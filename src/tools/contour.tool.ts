@@ -4,7 +4,7 @@ import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import { SettingsManager } from "@infolks/labelmore-devkit";
 import { ToolEvent, Path, Point, Color, PaperScope, KeyEvent, Key, Group } from "paper";
 import { DEFAULT_LABEL_TYPES } from "@infolks/labelmore-devkit";
-
+import {NAME as ESSENTAIL_SETTINGS, GeneralToolSettings, ContourToolSettings} from "../settings";
 /**
  * Settings
  * --------
@@ -49,11 +49,19 @@ export class ContourTool extends AnnotationTool {
         return this.points[this.points.length - 1]
     }
 
+    get prefs(): ContourToolSettings {
+        return this.settings.getSettings(ESSENTAIL_SETTINGS).tools.contour
+    }
+
+    get generalPrefs(): GeneralToolSettings {
+        return this.settings.getSettings(ESSENTAIL_SETTINGS).tools.general
+    }
+
     onmousedown(event: ToolEvent) {
 
         if (this.closePathActive) {
 
-            if (this.points.length > 2) this.makeLabel()
+            this.makeLabel()
         }
 
         else {
@@ -75,8 +83,9 @@ export class ContourTool extends AnnotationTool {
 
             this.createPreview(event.point)
 
-            // TODO: change to settings
-            if (event.point.getDistance(this.firstPoint) < 10) {
+
+            
+            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance) {
 
                 this.createClosePoint()
 
@@ -154,7 +163,7 @@ export class ContourTool extends AnnotationTool {
 
         const class_ = this.labeller.class
 
-        if (this.points && this.points.length > 2) {
+        if (this.points && this.points.length >= this.prefs.minSides) {
 
             if (class_) {
 
@@ -197,7 +206,7 @@ export class ContourTool extends AnnotationTool {
 
             // joints
             for (let point of this.points) {
-                this.contourJoints.addChild(new this.paper.Path.Circle(point, 5))
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width*5))
             }
 
             const color = this.labeller.class? this.labeller.class.color: '#ffff00'
@@ -206,7 +215,7 @@ export class ContourTool extends AnnotationTool {
             this.contour.style = {
                 strokeColor: new Color(color),
                 fillColor: null,
-                strokeWidth: 1*ratio //TODO: preview stroke width
+                strokeWidth: this.generalPrefs.preview.width*ratio 
             }
             
             this.contourJoints.fillColor = new Color(color)
@@ -224,7 +233,7 @@ export class ContourTool extends AnnotationTool {
 
             const ratio = 1/this.workspace.zoom
 
-            this.closePoint = new this.paper.Path.Circle(this.firstPoint, 10) // TODO: replace with settings
+            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.snapDistance)
 
             const color = this.labeller.class? this.labeller.class.color: '#ffff00'
 
@@ -232,7 +241,7 @@ export class ContourTool extends AnnotationTool {
             this.closePoint.style = {
                 strokeColor: new Color(color),
                 fillColor: null,
-                strokeWidth: 1*ratio //TODO: preview stroke width
+                strokeWidth: this.generalPrefs.preview.width*ratio
             }
         }
     }
@@ -255,13 +264,12 @@ export class ContourTool extends AnnotationTool {
 
             const ratio = 1/this.workspace.zoom
 
-            // TODO: Use settings here
             // @ts-ignore
             this.preview.style = {
-                strokeWidth: 1*ratio,
+                strokeWidth: this.generalPrefs.preview.width*ratio,
                 fillColor: null,
-                strokeColor: new Color('#00ffff'),
-                dashArray: [6*ratio, 3*ratio]
+                strokeColor: this.generalPrefs.preview.color,
+                dashArray: this.generalPrefs.preview.dashed? [6*ratio, 3*ratio] : []
             }
         }
     }

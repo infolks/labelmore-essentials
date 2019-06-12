@@ -10,10 +10,15 @@ export interface GeneralToolSettings {
 export interface BoundboxToolSettings {
     minArea: number;
 }
+export interface ContourToolSettings {
+    snapDistance: number;
+    minSides: number;
+}
 export interface EssentialSettings {
     tools: {
         general: GeneralToolSettings;
         boundbox: BoundboxToolSettings;
+        contour: ContourToolSettings;
     };
 }
 export declare const NAME = "settings.default.essentials";

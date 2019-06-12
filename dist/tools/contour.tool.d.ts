@@ -3,6 +3,7 @@ import { LabelManager } from "@infolks/labelmore-devkit";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import { SettingsManager } from "@infolks/labelmore-devkit";
 import { ToolEvent, PaperScope, KeyEvent } from "paper";
+import { GeneralToolSettings, ContourToolSettings } from "../settings";
 /**
  * Settings
  * --------
@@ -29,6 +30,8 @@ export declare class ContourTool extends AnnotationTool {
     constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope);
     private readonly firstPoint;
     private readonly lastPoint;
+    readonly prefs: ContourToolSettings;
+    readonly generalPrefs: GeneralToolSettings;
     onmousedown(event: ToolEvent): void;
     onmousemove(event: ToolEvent): void;
     onkeyup(event: KeyEvent): void;

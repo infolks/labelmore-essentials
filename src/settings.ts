@@ -14,6 +14,11 @@ export interface BoundboxToolSettings {
     minArea: number
 }
 
+export interface ContourToolSettings {
+    snapDistance: number,
+    minSides: number
+}
+
 // export interface SelectToolSettings {
 // }
 
@@ -21,6 +26,7 @@ export interface EssentialSettings {
     tools: {
         general: GeneralToolSettings
         boundbox: BoundboxToolSettings
+        contour: ContourToolSettings
         // select: SelectToolSettings
     }
 }
@@ -38,6 +44,10 @@ export const DEFAULT_SETTINGS: EssentialSettings = {
         },
         boundbox: {
             minArea: 1
+        },
+        contour: {
+            snapDistance: 10,
+            minSides: 3
         }
         // select: {
         //     highlight: false

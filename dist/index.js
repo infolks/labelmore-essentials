@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.2.0
+ * @infolks/labelmore-essentials v0.3.0
  * (c) infolks
  * Released under the ISC License.
  */
@@ -182,13 +182,13 @@ var script = {
 const __vue_script__ = script;
 
 /* template */
-var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{attrs:{"id":"boundbox-settings-form"},on:{"submit":function($event){$event.preventDefault();return _vm.submit()}}},[_c('h5',{staticClass:"settings-sub-heading"},[_vm._v("Boundbox Tool")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Color: ")]),_vm._v(" "),_c('app-color-input',{attrs:{"pos":"bottom"},model:{value:(_vm.settings.tools.boundbox.preview.color),callback:function ($$v) {_vm.$set(_vm.settings.tools.boundbox.preview, "color", $$v);},expression:"settings.tools.boundbox.preview.color"}})],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Stroke Width:")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.boundbox.preview.width),expression:"settings.tools.boundbox.preview.width",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":1},domProps:{"value":(_vm.settings.tools.boundbox.preview.width)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.boundbox.preview, "width", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_area"}},[_vm._v("Minimum Area")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.boundbox.minArea),expression:"settings.tools.boundbox.minArea",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":0.01,"step":0.01},domProps:{"value":(_vm.settings.tools.boundbox.minArea)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.boundbox, "minArea", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Dashed:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.boundbox.preview.dashed),callback:function ($$v) {_vm.$set(_vm.settings.tools.boundbox.preview, "dashed", $$v);},expression:"settings.tools.boundbox.preview.dashed"}},[_vm._v(_vm._s(_vm.settings.tools.boundbox.preview.dashed? 'dashed' : 'not dashed'))])],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Hotspots:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.boundbox.preview.hotspots),callback:function ($$v) {_vm.$set(_vm.settings.tools.boundbox.preview, "hotspots", $$v);},expression:"settings.tools.boundbox.preview.hotspots"}},[_vm._v(_vm._s(_vm.settings.tools.boundbox.preview.hotspots? 'enabled' : 'disabled'))])],1)])])])};
+var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{attrs:{"id":"boundbox-settings-form"},on:{"submit":function($event){$event.preventDefault();return _vm.submit()}}},[_c('h5',{staticClass:"settings-sub-heading"},[_vm._v("Tool Settings")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Color: ")]),_vm._v(" "),_c('app-color-input',{attrs:{"pos":"bottom"},model:{value:(_vm.settings.tools.general.preview.color),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "color", $$v);},expression:"settings.tools.general.preview.color"}})],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Stroke Width:")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.general.preview.width),expression:"settings.tools.general.preview.width",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":1},domProps:{"value":(_vm.settings.tools.general.preview.width)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.general.preview, "width", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Dashed:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.dashed),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "dashed", $$v);},expression:"settings.tools.general.preview.dashed"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.dashed? 'dashed' : 'not dashed'))])],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Hotspots:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.hotspots),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "hotspots", $$v);},expression:"settings.tools.general.preview.hotspots"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.hotspots? 'enabled' : 'disabled'))])],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_area"}},[_vm._v("Minimum Area")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.boundbox.minArea),expression:"settings.tools.boundbox.minArea",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":0.01,"step":0.01},domProps:{"value":(_vm.settings.tools.boundbox.minArea)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.boundbox, "minArea", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_snap_distance"}},[_vm._v("Minimum Snap Distance")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.snapDistance),expression:"settings.tools.contour.snapDistance",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_snap_distance","min":5,"step":1},domProps:{"value":(_vm.settings.tools.contour.snapDistance)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "snapDistance", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_sides"}},[_vm._v("Minimum Sides")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.minSides),expression:"settings.tools.contour.minSides",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_sides","min":3,"step":1},domProps:{"value":(_vm.settings.tools.contour.minSides)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "minSides", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})])])])])};
 var __vue_staticRenderFns__ = [];
 
   /* style */
   const __vue_inject_styles__ = undefined;
   /* scoped */
-  const __vue_scope_id__ = "data-v-44d23153";
+  const __vue_scope_id__ = "data-v-4cbf1986";
   /* module identifier */
   const __vue_module_identifier__ = undefined;
   /* functional template */
@@ -223,6 +223,10 @@ const DEFAULT_SETTINGS = {
         },
         boundbox: {
             minArea: 1
+        },
+        contour: {
+            snapDistance: 10,
+            minSides: 3
         }
         // select: {
         //     highlight: false
@@ -387,10 +391,15 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
     get lastPoint() {
         return this.points[this.points.length - 1];
     }
+    get prefs() {
+        return this.settings.getSettings(NAME).tools.contour;
+    }
+    get generalPrefs() {
+        return this.settings.getSettings(NAME).tools.general;
+    }
     onmousedown(event) {
         if (this.closePathActive) {
-            if (this.points.length > 2)
-                this.makeLabel();
+            this.makeLabel();
         }
         else {
             this.points.push(event.point);
@@ -402,8 +411,7 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             const ratio = 1 / this.workspace.zoom;
             this.createContour();
             this.createPreview(event.point);
-            // TODO: change to settings
-            if (event.point.getDistance(this.firstPoint) < 10) {
+            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance) {
                 this.createClosePoint();
                 this.closePathActive = true;
             }
@@ -450,7 +458,7 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
      */
     makeLabel() {
         const class_ = this.labeller.class;
-        if (this.points && this.points.length > 2) {
+        if (this.points && this.points.length >= this.prefs.minSides) {
             if (class_) {
                 // console.log('making label')
                 this.labeller.add({
@@ -476,14 +484,14 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             this.contourJoints = new this.paper.Group();
             // joints
             for (let point of this.points) {
-                this.contourJoints.addChild(new this.paper.Path.Circle(point, 5));
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width * 5));
             }
             const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
             // @ts-ignore
             this.contour.style = {
                 strokeColor: new paper.Color(color),
                 fillColor: null,
-                strokeWidth: 1 * ratio //TODO: preview stroke width
+                strokeWidth: this.generalPrefs.preview.width * ratio
             };
             this.contourJoints.fillColor = new paper.Color(color);
         }
@@ -495,13 +503,13 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
         this.closePoint && this.closePoint.remove();
         if (this.points.length) {
             const ratio = 1 / this.workspace.zoom;
-            this.closePoint = new this.paper.Path.Circle(this.firstPoint, 10); // TODO: replace with settings
+            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.snapDistance);
             const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
             // @ts-ignore
             this.closePoint.style = {
                 strokeColor: new paper.Color(color),
                 fillColor: null,
-                strokeWidth: 1 * ratio //TODO: preview stroke width
+                strokeWidth: this.generalPrefs.preview.width * ratio
             };
         }
     }
@@ -515,13 +523,12 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
                 this.preview.add(this.lastPoint);
             }
             const ratio = 1 / this.workspace.zoom;
-            // TODO: Use settings here
             // @ts-ignore
             this.preview.style = {
-                strokeWidth: 1 * ratio,
+                strokeWidth: this.generalPrefs.preview.width * ratio,
                 fillColor: null,
-                strokeColor: new paper.Color('#00ffff'),
-                dashArray: [6 * ratio, 3 * ratio]
+                strokeColor: this.generalPrefs.preview.color,
+                dashArray: this.generalPrefs.preview.dashed ? [6 * ratio, 3 * ratio] : []
             };
         }
     }
