@@ -8,9 +8,13 @@
         "strict": false,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "declaration": true
+        "declaration": true,
+        "skipLibCheck": true
     },
     "include": [
         "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

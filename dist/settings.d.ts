@@ -1,6 +1,5 @@
 import { Interface } from "@infolks/labelmore-devkit";
-export interface BoundboxToolSettings {
-    minArea: number;
+export interface GeneralToolSettings {
     preview: {
         color: string;
         width: number;
@@ -8,8 +7,12 @@ export interface BoundboxToolSettings {
         hotspots: boolean;
     };
 }
+export interface BoundboxToolSettings {
+    minArea: number;
+}
 export interface EssentialSettings {
     tools: {
+        general: GeneralToolSettings;
         boundbox: BoundboxToolSettings;
     };
 }

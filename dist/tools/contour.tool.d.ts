@@ -2,7 +2,14 @@ import { AnnotationToolOptions, AnnotationTool } from "@infolks/labelmore-devkit
 import { LabelManager } from "@infolks/labelmore-devkit";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import { SettingsManager } from "@infolks/labelmore-devkit";
-import { ToolEvent, PaperScope } from "paper";
+import { ToolEvent, PaperScope, KeyEvent } from "paper";
+/**
+ * Settings
+ * --------
+ * Snap Distance
+ * Min Sides
+ * Preview color
+ */
 export declare class ContourTool extends AnnotationTool {
     protected labeller: LabelManager;
     protected workspace: WorkspaceManager;
@@ -14,6 +21,7 @@ export declare class ContourTool extends AnnotationTool {
     readonly cursor = "crosshair";
     private preview;
     private contour;
+    private contourJoints;
     private closePoint;
     private closePathActive;
     private points;
@@ -23,8 +31,16 @@ export declare class ContourTool extends AnnotationTool {
     private readonly lastPoint;
     onmousedown(event: ToolEvent): void;
     onmousemove(event: ToolEvent): void;
+    onkeyup(event: KeyEvent): void;
+    private reset;
+    /**
+     * Complete the label
+     */
     private makeLabel;
     private createContour;
+    /**
+     * Create the circle used to close the path
+     */
     private createClosePoint;
     private createPreview;
 }

@@ -4,7 +4,7 @@ import { LabelManager } from "@infolks/labelmore-devkit";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import {SettingsManager} from '@infolks/labelmore-devkit';
 import { AnnotationToolOptions, AnnotationTool } from "@infolks/labelmore-devkit";
-import {NAME as ESSENTAIL_SETTINGS, BoundboxToolSettings} from "../settings"
+import {NAME as ESSENTAIL_SETTINGS, BoundboxToolSettings, GeneralToolSettings} from "../settings"
 
 export class BoundboxTool extends AnnotationTool {
 
@@ -35,6 +35,10 @@ export class BoundboxTool extends AnnotationTool {
         return this.settings.getSettings(ESSENTAIL_SETTINGS).tools.boundbox
     }
 
+    get generalPrefs(): GeneralToolSettings {
+        return this.settings.getSettings(ESSENTAIL_SETTINGS).tools.general
+    }
+
     onmousedrag(event: ToolEvent) {
 
         if (this.downPoint) {
@@ -52,17 +56,17 @@ export class BoundboxTool extends AnnotationTool {
             
             //@ts-ignore
             this.preview.style = {
-                strokeColor: new Color(this.prefs.preview.color),
+                strokeColor: new Color(this.generalPrefs.preview.color),
                 fillColor: null,
-                strokeWidth: this.prefs.preview.width*ratio,
-                dashArray: this.prefs.preview.dashed? [6*ratio, 3*ratio]: []
+                strokeWidth: this.generalPrefs.preview.width*ratio,
+                dashArray: this.generalPrefs.preview.dashed? [6*ratio, 3*ratio]: []
             }
 
             // }
 
             // show hotspots {
 
-            if (this.prefs.preview.hotspots) {
+            if (this.generalPrefs.preview.hotspots) {
 
                 this.hotspots && this.hotspots.remove()
 
@@ -73,11 +77,10 @@ export class BoundboxTool extends AnnotationTool {
                 txtStart.content = `(${event.downPoint.round().x}, ${event.downPoint.round().y})` // coordinates
 
                 // apply style
-                //@ts-ignore
                 txtStart.style = {
                     fontSize: 9 * ratio,
                     fontWeight: 300,
-                    fillColor: new Color(this.prefs.preview.color)
+                    fillColor: new Color(this.generalPrefs.preview.color)
                 }
 
                 txtStart.bounds.bottomRight = event.downPoint.subtract(padPoint) // real point

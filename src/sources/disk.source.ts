@@ -1,6 +1,5 @@
 import { Source } from "@infolks/labelmore-devkit";
 import { FileManager } from "@infolks/labelmore-devkit";
-import { OpenDialogOptions } from "electron";
 
 class DiskSource extends Source {
 
@@ -15,7 +14,7 @@ class DiskSource extends Source {
 
     async trigger(): Promise<string> {
 
-        const options: OpenDialogOptions = {
+        const options = {
             properties: ["openDirectory", "createDirectory"]
         }
         

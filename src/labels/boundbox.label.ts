@@ -3,7 +3,7 @@ import { LabelClass, DEFAULT_LABEL_TYPES, Label } from "@infolks/labelmore-devki
 import { LabelManager } from "@infolks/labelmore-devkit";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import { SettingsManager } from "@infolks/labelmore-devkit";
-import { Point, PathItem, Path, PaperScope } from "paper";
+import { PathItem, PaperScope } from "paper";
 
 export class BoundboxLabel extends SimpleLabelType {
 
@@ -25,7 +25,7 @@ export class BoundboxLabel extends SimpleLabelType {
     
         const path = new this.paper.Path.Rectangle(min, max)
 
-        console.log('bndbx.vectorize', path)
+        // console.log('bndbx.vectorize', path)
     
         return path;
     

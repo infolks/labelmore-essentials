@@ -1,7 +1,7 @@
 // tools
 import SelectTool from "./tools/select.tool"
 import BoundboxTool from "./tools/boundbox.tool"
-// import ContourTool from "./tools/contour.tool"
+import ContourTool from "./tools/contour.tool"
 import PanTool from "./tools/pan.tool"
 
 // labels
@@ -29,7 +29,7 @@ export default {
         // settings
         vue.use(SelectTool)
         vue.use(BoundboxTool)
-        // vue.use(ContourTool)
+        vue.use(ContourTool)
         vue.use(PanTool)
 
         // labels

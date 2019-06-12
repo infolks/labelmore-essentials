@@ -2,9 +2,16 @@ import { AnnotationToolOptions, AnnotationTool } from "@infolks/labelmore-devkit
 import { LabelManager } from "@infolks/labelmore-devkit";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import { SettingsManager } from "@infolks/labelmore-devkit";
-import { ToolEvent, Path, Point, Color, PaperScope } from "paper";
+import { ToolEvent, Path, Point, Color, PaperScope, KeyEvent, Key, Group } from "paper";
 import { DEFAULT_LABEL_TYPES } from "@infolks/labelmore-devkit";
 
+/**
+ * Settings
+ * --------
+ * Snap Distance
+ * Min Sides
+ * Preview color
+ */
 export class ContourTool extends AnnotationTool {
     public readonly name = 'tools.default.contour'
     public readonly title = 'Contour'
@@ -13,6 +20,7 @@ export class ContourTool extends AnnotationTool {
 
     private preview: Path
     private contour: Path
+    private contourJoints: Group
     private closePoint: Path
 
     private closePathActive: boolean = false
@@ -87,28 +95,46 @@ export class ContourTool extends AnnotationTool {
         }
     }
 
-    private makeLabel() {
+    onkeyup(event: KeyEvent) {
 
-        const class_ = this.labeller.class
+        const key = event.key
 
-        if (class_) {
+        if (key === 'backspace') {
 
-            console.log('making label')
+            // if there are points
+            if (this.points && this.points.length) {
 
-            this.labeller.add({
-                id: new Date().getTime(),
-                type: 'default',
-                class_id: class_.id,
-                props: {
-                    points: this.points.map(p => ({x: p.x, y: p.y}))
+                // pop last point
+                this.points.pop()
+                
+                // update preview
+                if (this.preview.segments.length === 3) {
+
+                    this.createPreview(this.preview.segments[1].point)
+
+                    this.createContour()
+                } 
+
+                else {
+                    this.preview.remove()
                 }
-            })
 
+            }
+            
         }
 
-        // refresh
+        else if (key === 'enter') {
+
+            this.makeLabel()
+            
+        }
+    }
+
+    private reset() {
+
         this.preview && this.preview.remove()
         this.contour && this.contour.remove()
+        this.contourJoints && this.contourJoints.remove()
         this.closePoint && this.closePoint.remove()
 
         this.preview = this.contour = this.closePoint = null
@@ -118,6 +144,38 @@ export class ContourTool extends AnnotationTool {
         this.points = []
 
         this.workspace.cursor = this.cursor
+
+    }
+
+    /**
+     * Complete the label
+     */
+    private makeLabel() {
+
+        const class_ = this.labeller.class
+
+        if (this.points && this.points.length > 2) {
+
+            if (class_) {
+
+                // console.log('making label')
+    
+                this.labeller.add({
+                    id: new Date().getTime(),
+                    type: DEFAULT_LABEL_TYPES.contour,
+                    class_id: class_.id,
+                    props: {
+                        points: this.points.map(p => ({x: p.x, y: p.y}))
+                    }
+                })
+    
+            }
+    
+            // reset
+            this.reset()
+
+        }
+
     }
 
 
@@ -127,11 +185,20 @@ export class ContourTool extends AnnotationTool {
 
         this.contour && this.contour.remove()
 
+        this.contourJoints && this.contourJoints.remove()
+
         if (this.points.length) {
 
             const ratio = 1/this.workspace.zoom
 
             this.contour = new this.paper.Path(this.points)
+
+            this.contourJoints = new this.paper.Group()
+
+            // joints
+            for (let point of this.points) {
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, 5))
+            }
 
             const color = this.labeller.class? this.labeller.class.color: '#ffff00'
 
@@ -141,12 +208,14 @@ export class ContourTool extends AnnotationTool {
                 fillColor: null,
                 strokeWidth: 1*ratio //TODO: preview stroke width
             }
-
-            // create the circle above cursor
             
+            this.contourJoints.fillColor = new Color(color)
         }
     }
 
+    /**
+     * Create the circle used to close the path
+     */
     private createClosePoint() {
 
         this.closePoint && this.closePoint.remove()

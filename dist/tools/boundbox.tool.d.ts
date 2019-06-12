@@ -3,7 +3,7 @@ import { LabelManager } from "@infolks/labelmore-devkit";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import { SettingsManager } from '@infolks/labelmore-devkit';
 import { AnnotationToolOptions, AnnotationTool } from "@infolks/labelmore-devkit";
-import { BoundboxToolSettings } from "../settings";
+import { BoundboxToolSettings, GeneralToolSettings } from "../settings";
 export declare class BoundboxTool extends AnnotationTool {
     protected labeller: LabelManager;
     protected workspace: WorkspaceManager;
@@ -19,6 +19,7 @@ export declare class BoundboxTool extends AnnotationTool {
     private hotspots;
     constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope);
     readonly prefs: BoundboxToolSettings;
+    readonly generalPrefs: GeneralToolSettings;
     onmousedrag(event: ToolEvent): void;
     onmousedown(event: ToolEvent): void;
     onmouseup(event: ToolEvent): void;

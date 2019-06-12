@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.1.0
+ * @infolks/labelmore-essentials v0.2.0
  * (c) infolks
  * Released under the ISC License.
  */
@@ -213,8 +213,7 @@ var __vue_staticRenderFns__ = [];
 const NAME = 'settings.default.essentials';
 const DEFAULT_SETTINGS = {
     tools: {
-        boundbox: {
-            minArea: 1,
+        general: {
             preview: {
                 color: "#00ffff",
                 width: 1,
@@ -222,6 +221,12 @@ const DEFAULT_SETTINGS = {
                 hotspots: true
             }
         },
+        boundbox: {
+            minArea: 1
+        }
+        // select: {
+        //     highlight: false
+        // }
     }
 };
 class EssentialInterface extends labelmoreDevkit.Interface {
@@ -272,6 +277,9 @@ class BoundboxTool extends labelmoreDevkit.AnnotationTool {
     get prefs() {
         return this.settings.getSettings(NAME).tools.boundbox;
     }
+    get generalPrefs() {
+        return this.settings.getSettings(NAME).tools.general;
+    }
     onmousedrag(event) {
         if (this.downPoint) {
             const min = this.downPoint;
@@ -282,25 +290,24 @@ class BoundboxTool extends labelmoreDevkit.AnnotationTool {
             this.preview = new this.paper.Path.Rectangle(min, max);
             //@ts-ignore
             this.preview.style = {
-                strokeColor: new paper.Color(this.prefs.preview.color),
+                strokeColor: new paper.Color(this.generalPrefs.preview.color),
                 fillColor: null,
-                strokeWidth: this.prefs.preview.width * ratio,
-                dashArray: this.prefs.preview.dashed ? [6 * ratio, 3 * ratio] : []
+                strokeWidth: this.generalPrefs.preview.width * ratio,
+                dashArray: this.generalPrefs.preview.dashed ? [6 * ratio, 3 * ratio] : []
             };
             // }
             // show hotspots {
-            if (this.prefs.preview.hotspots) {
+            if (this.generalPrefs.preview.hotspots) {
                 this.hotspots && this.hotspots.remove();
                 // point for padding
                 const padPoint = new paper.Point(5, 5);
                 const txtStart = new this.paper.PointText(padPoint /* dummy point*/);
                 txtStart.content = `(${event.downPoint.round().x}, ${event.downPoint.round().y})`; // coordinates
                 // apply style
-                //@ts-ignore
                 txtStart.style = {
                     fontSize: 9 * ratio,
                     fontWeight: 300,
-                    fillColor: new paper.Color(this.prefs.preview.color)
+                    fillColor: new paper.Color(this.generalPrefs.preview.color)
                 };
                 txtStart.bounds.bottomRight = event.downPoint.subtract(padPoint); // real point
                 const txtEnd = new this.paper.PointText(padPoint /* dummy point*/);
@@ -342,6 +349,191 @@ var BoundboxTool$1 = {
                     const bndbox = new BoundboxTool(this.$labeller, this.$workspace, this.$settings, this.$paper);
                     if (!this.$tools.hasTool(bndbox.name)) {
                         this.$tools.register(bndbox.name, bndbox);
+                    }
+                }
+            }
+        });
+    }
+};
+
+/**
+ * Settings
+ * --------
+ * Snap Distance
+ * Min Sides
+ * Preview color
+ */
+class ContourTool extends labelmoreDevkit.AnnotationTool {
+    constructor(labeller, workspace, settings, paper) {
+        super(workspace, settings, paper);
+        this.labeller = labeller;
+        this.workspace = workspace;
+        this.settings = settings;
+        this.paper = paper;
+        this.name = 'tools.default.contour';
+        this.title = 'Contour';
+        this.icon = `<i class="fas fa-draw-polygon"></i>`;
+        this.cursor = 'crosshair';
+        this.closePathActive = false;
+        this.points = [];
+        this.options = {
+            showGuide: true,
+            limitToArtboard: true
+        };
+    }
+    get firstPoint() {
+        return this.points[0];
+    }
+    get lastPoint() {
+        return this.points[this.points.length - 1];
+    }
+    onmousedown(event) {
+        if (this.closePathActive) {
+            if (this.points.length > 2)
+                this.makeLabel();
+        }
+        else {
+            this.points.push(event.point);
+        }
+        this.createContour();
+    }
+    onmousemove(event) {
+        if (this.points.length) {
+            const ratio = 1 / this.workspace.zoom;
+            this.createContour();
+            this.createPreview(event.point);
+            // TODO: change to settings
+            if (event.point.getDistance(this.firstPoint) < 10) {
+                this.createClosePoint();
+                this.closePathActive = true;
+            }
+            else {
+                this.closePoint && this.closePoint.remove();
+                this.closePoint = null;
+                this.closePathActive = false;
+            }
+        }
+    }
+    onkeyup(event) {
+        const key = event.key;
+        if (key === 'backspace') {
+            // if there are points
+            if (this.points && this.points.length) {
+                // pop last point
+                this.points.pop();
+                // update preview
+                if (this.preview.segments.length === 3) {
+                    this.createPreview(this.preview.segments[1].point);
+                    this.createContour();
+                }
+                else {
+                    this.preview.remove();
+                }
+            }
+        }
+        else if (key === 'enter') {
+            this.makeLabel();
+        }
+    }
+    reset() {
+        this.preview && this.preview.remove();
+        this.contour && this.contour.remove();
+        this.contourJoints && this.contourJoints.remove();
+        this.closePoint && this.closePoint.remove();
+        this.preview = this.contour = this.closePoint = null;
+        this.closePathActive = false;
+        this.points = [];
+        this.workspace.cursor = this.cursor;
+    }
+    /**
+     * Complete the label
+     */
+    makeLabel() {
+        const class_ = this.labeller.class;
+        if (this.points && this.points.length > 2) {
+            if (class_) {
+                // console.log('making label')
+                this.labeller.add({
+                    id: new Date().getTime(),
+                    type: labelmoreDevkit.DEFAULT_LABEL_TYPES.contour,
+                    class_id: class_.id,
+                    props: {
+                        points: this.points.map(p => ({ x: p.x, y: p.y }))
+                    }
+                });
+            }
+            // reset
+            this.reset();
+        }
+    }
+    /// PRIVATE
+    createContour() {
+        this.contour && this.contour.remove();
+        this.contourJoints && this.contourJoints.remove();
+        if (this.points.length) {
+            const ratio = 1 / this.workspace.zoom;
+            this.contour = new this.paper.Path(this.points);
+            this.contourJoints = new this.paper.Group();
+            // joints
+            for (let point of this.points) {
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, 5));
+            }
+            const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
+            // @ts-ignore
+            this.contour.style = {
+                strokeColor: new paper.Color(color),
+                fillColor: null,
+                strokeWidth: 1 * ratio //TODO: preview stroke width
+            };
+            this.contourJoints.fillColor = new paper.Color(color);
+        }
+    }
+    /**
+     * Create the circle used to close the path
+     */
+    createClosePoint() {
+        this.closePoint && this.closePoint.remove();
+        if (this.points.length) {
+            const ratio = 1 / this.workspace.zoom;
+            this.closePoint = new this.paper.Path.Circle(this.firstPoint, 10); // TODO: replace with settings
+            const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
+            // @ts-ignore
+            this.closePoint.style = {
+                strokeColor: new paper.Color(color),
+                fillColor: null,
+                strokeWidth: 1 * ratio //TODO: preview stroke width
+            };
+        }
+    }
+    createPreview(cursorPoint) {
+        if (this.firstPoint && cursorPoint) {
+            this.preview && this.preview.remove();
+            this.preview = new this.paper.Path();
+            this.preview.add(this.firstPoint);
+            this.preview.add(cursorPoint);
+            if (this.lastPoint && !this.firstPoint.equals(this.lastPoint)) {
+                this.preview.add(this.lastPoint);
+            }
+            const ratio = 1 / this.workspace.zoom;
+            // TODO: Use settings here
+            // @ts-ignore
+            this.preview.style = {
+                strokeWidth: 1 * ratio,
+                fillColor: null,
+                strokeColor: new paper.Color('#00ffff'),
+                dashArray: [6 * ratio, 3 * ratio]
+            };
+        }
+    }
+}
+var ContourTool$1 = {
+    install(vue, opts) {
+        vue.mixin({
+            beforeCreate() {
+                if (this.$labeller && this.$tools && this.$workspace && this.$settings) {
+                    const contour = new ContourTool(this.$labeller, this.$workspace, this.$settings, this.$paper);
+                    if (!this.$tools.hasTool(contour.name)) {
+                        this.$tools.register(contour.name, contour);
                     }
                 }
             }
@@ -416,7 +608,7 @@ class BoundboxLabel extends labelmoreDevkit.SimpleLabelType {
         const min = new this.paper.Point(label.props.xmin, label.props.ymin);
         const max = new this.paper.Point(label.props.xmax, label.props.ymax);
         const path = new this.paper.Path.Rectangle(min, max);
-        console.log('bndbx.vectorize', path);
+        // console.log('bndbx.vectorize', path)
         return path;
     }
     controls(path) {
@@ -810,7 +1002,7 @@ var index = {
         // settings
         vue.use(SelectTool$1);
         vue.use(BoundboxTool$1);
-        // vue.use(ContourTool)
+        vue.use(ContourTool$1);
         vue.use(PanTool$1);
         // labels
         vue.use(BoundboxLabel$1);

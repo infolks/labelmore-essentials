@@ -1,8 +1,7 @@
 import { Interface } from "@infolks/labelmore-devkit";
 import SettingsComponent from "./Settings.vue"
 
-export interface BoundboxToolSettings {
-    minArea: number,
+export interface GeneralToolSettings {
     preview: {
         color: string,
         width: number,
@@ -11,12 +10,17 @@ export interface BoundboxToolSettings {
     }
 }
 
+export interface BoundboxToolSettings {
+    minArea: number
+}
+
 // export interface SelectToolSettings {
 // }
 
 export interface EssentialSettings {
     tools: {
-        boundbox: BoundboxToolSettings,
+        general: GeneralToolSettings
+        boundbox: BoundboxToolSettings
         // select: SelectToolSettings
     }
 }
@@ -24,8 +28,7 @@ export interface EssentialSettings {
 export const NAME = 'settings.default.essentials'
 export const DEFAULT_SETTINGS: EssentialSettings = {
     tools: {
-        boundbox: {
-            minArea: 1,
+        general: {
             preview: {
                 color: "#00ffff",
                 width: 1,
@@ -33,6 +36,9 @@ export const DEFAULT_SETTINGS: EssentialSettings = {
                 hotspots: true
             }
         },
+        boundbox: {
+            minArea: 1
+        }
         // select: {
         //     highlight: false
         // }

@@ -7,7 +7,8 @@ const config: Config = {
         babel: false,
         vue: {
             css: true
-        }
+        },
+        commonjs: true
     },
     output: {
         extractCSS: false,
