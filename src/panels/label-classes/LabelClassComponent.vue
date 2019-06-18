@@ -54,15 +54,14 @@
     .label-class-item {
         transition: background 0.3s ease-in-out;
         cursor: pointer;
-
     }
 
     .label-class-item:hover {
-        background: darken(white, 5%)
+        background: darken(white, 5%);
     }
 
     .label-class-dropdown {
         max-height: 300px;
-        overflow-y: auto
+        overflow-y: auto;
     }
 </style>

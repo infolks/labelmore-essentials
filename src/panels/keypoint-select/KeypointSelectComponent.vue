@@ -9,7 +9,7 @@
                 </span>
             </button>
             <div v-if="keypoints" class="uk-padding-remove keypoint-dropdown" uk-dropdown="mode: click; pos; bottom-justify, boundary: #keypoint-select, boundary-align: true">
-                <div class="uk-padding-small label-class-item uk-dropdown-close" v-for="kp in keypoints" :key="kp.name" @click="$labeller.selectKeypoint(kp.name)">
+                <div class="uk-padding-small keypoint-item uk-dropdown-close" v-for="kp in keypoints" :key="kp.name" @click="$labeller.selectKeypoint(kp.name)">
                     {{kp.name}}
                 </div>
             </div>
@@ -43,5 +43,17 @@
 </script>
 
 <style scoped>
+    .keypoint-item {
+        transition: background 0.3s ease-in-out;
+        cursor: pointer;
+    }
 
+    .keypoint-item:hover {
+        background: darken(white, 5%)
+    }
+
+    .keypoint-dropdown {
+        max-height: 300px;
+        overflow-y: auto
+    }
 </style>
