@@ -17,16 +17,14 @@
                 {{cl.name}}
             </div>
         </div>
-        
     </div>
 </template>
 
 <script lang="ts">
-    import Vue from 'vue'
     import { LabelClass } from '@infolks/labelmore-devkit';
 
     export default {
-        name: 'app-labelclass',
+        name: 'app-panel-labelclass',
         computed: {
             labelClasses() {
                 return this.$labeller.classes
@@ -38,6 +36,14 @@
 
             class_() {
                 return this.$labeller.class
+            },
+
+            keypoints() {
+                return this.$labeller.keypoints
+            },
+
+            keypoint() {
+                return this.$labeller.keypoint
             }
         },
     }

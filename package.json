@@ -34,7 +34,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
-    "@infolks/labelmore-devkit": "^1.1.15",
+    "@infolks/labelmore-devkit": "^1.2.0",
     "vue": "^2.6.10",
     "vuex": "^3.1.1"
   }

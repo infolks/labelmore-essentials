@@ -1,12 +1,12 @@
 import { Panel, PanelOptions } from "@infolks/labelmore-devkit";
-import LabelClassComponent from './LabelClassComponent.vue'
+import KeypointSelectComponent from './KeypointSelectComponent.vue'
 
-class LabelClassPanel extends Panel {
+class KeypointsPanel extends Panel {
 
-    public readonly name = "panels.default.labelclass"
-    public readonly title = 'Label Classes'
-    public readonly icon = `<i class="fas fa-shapes"></i>`
-    public readonly component = 'app-panel-labelclass'
+    public readonly name = "panels.default.keypoints"
+    public readonly title = 'Keypoints'
+    public readonly icon = `<i class="fas fa-dot-circle"></i>`
+    public readonly component = 'app-panel-keypoints'
 
     public readonly options: PanelOptions = {
         showTitle: true
@@ -23,11 +23,11 @@ export default {
 
                 if (this.$workspace) {
 
-                    const panel = new LabelClassPanel()
+                    const panel = new KeypointsPanel()
 
                     if (!this.$workspace.hasPanel(panel.name)) {
                         this.$workspace.registerPanel(panel.name, panel)
-                        Vue.component(panel.component, LabelClassComponent)
+                        Vue.component(panel.component, KeypointSelectComponent)
                     }
                 }
             }

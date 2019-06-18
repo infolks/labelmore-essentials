@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.3.0
+ * @infolks/labelmore-essentials v0.3.1
  * (c) infolks
  * Released under the ISC License.
  */
@@ -845,7 +845,7 @@ var DiskSource$1 = {
 };
 
 var script$1 = {
-    name: 'app-labelclass',
+    name: 'app-panel-labelclass',
     computed: {
         labelClasses() {
             return this.$labeller.classes;
@@ -855,6 +855,12 @@ var script$1 = {
         },
         class_() {
             return this.$labeller.class;
+        },
+        keypoints() {
+            return this.$labeller.keypoints;
+        },
+        keypoint() {
+            return this.$labeller.keypoint;
         }
     },
 };
@@ -869,11 +875,11 @@ var __vue_staticRenderFns__$1 = [function () {var _vm=this;var _h=_vm.$createEle
   /* style */
   const __vue_inject_styles__$1 = function (inject) {
     if (!inject) return
-    inject("data-v-29493a80_0", { source: ".label-class-item[data-v-29493a80]{transition:background .3s ease-in-out;cursor:pointer}.label-class-item[data-v-29493a80]:hover{background:darken(white,5%)}.label-class-dropdown[data-v-29493a80]{max-height:300px;overflow-y:auto}", map: undefined, media: undefined });
+    inject("data-v-41c129b8_0", { source: ".label-class-item[data-v-41c129b8]{transition:background .3s ease-in-out;cursor:pointer}.label-class-item[data-v-41c129b8]:hover{background:darken(white,5%)}.label-class-dropdown[data-v-41c129b8]{max-height:300px;overflow-y:auto}", map: undefined, media: undefined });
 
   };
   /* scoped */
-  const __vue_scope_id__$1 = "data-v-29493a80";
+  const __vue_scope_id__$1 = "data-v-41c129b8";
   /* module identifier */
   const __vue_module_identifier__$1 = undefined;
   /* functional template */
@@ -894,9 +900,8 @@ var __vue_staticRenderFns__$1 = [function () {var _vm=this;var _h=_vm.$createEle
   );
 
 class LabelClassPanel extends labelmoreDevkit.Panel {
-    constructor(projectManager) {
-        super();
-        this.projectManager = projectManager;
+    constructor() {
+        super(...arguments);
         this.name = "panels.default.labelclass";
         this.title = 'Label Classes';
         this.icon = `<i class="fas fa-shapes"></i>`;
@@ -910,11 +915,84 @@ var LabelClassesPanel = {
     install(Vue, opts) {
         Vue.mixin({
             beforeCreate() {
-                if (this.$workspace && this.$projects) {
-                    const panel = new LabelClassPanel(this.$projects);
+                if (this.$workspace) {
+                    const panel = new LabelClassPanel();
                     if (!this.$workspace.hasPanel(panel.name)) {
                         this.$workspace.registerPanel(panel.name, panel);
                         Vue.component(panel.component, LabelClassComponent);
+                    }
+                }
+            }
+        });
+    }
+};
+
+var script$2 = {
+    name: 'app-panel-keypoints',
+    computed: {
+        keypoints() {
+            console.log(this, this.$labeller);
+            return this.$labeller.keypoints;
+        },
+        keypoint() {
+            return this.$labeller.keypoint;
+        }
+    }
+};
+
+/* script */
+const __vue_script__$2 = script$2;
+
+/* template */
+var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-padding-small",attrs:{"id":"keypoint-select"}},[(_vm.keypoints && _vm.keypoints.length)?_c('div',[_c('button',{staticClass:"uk-button uk-width-1-1 uk-button-default uk-flex uk-flex-middle",attrs:{"type":"button"}},[_vm._v("\n            "+_vm._s(_vm.keypoint? _vm.keypoint.name: 'Select Keypoint')+"\n            "),_vm._m(0)]),_vm._v(" "),(_vm.keypoints)?_c('div',{staticClass:"uk-padding-remove keypoint-dropdown",attrs:{"uk-dropdown":"mode: click; pos; bottom-justify, boundary: #keypoint-select, boundary-align: true"}},_vm._l((_vm.keypoints),function(kp){return _c('div',{key:kp.name,staticClass:"uk-padding-small label-class-item uk-dropdown-close",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_vm._v("\n                "+_vm._s(kp.name)+"\n            ")])}),0):_vm._e()]):_c('div',[_c('div',{staticClass:"uk-placeholder uk-text-center"},[_vm._v("\n            No Keypoints available\n        ")])])])};
+var __vue_staticRenderFns__$2 = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"uk-margin-auto-left"},[_c('i',{staticClass:"fas fa-chevron-down"})])}];
+
+  /* style */
+  const __vue_inject_styles__$2 = undefined;
+  /* scoped */
+  const __vue_scope_id__$2 = "data-v-28f09fd8";
+  /* module identifier */
+  const __vue_module_identifier__$2 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$2 = false;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var KeypointSelectComponent = __vue_normalize__(
+    { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
+    __vue_inject_styles__$2,
+    __vue_script__$2,
+    __vue_scope_id__$2,
+    __vue_is_functional_template__$2,
+    __vue_module_identifier__$2,
+    undefined,
+    undefined
+  );
+
+class KeypointsPanel extends labelmoreDevkit.Panel {
+    constructor() {
+        super(...arguments);
+        this.name = "panels.default.keypoints";
+        this.title = 'Keypoints';
+        this.icon = `<i class="fas fa-dot-circle"></i>`;
+        this.component = 'app-panel-keypoints';
+        this.options = {
+            showTitle: true
+        };
+    }
+}
+var KeypointsPanel$1 = {
+    install(Vue, opts) {
+        Vue.mixin({
+            beforeCreate() {
+                if (this.$workspace) {
+                    const panel = new KeypointsPanel();
+                    if (!this.$workspace.hasPanel(panel.name)) {
+                        this.$workspace.registerPanel(panel.name, panel);
+                        Vue.component(panel.component, KeypointSelectComponent);
                     }
                 }
             }
@@ -1020,6 +1098,7 @@ var index = {
         vue.use(DiskSource$1);
         // panels
         vue.use(LabelClassesPanel);
+        vue.use(KeypointsPanel$1);
         // encoders
         vue.use(JsonEncoder$1);
         // settings
