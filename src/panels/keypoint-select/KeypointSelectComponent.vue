@@ -27,7 +27,7 @@
         <li :class="{'uk-active': keypoint && (keypoint.name === kp.name)}" v-for="kp in keypoints" :key="kp.name">
             <div class="uk-padding-small keypoint-item" @click="$labeller.selectKeypoint(kp.name)">
                 <span class="uk-margin-right uk-text-primary">
-                    <i class="far fa-bullseye" v-if="keypoint && (keypoint.name === kp.name)"></i>
+                    <i class="far fa-dot-circle" v-if="keypoint && (keypoint.name === kp.name)"></i>
                     <i class="far fa-circle" v-else></i>
                 </span>
                 {{kp.name}}
