@@ -14,6 +14,7 @@ class LocalizationWizard extends Wizard {
         allowToolSelection: true,
         allowLabelClassCreation: true,
         allowKeypointCreation: true,
+        allowPanelSelection: true
     };
 
     public readonly allowExtensions = true
@@ -36,6 +37,7 @@ class LocalizationWizard extends Wizard {
     async load(data: Buffer, options: any): Promise<Buffer> {
         
         return data;
+        
     }
 
 }
