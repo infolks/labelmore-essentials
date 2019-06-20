@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.4.0
+ * @infolks/labelmore-essentials v0.4.1
  * (c) infolks
  * Released under the ISC License.
  */
@@ -11,7 +11,6 @@ var labelmoreDevkit = require('@infolks/labelmore-devkit');
 var paper = require('paper');
 var __vue_normalize__ = _interopDefault(require('vue-runtime-helpers/dist/normalize-component.js'));
 var tslib_1 = require('tslib');
-var __vue_create_injector__ = _interopDefault(require('vue-runtime-helpers/dist/inject-style/browser.js'));
 
 // import {NAME as ESSENTIAL_SETTINGS} from "../settings"
 class SelectTool extends labelmoreDevkit.AnnotationTool {
@@ -855,12 +854,6 @@ var script$1 = {
         },
         class_() {
             return this.$labeller.class;
-        },
-        keypoints() {
-            return this.$labeller.keypoints;
-        },
-        keypoint() {
-            return this.$labeller.keypoint;
         }
     },
 };
@@ -869,21 +862,19 @@ var script$1 = {
 const __vue_script__$1 = script$1;
 
 /* template */
-var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-padding-small",attrs:{"id":"label-classes-select"}},[_c('button',{staticClass:"uk-button uk-width-1-1 uk-button-default uk-flex uk-flex-middle",attrs:{"type":"button"}},[_c('span',{staticClass:"uk-margin-right",style:({color: _vm.labelClass.color})},[_c('i',{staticClass:"fas fa-square"})]),_vm._v("\n        "+_vm._s(_vm.labelClass.name)+"\n        "),_vm._m(0)]),_vm._v(" "),(_vm.labelClasses)?_c('div',{staticClass:"uk-padding-remove label-class-dropdown",attrs:{"uk-dropdown":"mode: click; pos; bottom-justify, boundary: #label-classes-select, boundary-align: true"}},_vm._l((_vm.labelClasses),function(cl){return _c('div',{key:cl.id,staticClass:"uk-padding-small label-class-item uk-dropdown-close",on:{"click":function($event){return _vm.$labeller.selectClass(cl.id)}}},[_c('span',{staticClass:"uk-margin-right",style:({color: cl.color})},[_c('i',{staticClass:"fa-square",class:{fas: cl.id === _vm.labelClass.id, far: cl.id !== _vm.labelClass.id}})]),_vm._v("\n            "+_vm._s(cl.name)+"\n        ")])}),0):_vm._e()])};
-var __vue_staticRenderFns__$1 = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"uk-margin-auto-left"},[_c('i',{staticClass:"fas fa-chevron-down"})])}];
+var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-list uk-list-clickable"},_vm._l((_vm.labelClasses),function(cl){return _c('li',{key:cl.id,class:{'uk-active': _vm.class_ && (_vm.class_.id === cl.id)}},[_c('div',{staticClass:"uk-flex uk-padding-small label-class-item",on:{"click":function($event){return _vm.$labeller.selectClass(cl.id)}}},[_c('span',{staticClass:"uk-margin-right",style:({color: cl.color})},[_c('i',{staticClass:"fa-square",class:{fas: cl.id === _vm.labelClass.id, far: cl.id !== _vm.labelClass.id}})]),_vm._v("\n            "+_vm._s(cl.name)+"\n        ")])])}),0)};
+var __vue_staticRenderFns__$1 = [];
 
   /* style */
-  const __vue_inject_styles__$1 = function (inject) {
-    if (!inject) return
-    inject("data-v-05ccba46_0", { source: ".label-class-item[data-v-05ccba46]{transition:background .3s ease-in-out;cursor:pointer}.label-class-item[data-v-05ccba46]:hover{background:darken(white,5%)}.label-class-dropdown[data-v-05ccba46]{max-height:300px;overflow-y:auto}", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$1 = undefined;
   /* scoped */
-  const __vue_scope_id__$1 = "data-v-05ccba46";
+  const __vue_scope_id__$1 = "data-v-cdd4c0ae";
   /* module identifier */
   const __vue_module_identifier__$1 = undefined;
   /* functional template */
   const __vue_is_functional_template__$1 = false;
+  /* style inject */
+  
   /* style inject SSR */
   
 
@@ -895,7 +886,7 @@ var __vue_staticRenderFns__$1 = [function () {var _vm=this;var _h=_vm.$createEle
     __vue_scope_id__$1,
     __vue_is_functional_template__$1,
     __vue_module_identifier__$1,
-    __vue_create_injector__,
+    undefined,
     undefined
   );
 
@@ -944,21 +935,19 @@ var script$2 = {
 const __vue_script__$2 = script$2;
 
 /* template */
-var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-padding-small",attrs:{"id":"keypoint-select"}},[(_vm.keypoints && _vm.keypoints.length)?_c('div',[_c('button',{staticClass:"uk-button uk-width-1-1 uk-button-default uk-flex uk-flex-middle",attrs:{"type":"button"}},[_vm._v("\n            "+_vm._s(_vm.keypoint? _vm.keypoint.name: 'Select Keypoint')+"\n            "),_vm._m(0)]),_vm._v(" "),(_vm.keypoints)?_c('div',{staticClass:"uk-padding-remove keypoint-dropdown",attrs:{"uk-dropdown":"mode: click; pos; bottom-justify, boundary: #keypoint-select, boundary-align: true"}},_vm._l((_vm.keypoints),function(kp){return _c('div',{key:kp.name,staticClass:"uk-padding-small keypoint-item uk-dropdown-close",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_vm._v("\n                "+_vm._s(kp.name)+"\n            ")])}),0):_vm._e()]):_c('div',[_c('div',{staticClass:"uk-placeholder uk-text-center"},[_vm._v("\n            No Keypoints available\n        ")])])])};
-var __vue_staticRenderFns__$2 = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"uk-margin-auto-left"},[_c('i',{staticClass:"fas fa-chevron-down"})])}];
+var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-list uk-list-clickable"},_vm._l((_vm.keypoints),function(kp){return _c('li',{key:kp.name,class:{'uk-active': _vm.keypoint && (_vm.keypoint.name === kp.name)}},[_c('div',{staticClass:"uk-padding-small keypoint-item",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_vm._v("\n            "+_vm._s(kp.name)+"\n        ")])])}),0)};
+var __vue_staticRenderFns__$2 = [];
 
   /* style */
-  const __vue_inject_styles__$2 = function (inject) {
-    if (!inject) return
-    inject("data-v-67f81c0b_0", { source: ".keypoint-item[data-v-67f81c0b]{transition:background .3s ease-in-out;cursor:pointer}.keypoint-item[data-v-67f81c0b]:hover{background:darken(white,5%)}.keypoint-dropdown[data-v-67f81c0b]{max-height:300px;overflow-y:auto}", map: undefined, media: undefined });
-
-  };
+  const __vue_inject_styles__$2 = undefined;
   /* scoped */
-  const __vue_scope_id__$2 = "data-v-67f81c0b";
+  const __vue_scope_id__$2 = "data-v-68396f62";
   /* module identifier */
   const __vue_module_identifier__$2 = undefined;
   /* functional template */
   const __vue_is_functional_template__$2 = false;
+  /* style inject */
+  
   /* style inject SSR */
   
 
@@ -970,7 +959,7 @@ var __vue_staticRenderFns__$2 = [function () {var _vm=this;var _h=_vm.$createEle
     __vue_scope_id__$2,
     __vue_is_functional_template__$2,
     __vue_module_identifier__$2,
-    __vue_create_injector__,
+    undefined,
     undefined
   );
 

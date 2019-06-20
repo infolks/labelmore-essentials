@@ -1,5 +1,5 @@
 <template>
-    <div class="uk-padding-small" id="label-classes-select">
+    <!-- <div class="uk-padding-small" id="label-classes-select">
         <button class="uk-button uk-width-1-1 uk-button-default uk-flex uk-flex-middle" type="button">
             <span class="uk-margin-right" :style="{color: labelClass.color}">
                 <i class="fas fa-square"></i>
@@ -17,6 +17,21 @@
                 {{cl.name}}
             </div>
         </div>
+
+        <div class="uk-flex label-class-item uk-padding">
+
+        </div>
+    </div> -->
+
+    <div class="uk-list uk-list-clickable">
+        <li :class="{'uk-active': class_ && (class_.id === cl.id)}" v-for="cl in labelClasses" :key="cl.id">
+            <div class="uk-flex uk-padding-small label-class-item" @click="$labeller.selectClass(cl.id)">
+                <span class="uk-margin-right" :style="{color: cl.color}">
+                    <i class="fa-square" :class="{fas: cl.id === labelClass.id, far: cl.id !== labelClass.id}"></i>
+                </span>
+                {{cl.name}}
+            </div>
+        </li>
     </div>
 </template>
 
@@ -36,14 +51,6 @@
 
             class_() {
                 return this.$labeller.class
-            },
-
-            keypoints() {
-                return this.$labeller.keypoints
-            },
-
-            keypoint() {
-                return this.$labeller.keypoint
             }
         },
     }
@@ -51,17 +58,4 @@
 
 <style scoped>
 
-    .label-class-item {
-        transition: background 0.3s ease-in-out;
-        cursor: pointer;
-    }
-
-    .label-class-item:hover {
-        background: darken(white, 5%);
-    }
-
-    .label-class-dropdown {
-        max-height: 300px;
-        overflow-y: auto;
-    }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="uk-padding-small" id="keypoint-select">
+    <!-- <div class="uk-padding-small" id="keypoint-select">
         <div v-if="keypoints && keypoints.length">
 
             <button class="uk-button uk-width-1-1 uk-button-default uk-flex uk-flex-middle" type="button">
@@ -22,6 +22,13 @@
             </div>
         </div>
         
+    </div> -->
+    <div class="uk-list uk-list-clickable">
+        <li :class="{'uk-active': keypoint && (keypoint.name === kp.name)}" v-for="kp in keypoints" :key="kp.name">
+            <div class="uk-padding-small keypoint-item" @click="$labeller.selectKeypoint(kp.name)">
+                {{kp.name}}
+            </div>
+        </li>
     </div>
 </template>
 
@@ -43,17 +50,5 @@
 </script>
 
 <style scoped>
-    .keypoint-item {
-        transition: background 0.3s ease-in-out;
-        cursor: pointer;
-    }
 
-    .keypoint-item:hover {
-        background: darken(white, 5%)
-    }
-
-    .keypoint-dropdown {
-        max-height: 300px;
-        overflow-y: auto
-    }
 </style>

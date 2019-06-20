@@ -4,8 +4,6 @@ declare const _default: {
         labelClasses(): any;
         labelClass(): any;
         class_(): any;
-        keypoints(): any;
-        keypoint(): any;
     };
 };
 export default _default;
