@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.4.2
+ * @infolks/labelmore-essentials v0.4.3
  * (c) infolks
  * Released under the ISC License.
  */
@@ -857,6 +857,11 @@ var script$1 = {
             return this.$labeller.class;
         }
     },
+    methods: {
+        isActive(class_id) {
+            return this.class_ && this.class_.id === class_id;
+        },
+    }
 };
 
 /* script */
@@ -869,7 +874,7 @@ var __vue_staticRenderFns__$1 = [];
   /* style */
   const __vue_inject_styles__$1 = undefined;
   /* scoped */
-  const __vue_scope_id__$1 = "data-v-cdd4c0ae";
+  const __vue_scope_id__$1 = "data-v-04397312";
   /* module identifier */
   const __vue_module_identifier__$1 = undefined;
   /* functional template */
@@ -936,13 +941,13 @@ var script$2 = {
 const __vue_script__$2 = script$2;
 
 /* template */
-var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-list uk-list-clickable"},_vm._l((_vm.keypoints),function(kp){return _c('li',{key:kp.name,class:{'uk-active': _vm.keypoint && (_vm.keypoint.name === kp.name)}},[_c('div',{staticClass:"uk-padding-small keypoint-item",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_vm._v("\n            "+_vm._s(kp.name)+"\n        ")])])}),0)};
-var __vue_staticRenderFns__$2 = [];
+var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-list uk-list-clickable"},_vm._l((_vm.keypoints),function(kp){return _c('li',{key:kp.name,class:{'uk-active': _vm.keypoint && (_vm.keypoint.name === kp.name)}},[_c('div',{staticClass:"uk-padding-small keypoint-item",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_vm._m(0,true),_vm._v("\n            "+_vm._s(kp.name)+"\n        ")])])}),0)};
+var __vue_staticRenderFns__$2 = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"uk-margin-right uk-text-primary"},[_c('i',{staticClass:"fas fa-caret-right"})])}];
 
   /* style */
   const __vue_inject_styles__$2 = undefined;
   /* scoped */
-  const __vue_scope_id__$2 = "data-v-68396f62";
+  const __vue_scope_id__$2 = "data-v-6b37eadf";
   /* module identifier */
   const __vue_module_identifier__$2 = undefined;
   /* functional template */

@@ -26,6 +26,9 @@
     <div class="uk-list uk-list-clickable">
         <li :class="{'uk-active': keypoint && (keypoint.name === kp.name)}" v-for="kp in keypoints" :key="kp.name">
             <div class="uk-padding-small keypoint-item" @click="$labeller.selectKeypoint(kp.name)">
+                <span class="uk-margin-right uk-text-primary">
+                    <i class="fas fa-caret-right"></i>
+                </span>
                 {{kp.name}}
             </div>
         </li>

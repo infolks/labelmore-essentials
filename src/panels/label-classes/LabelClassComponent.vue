@@ -53,6 +53,12 @@
                 return this.$labeller.class
             }
         },
+
+        methods: {
+            isActive(class_id) {
+                return this.class_ && this.class_.id === class_id
+            },
+        }
     }
 </script>
 

@@ -5,5 +5,8 @@ declare const _default: {
         labelClass(): any;
         class_(): any;
     };
+    methods: {
+        isActive(class_id: any): boolean;
+    };
 };
 export default _default;
