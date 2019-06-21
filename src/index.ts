@@ -17,6 +17,7 @@ import DiskSource from "./sources/disk.source"
 // panels
 import LabelClassesPanel from "./panels/label-classes"
 import KeypointsPanel from "./panels/keypoint-select"
+import ClassAttributesPanel from "./panels/class-attribute-select"
 
 // encoders
 import JsonEncoder from "./encoders/json.encoder"
@@ -46,6 +47,7 @@ export default {
         // panels
         vue.use(LabelClassesPanel)
         vue.use(KeypointsPanel)
+        vue.use(ClassAttributesPanel)
 
         // encoders
         vue.use(JsonEncoder)

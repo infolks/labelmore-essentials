@@ -9,15 +9,13 @@ class LocalizationWizard extends Wizard {
     public readonly description = `Locate and Seperate different objects in an image`;
     public readonly type: WizardType = 'creator';
 
-    protected options: Partial<WizardOptions> = {
+    public options: Partial<WizardOptions> = {
         allowOutputSelection: true,
         allowToolSelection: true,
         allowLabelClassCreation: true,
         allowKeypointCreation: true,
         allowPanelSelection: true
     };
-
-    public readonly allowExtensions = true
 
     constructor(private fileManager: FileManager) {
         super()
@@ -37,7 +35,7 @@ class LocalizationWizard extends Wizard {
     async load(data: Buffer, options: any): Promise<Buffer> {
         
         return data;
-        
+
     }
 
 }
