@@ -13,6 +13,7 @@ class LocalizationWizard extends Wizard {
         allowToolSelection: true,
         allowOutputSelection: true,
         allowPanelSelection: true,
+        allowLabelClassCreation: true,
         allowClassAttributeCreation: true,
         allowSceneAttributeCreation: true,
     };

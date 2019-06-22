@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.2
+ * @infolks/labelmore-essentials v0.5.3
  * (c) infolks
  * Released under the ISC License.
  */
@@ -779,6 +779,7 @@ class LocalizationWizard extends labelmoreDevkit.Wizard {
             allowToolSelection: true,
             allowOutputSelection: true,
             allowPanelSelection: true,
+            allowLabelClassCreation: true,
             allowClassAttributeCreation: true,
             allowSceneAttributeCreation: true,
         };
