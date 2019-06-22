@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.3
+ * @infolks/labelmore-essentials v0.5.4
  * (c) infolks
  * Released under the ISC License.
  */
@@ -8,114 +8,10 @@
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var labelmoreDevkit = require('@infolks/labelmore-devkit');
-var paper = require('paper');
 var __vue_normalize__ = _interopDefault(require('vue-runtime-helpers/dist/normalize-component.js'));
+var paper = require('paper');
 var tslib_1 = require('tslib');
 var __vue_create_injector__ = _interopDefault(require('vue-runtime-helpers/dist/inject-style/browser.js'));
-
-// import {NAME as ESSENTIAL_SETTINGS} from "../settings"
-class SelectTool extends labelmoreDevkit.AnnotationTool {
-    constructor(labeller, workspace, settings, paper) {
-        super(workspace, settings, paper);
-        this.labeller = labeller;
-        this.workspace = workspace;
-        this.settings = settings;
-        this.paper = paper;
-        this.name = 'tools.default.select';
-        this.title = 'Select';
-        this.icon = `<i class="fas fa-mouse-pointer"></i>`;
-    }
-    // get prefs():SelectToolSettings {
-    //     return this.settings.getSettings(ESSENTIAL_SETTINGS).tools.select
-    // }
-    onmouseup(event) {
-        // if (this.item) {
-        //     const id = this.item.data.index
-        //     if (this.moved) this.labeller.apply(id, <PathItem>this.item)
-        // }
-        // this.moved = false
-        // this.item = null
-    }
-    // deslect any selection on deactivation of tool
-    ondeactivate() {
-        this.preview && this.preview.remove();
-        this.labeller.deselect();
-    }
-    onmousedown(event) {
-        const item = event.item;
-        const id = item ? item.data['index'] : -1;
-        // -1048 refers to controls
-        // id < -100 are reserved
-        if (id > -100) {
-            // this.item = item
-            this.labeller.select(id);
-        }
-    }
-    onmousemove(event) {
-        const item = event.item;
-        if (item) {
-            this.preview && this.preview.remove();
-            const size = item.bounds.size.round();
-            this.preview = new this.paper.PointText(new this.paper.Point(0, 0));
-            const ratio = 1 / this.workspace.zoom;
-            this.preview.content = `${size.width} x ${size.height}`;
-            this.preview.style = {
-                fontSize: 9 * ratio,
-                fontWeight: 400,
-                fillColor: 'white'
-            };
-            this.preview.bounds.center = item.bounds.center;
-            this.preview.locked = true;
-        }
-        else {
-            this.preview && this.preview.remove();
-        }
-    }
-    // onmousedrag (event: ToolEvent) {
-    //     if (this.item && !this.item.parent && event.item && event.item.data.index > -100) this.item = event.item;
-    //     const delta = event.delta
-    //     if (this.item) {
-    //         this.item.translate(this.limitMotion(this.item.bounds, delta))
-    //         // emit that the 
-    //         this.item.emit('moving', {
-    //             point: this.item.position.clone()
-    //         })
-    //         this.moved = true
-    //     }
-    // }
-    onkeyup(event) {
-        if (event.key == 'delete') {
-            if (this.labeller.selected) {
-                this.labeller.remove(this.labeller.selected.id);
-            }
-        }
-        else if (event.key == 'up') {
-            // move selected label up
-            if (this.labeller.selected)
-                this.labeller.raise();
-        }
-        else if (event.key == 'down') {
-            // move selected label down
-            if (this.labeller.selected)
-                this.labeller.fall();
-        }
-    }
-}
-var SelectTool$1 = {
-    install(vue, opts) {
-        vue.mixin({
-            beforeCreate() {
-                if (this.$labeller && this.$tools && this.$workspace && this.$settings) {
-                    const select = new SelectTool(this.$labeller, this.$workspace, this.$settings, this.$paper);
-                    if (!this.$tools.hasTool(select.name)) {
-                        this.$tools.register(select.name, select);
-                        this.$tools.activate(select.name);
-                    }
-                }
-            }
-        });
-    }
-};
 
 /**
  * remove extension from a file name
@@ -201,13 +97,13 @@ var script = {
 const __vue_script__ = script;
 
 /* template */
-var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{attrs:{"id":"boundbox-settings-form"},on:{"submit":function($event){$event.preventDefault();return _vm.submit()}}},[_c('h5',{staticClass:"settings-sub-heading"},[_vm._v("Tool Settings")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Color: ")]),_vm._v(" "),_c('app-color-input',{attrs:{"pos":"bottom"},model:{value:(_vm.settings.tools.general.preview.color),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "color", $$v);},expression:"settings.tools.general.preview.color"}})],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Stroke Width:")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.general.preview.width),expression:"settings.tools.general.preview.width",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":1},domProps:{"value":(_vm.settings.tools.general.preview.width)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.general.preview, "width", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Dashed:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.dashed),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "dashed", $$v);},expression:"settings.tools.general.preview.dashed"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.dashed? 'dashed' : 'not dashed'))])],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Hotspots:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.hotspots),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "hotspots", $$v);},expression:"settings.tools.general.preview.hotspots"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.hotspots? 'enabled' : 'disabled'))])],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_area"}},[_vm._v("Minimum Area")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.boundbox.minArea),expression:"settings.tools.boundbox.minArea",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":0.01,"step":0.01},domProps:{"value":(_vm.settings.tools.boundbox.minArea)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.boundbox, "minArea", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_snap_distance"}},[_vm._v("Minimum Snap Distance")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.snapDistance),expression:"settings.tools.contour.snapDistance",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_snap_distance","min":5,"step":1},domProps:{"value":(_vm.settings.tools.contour.snapDistance)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "snapDistance", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_sides"}},[_vm._v("Minimum Sides")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.minSides),expression:"settings.tools.contour.minSides",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_sides","min":3,"step":1},domProps:{"value":(_vm.settings.tools.contour.minSides)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "minSides", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})])])])])};
+var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{attrs:{"id":"boundbox-settings-form"},on:{"submit":function($event){$event.preventDefault();return _vm.submit()}}},[_c('h5',{staticClass:"settings-sub-heading"},[_vm._v("Tool Settings")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Color: ")]),_vm._v(" "),_c('app-color-input',{attrs:{"pos":"bottom"},model:{value:(_vm.settings.tools.general.preview.color),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "color", $$v);},expression:"settings.tools.general.preview.color"}})],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Stroke Width:")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.general.preview.width),expression:"settings.tools.general.preview.width",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":1},domProps:{"value":(_vm.settings.tools.general.preview.width)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.general.preview, "width", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Dashed:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.dashed),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "dashed", $$v);},expression:"settings.tools.general.preview.dashed"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.dashed? 'dashed' : 'not dashed'))])],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Hotspots:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.hotspots),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "hotspots", $$v);},expression:"settings.tools.general.preview.hotspots"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.hotspots? 'enabled' : 'disabled'))])],1)])]),_vm._v(" "),_c('h5',{staticClass:"settings-sub-heading small"},[_vm._v("Boundbox Tool")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small"},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_area"}},[_vm._v("Minimum Area")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.boundbox.minArea),expression:"settings.tools.boundbox.minArea",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":0.01,"step":0.01},domProps:{"value":(_vm.settings.tools.boundbox.minArea)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.boundbox, "minArea", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})])])]),_vm._v(" "),_c('h5',{staticClass:"settings-sub-heading small"},[_vm._v("Contour Tool")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small"},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_snap_distance"}},[_vm._v("Minimum Snap Distance")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.snapDistance),expression:"settings.tools.contour.snapDistance",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_snap_distance","min":5,"step":1},domProps:{"value":(_vm.settings.tools.contour.snapDistance)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "snapDistance", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_sides"}},[_vm._v("Minimum Sides")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.minSides),expression:"settings.tools.contour.minSides",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_sides","min":3,"step":1},domProps:{"value":(_vm.settings.tools.contour.minSides)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "minSides", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})])])])])};
 var __vue_staticRenderFns__ = [];
 
   /* style */
   const __vue_inject_styles__ = undefined;
   /* scoped */
-  const __vue_scope_id__ = "data-v-4cbf1986";
+  const __vue_scope_id__ = "data-v-f8fed208";
   /* module identifier */
   const __vue_module_identifier__ = undefined;
   /* functional template */
@@ -274,6 +170,110 @@ var EssentialSettings = {
                         const essInterface = new EssentialInterface();
                         this.$settings.registerInterface(NAME, essInterface);
                         vue.component(essInterface.component, SettingsComponent);
+                    }
+                }
+            }
+        });
+    }
+};
+
+class SelectTool extends labelmoreDevkit.AnnotationTool {
+    constructor(labeller, workspace, settings, paper) {
+        super(workspace, settings, paper);
+        this.labeller = labeller;
+        this.workspace = workspace;
+        this.settings = settings;
+        this.paper = paper;
+        this.name = 'tools.default.select';
+        this.title = 'Select';
+        this.icon = `<i class="fas fa-mouse-pointer"></i>`;
+    }
+    get prefs() {
+        return this.settings.getSettings(NAME).tools.general;
+    }
+    onmouseup(event) {
+        // if (this.item) {
+        //     const id = this.item.data.index
+        //     if (this.moved) this.labeller.apply(id, <PathItem>this.item)
+        // }
+        // this.moved = false
+        // this.item = null
+    }
+    // deslect any selection on deactivation of tool
+    ondeactivate() {
+        this.preview && this.preview.remove();
+        this.labeller.deselect();
+    }
+    onmousedown(event) {
+        const item = event.item;
+        const id = item ? item.data['index'] : -1;
+        // -1048 refers to controls
+        // id < -100 are reserved
+        if (id > -100) {
+            // this.item = item
+            this.labeller.select(id);
+        }
+    }
+    onmousemove(event) {
+        const item = event.item;
+        if (item && item.data.index > 0) {
+            this.preview && this.preview.remove();
+            const size = item.bounds.size.round();
+            this.preview = new this.paper.PointText(new this.paper.Point(0, 0));
+            const ratio = 1 / this.workspace.zoom;
+            this.preview.content = `${size.width} x ${size.height}`;
+            this.preview.style = {
+                fontSize: 10 * ratio,
+                fontWeight: 500,
+                fillColor: this.prefs.preview.color
+            };
+            this.preview.data.index = -1049;
+            this.preview.bounds.center = item.bounds.center;
+            this.preview.locked = true;
+        }
+        else {
+            this.preview && this.preview.remove();
+        }
+    }
+    // onmousedrag (event: ToolEvent) {
+    //     if (this.item && !this.item.parent && event.item && event.item.data.index > -100) this.item = event.item;
+    //     const delta = event.delta
+    //     if (this.item) {
+    //         this.item.translate(this.limitMotion(this.item.bounds, delta))
+    //         // emit that the 
+    //         this.item.emit('moving', {
+    //             point: this.item.position.clone()
+    //         })
+    //         this.moved = true
+    //     }
+    // }
+    onkeyup(event) {
+        if (event.key == 'delete') {
+            if (this.labeller.selected) {
+                this.labeller.remove(this.labeller.selected.id);
+            }
+        }
+        else if (event.key == 'up') {
+            // move selected label up
+            if (this.labeller.selected)
+                this.labeller.raise();
+        }
+        else if (event.key == 'down') {
+            // move selected label down
+            if (this.labeller.selected)
+                this.labeller.fall();
+        }
+    }
+}
+var SelectTool$1 = {
+    install(vue, opts) {
+        vue.mixin({
+            beforeCreate() {
+                if (this.$labeller && this.$tools && this.$workspace && this.$settings) {
+                    const select = new SelectTool(this.$labeller, this.$workspace, this.$settings, this.$paper);
+                    if (!this.$tools.hasTool(select.name)) {
+                        this.$tools.register(select.name, select);
+                        this.$tools.activate(select.name);
                     }
                 }
             }
@@ -781,7 +781,7 @@ class LocalizationWizard extends labelmoreDevkit.Wizard {
             allowPanelSelection: true,
             allowLabelClassCreation: true,
             allowClassAttributeCreation: true,
-            allowSceneAttributeCreation: true,
+            allowSceneAttributeCreation: false,
         };
     }
     input(title, dir, files, options) {
@@ -799,6 +799,12 @@ class LocalizationWizard extends labelmoreDevkit.Wizard {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             return data;
         });
+    }
+    fields() {
+        return [
+            new labelmoreDevkit.TextField('annotator', 'Annotator Name'),
+            new labelmoreDevkit.TextField('approver', 'Approver Name')
+        ];
     }
 }
 var LocalizationWizard$1 = {

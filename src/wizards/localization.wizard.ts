@@ -1,12 +1,12 @@
-import { Wizard, Project, ProjectOptions, WizardType, WizardOptions } from "@infolks/labelmore-devkit";
+import { Wizard, Project, ProjectOptions, WizardType, WizardOptions, Field, TextField } from "@infolks/labelmore-devkit";
 import { FileManager } from "@infolks/labelmore-devkit";
 
-class LocalizationWizard extends Wizard {
+export class LocalizationWizard extends Wizard {
 
-    public readonly name = "wizards.default.localization"
-    public readonly title = "Localization Project";
-    public readonly icon = '<i class="fas fa-object-group"></i>';
-    public readonly description = `Locate and Seperate different objects in an image`;
+    public readonly name: string = "wizards.default.localization"
+    public readonly title: string = "Localization Project";
+    public readonly icon: string = '<i class="fas fa-object-group"></i>';
+    public readonly description: string = `Locate and Seperate different objects in an image`;
     public readonly type: WizardType = 'creator';
 
     public options: Partial<WizardOptions> = {
@@ -15,7 +15,7 @@ class LocalizationWizard extends Wizard {
         allowPanelSelection: true,
         allowLabelClassCreation: true,
         allowClassAttributeCreation: true,
-        allowSceneAttributeCreation: true,
+        allowSceneAttributeCreation: false,
     };
 
     constructor(private fileManager: FileManager) {
@@ -37,6 +37,13 @@ class LocalizationWizard extends Wizard {
         
         return data;
 
+    }
+
+    fields(): Field[] {
+        return [
+            new TextField('annotator', 'Annotator Name'),
+            new TextField('approver', 'Approver Name')
+        ]
     }
 
 }

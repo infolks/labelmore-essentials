@@ -6,7 +6,7 @@ export interface GeneralToolSettings {
         color: string,
         width: number,
         dashed: boolean,
-        hotspots: boolean
+        hotspots: boolean,
     }
 }
 

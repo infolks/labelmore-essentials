@@ -4,7 +4,7 @@ import { ToolEvent, KeyEvent, PaperScope, Path, PointText} from "paper";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import { SettingsManager } from "@infolks/labelmore-devkit";
 
-// import {NAME as ESSENTIAL_SETTINGS} from "../settings"
+import {NAME as ESSENTIAL_SETTINGS, GeneralToolSettings} from "../settings"
 
 class SelectTool extends AnnotationTool {
 
@@ -28,10 +28,10 @@ class SelectTool extends AnnotationTool {
         super(workspace, settings, paper)
     }
 
-    // get prefs():SelectToolSettings {
+    get prefs(): GeneralToolSettings {
 
-    //     return this.settings.getSettings(ESSENTIAL_SETTINGS).tools.select
-    // }
+        return this.settings.getSettings(ESSENTIAL_SETTINGS).tools.general
+    }
 
     onmouseup (event: ToolEvent) {
 
@@ -73,7 +73,7 @@ class SelectTool extends AnnotationTool {
 
         const item = event.item
 
-        if (item) {
+        if (item && item.data.index > 0) {
 
             this.preview && this.preview.remove()
 
@@ -85,10 +85,11 @@ class SelectTool extends AnnotationTool {
 
             this.preview.content = `${size.width} x ${size.height}`
             this.preview.style = {
-                fontSize: 9 * ratio,
-                fontWeight: 400,
-                fillColor: 'white'
+                fontSize: 10 * ratio,
+                fontWeight: 500,
+                fillColor: this.prefs.preview.color
             }
+            this.preview.data.index = -1049
             this.preview.bounds.center = item.bounds.center
             this.preview.locked = true
         }

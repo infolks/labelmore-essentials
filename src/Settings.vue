@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="submit()" id="boundbox-settings-form">
 
-        <!-- Boundbox Tool -->
+        <!--General Tool Settings -->
         <h5 class="settings-sub-heading">Tool Settings</h5>
         <div class="uk-margin">
             <div class="uk-grid-small" uk-grid>
@@ -24,13 +24,24 @@
                     <app-check-toggle class="uk-width-1-1" v-model="settings.tools.general.preview.hotspots">{{settings.tools.general.preview.hotspots? 'enabled' : 'disabled'}}</app-check-toggle>
                 </div>
 
-                <!-- Boundbox -->
+            </div>
+        </div>
+
+        <!-- Boundbox Settings -->
+        <h5 class="settings-sub-heading small">Boundbox Tool</h5>
+        <div class="uk-margin">
+            <div class="uk-grid-small">
                 <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
                     <label class="uk-form-label" for="min_area">Minimum Area</label>
                     <input type="number" name="min_area" :min="0.01" :step="0.01" class="uk-input" v-model.number="settings.tools.boundbox.minArea">
                 </div>
+            </div>
+        </div>
 
-                <!-- Contour -->
+        <!-- Contour Settings -->
+        <h5 class="settings-sub-heading small">Contour Tool</h5>
+        <div class="uk-margin">
+            <div class="uk-grid-small">
                 <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
                     <label class="uk-form-label" for="min_snap_distance">Minimum Snap Distance</label>
                     <input type="number" name="min_snap_distance" :min="5" :step="1" class="uk-input" v-model.number="settings.tools.contour.snapDistance">
