@@ -1,7 +1,7 @@
 <template>
     <div class="uk-padding-small">
         <div class="uk-width-1-1 class-attribute-item" v-for="attr in attributes" :key="attr.name">
-            <div class="uk-text-small">{{attr.name | capitalize}}</div>
+            <div class="uk-text-small">{{attr.name | beautify}}</div>
             <app-multi-select
                 v-model="attributeValues[attr.name]"
                 :options="attr.values"
@@ -26,16 +26,20 @@
         computed: {
             attributes() {
                 return this.$labeller.attributes
+            },
+            attributeVals() {
+                return this.$labeller.attributeValues
             }
         },
         watch: {
             attributeValues: {
                 handler(attrs) {
-                    for (let name in attrs) {
-                        this.$labeller.setAttribute(name, attrs[name])
-                    }
+                    this.$labeller.attributeValues = attrs
                 },
                 deep: true
+            },
+            attributeVals() {
+                this.attributeValues = this.$labeller.attributeValues
             }
         },
         methods: {
@@ -48,7 +52,7 @@
                 this.attributeValues = this.$labeller.attributeValues
         },
         filters: {
-            beutify(value) {
+            beautify(value) {
                 if (!value) return ''
                 
                 value = value.toString()

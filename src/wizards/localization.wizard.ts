@@ -10,11 +10,11 @@ class LocalizationWizard extends Wizard {
     public readonly type: WizardType = 'creator';
 
     public options: Partial<WizardOptions> = {
-        allowOutputSelection: true,
         allowToolSelection: true,
-        allowLabelClassCreation: true,
-        allowKeypointCreation: true,
-        allowPanelSelection: true
+        allowOutputSelection: true,
+        allowPanelSelection: true,
+        allowClassAttributeCreation: true,
+        allowSceneAttributeCreation: true,
     };
 
     constructor(private fileManager: FileManager) {

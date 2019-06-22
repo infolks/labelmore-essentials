@@ -5,19 +5,21 @@ declare const _default: {
     };
     computed: {
         attributes(): any;
+        attributeVals(): any;
     };
     watch: {
         attributeValues: {
             handler(attrs: any): void;
             deep: boolean;
         };
+        attributeVals(): void;
     };
     methods: {
         limitText(count: any): string;
     };
     created(): void;
     filters: {
-        beutify(value: any): any;
+        beautify(value: any): any;
     };
 };
 export default _default;

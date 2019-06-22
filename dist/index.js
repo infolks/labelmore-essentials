@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.4.8
+ * @infolks/labelmore-essentials v0.5.0
  * (c) infolks
  * Released under the ISC License.
  */
@@ -744,11 +744,11 @@ class LocalizationWizard extends labelmoreDevkit.Wizard {
         this.description = `Locate and Seperate different objects in an image`;
         this.type = 'creator';
         this.options = {
-            allowOutputSelection: true,
             allowToolSelection: true,
-            allowLabelClassCreation: true,
-            allowKeypointCreation: true,
-            allowPanelSelection: true
+            allowOutputSelection: true,
+            allowPanelSelection: true,
+            allowClassAttributeCreation: true,
+            allowSceneAttributeCreation: true,
         };
     }
     input(title, dir, files, options) {
@@ -1007,16 +1007,20 @@ var script$3 = {
     computed: {
         attributes() {
             return this.$labeller.attributes;
+        },
+        attributeVals() {
+            return this.$labeller.attributeValues;
         }
     },
     watch: {
         attributeValues: {
             handler(attrs) {
-                for (let name in attrs) {
-                    this.$labeller.setAttribute(name, attrs[name]);
-                }
+                this.$labeller.attributeValues = attrs;
             },
             deep: true
+        },
+        attributeVals() {
+            this.attributeValues = this.$labeller.attributeValues;
         }
     },
     methods: {
@@ -1029,7 +1033,7 @@ var script$3 = {
             this.attributeValues = this.$labeller.attributeValues;
     },
     filters: {
-        beutify(value) {
+        beautify(value) {
             if (!value)
                 return '';
             value = value.toString();
@@ -1042,17 +1046,17 @@ var script$3 = {
 const __vue_script__$3 = script$3;
 
 /* template */
-var __vue_render__$3 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-padding-small"},_vm._l((_vm.attributes),function(attr){return _c('div',{key:attr.name,staticClass:"uk-width-1-1 class-attribute-item"},[_c('div',{staticClass:"uk-text-small"},[_vm._v(_vm._s(_vm._f("capitalize")(attr.name)))]),_vm._v(" "),_c('app-multi-select',{attrs:{"options":attr.values,"multiple":attr.multi,"placeholder":"Select","limit":3,"limit-text":_vm.limitText,"close-on-select":!attr.multi},model:{value:(_vm.attributeValues[attr.name]),callback:function ($$v) {_vm.$set(_vm.attributeValues, attr.name, $$v);},expression:"attributeValues[attr.name]"}})],1)}),0)};
+var __vue_render__$3 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-padding-small"},_vm._l((_vm.attributes),function(attr){return _c('div',{key:attr.name,staticClass:"uk-width-1-1 class-attribute-item"},[_c('div',{staticClass:"uk-text-small"},[_vm._v(_vm._s(_vm._f("beautify")(attr.name)))]),_vm._v(" "),_c('app-multi-select',{attrs:{"options":attr.values,"multiple":attr.multi,"placeholder":"Select","limit":3,"limit-text":_vm.limitText,"close-on-select":!attr.multi},model:{value:(_vm.attributeValues[attr.name]),callback:function ($$v) {_vm.$set(_vm.attributeValues, attr.name, $$v);},expression:"attributeValues[attr.name]"}})],1)}),0)};
 var __vue_staticRenderFns__$3 = [];
 
   /* style */
   const __vue_inject_styles__$3 = function (inject) {
     if (!inject) return
-    inject("data-v-2bb94593_0", { source: ".class-attribute-item[data-v-2bb94593]:nth-child(n+2){margin-top:.5rem}", map: undefined, media: undefined });
+    inject("data-v-d52a87aa_0", { source: ".class-attribute-item[data-v-d52a87aa]:nth-child(n+2){margin-top:.5rem}", map: undefined, media: undefined });
 
   };
   /* scoped */
-  const __vue_scope_id__$3 = "data-v-2bb94593";
+  const __vue_scope_id__$3 = "data-v-d52a87aa";
   /* module identifier */
   const __vue_module_identifier__$3 = undefined;
   /* functional template */
@@ -1093,6 +1097,100 @@ var ClassAttributesPanel$1 = {
                     if (!this.$workspace.hasPanel(panel.name)) {
                         this.$workspace.registerPanel(panel.name, panel);
                         Vue.component(panel.component, ClassAttributeSelectComponent);
+                    }
+                }
+            }
+        });
+    }
+};
+
+var script$4 = {
+    name: 'app-scene-attribute-select',
+    data() {
+        return {
+            scene: {}
+        };
+    },
+    watch: {
+        scene: {
+            handler(attrs) {
+                this.$projects.scene = attrs;
+            },
+            deep: true
+        },
+        sceneVals() {
+            this.scene = this.sceneVals || {};
+        }
+    },
+    computed: {
+        attributes() {
+            return this.$projects.sceneAttributes;
+        },
+        sceneVals() {
+            return this.$projects.scene;
+        }
+    },
+    created() {
+        if (this.$projects.scene)
+            this.scene = this.$projects.scene;
+    }
+};
+
+/* script */
+const __vue_script__$4 = script$4;
+
+/* template */
+var __vue_render__$4 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-padding-small"},_vm._l((_vm.attributes),function(attr){return _c('div',{key:attr.name,staticClass:"uk-width-1-1 class-attribute-item"},[_c('app-field',{attrs:{"field":attr,"required":true},model:{value:(_vm.scene[attr.name]),callback:function ($$v) {_vm.$set(_vm.scene, attr.name, $$v);},expression:"scene[attr.name]"}})],1)}),0)};
+var __vue_staticRenderFns__$4 = [];
+
+  /* style */
+  const __vue_inject_styles__$4 = function (inject) {
+    if (!inject) return
+    inject("data-v-15a50a61_0", { source: ".class-attribute-item[data-v-15a50a61]{margin-top:1rem}.class-attribute-item[data-v-15a50a61]:first-child{margin-top:0}", map: undefined, media: undefined });
+
+  };
+  /* scoped */
+  const __vue_scope_id__$4 = "data-v-15a50a61";
+  /* module identifier */
+  const __vue_module_identifier__$4 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$4 = false;
+  /* style inject SSR */
+  
+
+  
+  var SceneAttributeSelectComponent = __vue_normalize__(
+    { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 },
+    __vue_inject_styles__$4,
+    __vue_script__$4,
+    __vue_scope_id__$4,
+    __vue_is_functional_template__$4,
+    __vue_module_identifier__$4,
+    __vue_create_injector__,
+    undefined
+  );
+
+class SceneAttributesPanel extends labelmoreDevkit.Panel {
+    constructor() {
+        super(...arguments);
+        this.name = "panels.default.attributes.scene";
+        this.title = 'Scene Attributes';
+        this.icon = `<i class="fas fa-cloud-sun-rain"></i>`;
+        this.component = 'app-panel-scene-attributes';
+        this.options = {
+            showTitle: true
+        };
+    }
+}
+var SceneAttributesPanel$1 = {
+    install(Vue, opts) {
+        Vue.mixin({
+            beforeCreate() {
+                if (this.$workspace) {
+                    const panel = new SceneAttributesPanel();
+                    if (!this.$workspace.hasPanel(panel.name)) {
+                        this.$workspace.registerPanel(panel.name, panel);
+                        Vue.component(panel.component, SceneAttributeSelectComponent);
                     }
                 }
             }
@@ -1200,6 +1298,7 @@ var index = {
         vue.use(LabelClassesPanel);
         vue.use(KeypointsPanel$1);
         vue.use(ClassAttributesPanel$1);
+        vue.use(SceneAttributesPanel$1);
         // encoders
         vue.use(JsonEncoder$1);
         // settings
