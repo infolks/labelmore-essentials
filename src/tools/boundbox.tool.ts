@@ -68,29 +68,7 @@ export class BoundboxTool extends AnnotationTool {
 
             if (this.generalPrefs.preview.hotspots) {
 
-                this.hotspots && this.hotspots.remove()
-
-                // point for padding
-                const padPoint = new Point(5,5)
-
-                const txtStart = new this.paper.PointText(padPoint/* dummy point*/)
-                txtStart.content = `(${event.downPoint.round().x}, ${event.downPoint.round().y})` // coordinates
-
-                // apply style
-                txtStart.style = {
-                    fontSize: 9 * ratio,
-                    fontWeight: 300,
-                    fillColor: new Color(this.generalPrefs.preview.color)
-                }
-
-                txtStart.bounds.bottomRight = event.downPoint.subtract(padPoint) // real point
-
-                const txtEnd = new this.paper.PointText(padPoint/* dummy point*/)
-                txtEnd.content = `(${event.point.round().x}, ${event.point.round().y})` // coordinates
-                txtEnd.style = txtStart.style
-                txtEnd.bounds.bottomRight = event.point.subtract(padPoint) // real point
-
-                this.hotspots = new this.paper.Group([txtStart, txtEnd])
+                this.createHotspot(event, ratio)
 
             }
 
@@ -128,6 +106,46 @@ export class BoundboxTool extends AnnotationTool {
 
         this.hotspots = null
 
+    }
+
+    private createHotspot(event: ToolEvent, ratio: number) {
+
+        this.hotspots && this.hotspots.remove()
+
+        // point for padding
+        const padPoint = new Point(5,5)
+
+        // const txtStart = new this.paper.PointText(padPoint/* dummy point*/)
+        // txtStart.content = `(${event.downPoint.round().x}, ${event.downPoint.round().y})` // coordinates
+
+        // // apply style
+        // txtStart.style = {
+        //     fontSize: 9 * ratio,
+        //     fontWeight: 300,
+        //     fillColor: new Color(this.generalPrefs.preview.color)
+        // }
+
+        // txtStart.bounds.bottomRight = event.downPoint.subtract(padPoint) // real point
+
+        // const txtEnd = new this.paper.PointText(padPoint/* dummy point*/)
+        // txtEnd.content = `(${event.point.round().x}, ${event.point.round().y})` // coordinates
+        // txtEnd.style = txtStart.style
+        // txtEnd.bounds.bottomRight = event.point.subtract(padPoint) // real point
+
+        // SHOW SIZE
+
+        const diff = event.point.subtract(event.downPoint).round()
+
+        const txtSize = new this.paper.PointText(padPoint/* dummy point*/)
+        txtSize.content = `${diff.x} x ${diff.y}`
+        txtSize.style = {
+            fontSize: 9 * ratio,
+            fontWeight: 300,
+            fillColor: new Color(this.generalPrefs.preview.color)
+        }
+        txtSize.bounds.center = event.downPoint.add(diff.divide(2))
+
+        this.hotspots = new this.paper.Group([/*txtStart, txtEnd,*/ txtSize])
     }
 }
 

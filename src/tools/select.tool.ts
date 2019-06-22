@@ -1,6 +1,6 @@
 import { AnnotationTool } from "@infolks/labelmore-devkit";
 import { LabelManager } from "@infolks/labelmore-devkit";
-import { ToolEvent, KeyEvent, PaperScope} from "paper";
+import { ToolEvent, KeyEvent, PaperScope, Path, PointText} from "paper";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import { SettingsManager } from "@infolks/labelmore-devkit";
 
@@ -16,6 +16,8 @@ class SelectTool extends AnnotationTool {
     // private item: Item;
 
     // private moved: boolean = false;
+
+    private preview: PointText;
 
     constructor (
         protected labeller: LabelManager, 
@@ -47,6 +49,7 @@ class SelectTool extends AnnotationTool {
 
     // deslect any selection on deactivation of tool
     ondeactivate () {
+        this.preview && this.preview.remove()
         this.labeller.deselect()
     }
 
@@ -64,6 +67,34 @@ class SelectTool extends AnnotationTool {
 
         }
         
+    }
+
+    onmousemove(event: ToolEvent) {
+
+        const item = event.item
+
+        if (item) {
+
+            this.preview && this.preview.remove()
+
+            const size = item.bounds.size.round()
+
+            this.preview = new this.paper.PointText(new this.paper.Point(0,0))
+
+            const ratio = 1/this.workspace.zoom
+
+            this.preview.content = `${size.width} x ${size.height}`
+            this.preview.style = {
+                fontSize: 9 * ratio,
+                fontWeight: 400,
+                fillColor: 'white'
+            }
+            this.preview.bounds.center = item.bounds.center
+        }
+
+        else {
+            this.preview && this.preview.remove()
+        }
     }
 
     // onmousedrag (event: ToolEvent) {
