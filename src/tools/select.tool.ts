@@ -90,6 +90,7 @@ class SelectTool extends AnnotationTool {
                 fillColor: 'white'
             }
             this.preview.bounds.center = item.bounds.center
+            this.preview.locked = true
         }
 
         else {

@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.1
+ * @infolks/labelmore-essentials v0.5.2
  * (c) infolks
  * Released under the ISC License.
  */
@@ -65,6 +65,7 @@ class SelectTool extends labelmoreDevkit.AnnotationTool {
                 fillColor: 'white'
             };
             this.preview.bounds.center = item.bounds.center;
+            this.preview.locked = true;
         }
         else {
             this.preview && this.preview.remove();
