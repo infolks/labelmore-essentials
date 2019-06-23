@@ -29,6 +29,7 @@ export declare class ContourTool extends AnnotationTool {
     private readonly lastPoint;
     readonly prefs: ContourToolSettings;
     readonly generalPrefs: GeneralToolSettings;
+    readonly ratio: number;
     onmousedown(event: ToolEvent): void;
     onmousemove(event: ToolEvent): void;
     onkeyup(event: KeyEvent): void;

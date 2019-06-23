@@ -16,7 +16,7 @@ export class PolylineLabel extends SimpleLabelType<PolylineProps> {
     public readonly title = 'Polyline'
     public readonly name = DEFAULT_LABEL_TYPES.line
 
-    public readonly options: Partial<BasicLabelTypeOptions> = {
+    public options: Partial<BasicLabelTypeOptions> = {
         showLabelTag: false,
         hasFill: false
     }

@@ -16,8 +16,9 @@ export class ContourLabel extends SimpleLabelType<ContourProps> {
     public readonly title = 'Contour'
     public readonly name = DEFAULT_LABEL_TYPES.contour
 
-    public readonly options: Partial<BasicLabelTypeOptions> = {
-        showLabelTag: false
+    public options: Partial<BasicLabelTypeOptions> = {
+        showLabelTag: false,
+        hasFill: true
     }
 
     constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope) {

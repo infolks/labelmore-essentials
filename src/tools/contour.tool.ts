@@ -53,6 +53,10 @@ export class ContourTool extends AnnotationTool {
         return this.settings.getSettings(ESSENTAIL_SETTINGS).tools.general
     }
 
+    get ratio(): number {
+        return 1/this.workspace.zoom
+    }
+
     onmousedown(event: ToolEvent) {
 
         if (this.closePathActive) {
@@ -79,7 +83,7 @@ export class ContourTool extends AnnotationTool {
 
 
             
-            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance) {
+            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance*this.ratio) {
 
                 this.createClosePoint()
 
@@ -190,15 +194,13 @@ export class ContourTool extends AnnotationTool {
 
         if (this.points.length) {
 
-            const ratio = 1/this.workspace.zoom
-
             this.contour = new this.paper.Path(this.points)
 
             this.contourJoints = new this.paper.Group()
 
             // joints
             for (let point of this.points) {
-                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width*ratio*5))
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width*this.ratio*5))
             }
 
             const color = this.labeller.class? this.labeller.class.color: '#ffff00'
@@ -207,7 +209,7 @@ export class ContourTool extends AnnotationTool {
             this.contour.style = {
                 strokeColor: new Color(color),
                 fillColor: null,
-                strokeWidth: this.generalPrefs.preview.width*ratio 
+                strokeWidth: this.generalPrefs.preview.width*this.ratio 
             }
             
             this.contourJoints.fillColor = new Color(color)
@@ -223,9 +225,7 @@ export class ContourTool extends AnnotationTool {
 
         if (this.points.length) {
 
-            const ratio = 1/this.workspace.zoom
-
-            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.snapDistance)
+            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.snapDistance*this.ratio)
 
             const color = this.labeller.class? this.labeller.class.color: '#ffff00'
 
@@ -233,7 +233,7 @@ export class ContourTool extends AnnotationTool {
             this.closePoint.style = {
                 strokeColor: new Color(color),
                 fillColor: null,
-                strokeWidth: this.generalPrefs.preview.width*ratio
+                strokeWidth: this.generalPrefs.preview.width*this.ratio
             }
         }
     }
@@ -254,14 +254,13 @@ export class ContourTool extends AnnotationTool {
                 this.preview.add(this.lastPoint)
             }
 
-            const ratio = 1/this.workspace.zoom
 
             // @ts-ignore
             this.preview.style = {
-                strokeWidth: this.generalPrefs.preview.width*ratio,
+                strokeWidth: this.generalPrefs.preview.width*this.ratio,
                 fillColor: null,
                 strokeColor: this.generalPrefs.preview.color,
-                dashArray: this.generalPrefs.preview.dashed? [6*ratio, 3*ratio] : []
+                dashArray: this.generalPrefs.preview.dashed? [6*this.ratio, 3*this.ratio] : []
             }
         }
     }

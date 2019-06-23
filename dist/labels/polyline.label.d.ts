@@ -3,7 +3,7 @@ import { Path, PaperScope } from "paper";
 export declare class PolylineLabel extends SimpleLabelType<PolylineProps> {
     readonly title = "Polyline";
     readonly name: string;
-    readonly options: Partial<BasicLabelTypeOptions>;
+    options: Partial<BasicLabelTypeOptions>;
     constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope);
     vectorize(label: Label<PolylineProps>): Path;
     controls(path: Path): Control[];

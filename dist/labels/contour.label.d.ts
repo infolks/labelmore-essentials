@@ -3,7 +3,7 @@ import { Path, PaperScope } from "paper";
 export declare class ContourLabel extends SimpleLabelType<ContourProps> {
     readonly title = "Contour";
     readonly name: string;
-    readonly options: Partial<BasicLabelTypeOptions>;
+    options: Partial<BasicLabelTypeOptions>;
     constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope);
     vectorize(label: Label<ContourProps>): Path;
     controls(path: Path): Control[];

@@ -429,6 +429,9 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
     get generalPrefs() {
         return this.settings.getSettings(NAME).tools.general;
     }
+    get ratio() {
+        return 1 / this.workspace.zoom;
+    }
     onmousedown(event) {
         if (this.closePathActive) {
             this.makeLabel();
@@ -442,7 +445,7 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
         if (this.points.length) {
             this.createContour();
             this.createPreview(event.point);
-            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance) {
+            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance * this.ratio) {
                 this.createClosePoint();
                 this.closePathActive = true;
             }
@@ -508,19 +511,18 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
         this.contour && this.contour.remove();
         this.contourJoints && this.contourJoints.remove();
         if (this.points.length) {
-            const ratio = 1 / this.workspace.zoom;
             this.contour = new this.paper.Path(this.points);
             this.contourJoints = new this.paper.Group();
             // joints
             for (let point of this.points) {
-                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width * ratio * 5));
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width * this.ratio * 5));
             }
             const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
             // @ts-ignore
             this.contour.style = {
                 strokeColor: new paper.Color(color),
                 fillColor: null,
-                strokeWidth: this.generalPrefs.preview.width * ratio
+                strokeWidth: this.generalPrefs.preview.width * this.ratio
             };
             this.contourJoints.fillColor = new paper.Color(color);
         }
@@ -531,14 +533,13 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
     createClosePoint() {
         this.closePoint && this.closePoint.remove();
         if (this.points.length) {
-            const ratio = 1 / this.workspace.zoom;
-            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.snapDistance);
+            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.snapDistance * this.ratio);
             const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
             // @ts-ignore
             this.closePoint.style = {
                 strokeColor: new paper.Color(color),
                 fillColor: null,
-                strokeWidth: this.generalPrefs.preview.width * ratio
+                strokeWidth: this.generalPrefs.preview.width * this.ratio
             };
         }
     }
@@ -551,13 +552,12 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             if (this.lastPoint && !this.firstPoint.equals(this.lastPoint)) {
                 this.preview.add(this.lastPoint);
             }
-            const ratio = 1 / this.workspace.zoom;
             // @ts-ignore
             this.preview.style = {
-                strokeWidth: this.generalPrefs.preview.width * ratio,
+                strokeWidth: this.generalPrefs.preview.width * this.ratio,
                 fillColor: null,
                 strokeColor: this.generalPrefs.preview.color,
-                dashArray: this.generalPrefs.preview.dashed ? [6 * ratio, 3 * ratio] : []
+                dashArray: this.generalPrefs.preview.dashed ? [6 * this.ratio, 3 * this.ratio] : []
             };
         }
     }
@@ -660,7 +660,7 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
             this.contourJoints = new this.paper.Group();
             // joints
             for (let point of this.points) {
-                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width * 5));
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width * this.ratio * 5));
             }
             const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
             // @ts-ignore
@@ -845,7 +845,8 @@ class ContourLabel extends labelmoreDevkit.SimpleLabelType {
         this.title = 'Contour';
         this.name = labelmoreDevkit.DEFAULT_LABEL_TYPES.contour;
         this.options = {
-            showLabelTag: false
+            showLabelTag: false,
+            hasFill: true
         };
     }
     vectorize(label) {
