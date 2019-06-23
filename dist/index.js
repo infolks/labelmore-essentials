@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.7
+ * @infolks/labelmore-essentials v0.5.8
  * (c) infolks
  * Released under the ISC License.
  */
@@ -513,7 +513,7 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             this.contourJoints = new this.paper.Group();
             // joints
             for (let point of this.points) {
-                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width * 5));
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width * ratio * 5));
             }
             const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
             // @ts-ignore
@@ -609,6 +609,7 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
     }
     onmousemove(event) {
         if (this.points.length) {
+            this.createContour();
             this.createPreview(event.point);
         }
     }

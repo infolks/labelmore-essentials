@@ -52,6 +52,8 @@ class LineTool extends AnnotationTool {
 
         if (this.points.length) {
 
+            this.createContour()
+
             this.createPreview(event.point)
         }
     }

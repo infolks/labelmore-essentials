@@ -198,7 +198,7 @@ export class ContourTool extends AnnotationTool {
 
             // joints
             for (let point of this.points) {
-                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width*5))
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width*ratio*5))
             }
 
             const color = this.labeller.class? this.labeller.class.color: '#ffff00'
