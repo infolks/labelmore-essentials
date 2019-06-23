@@ -1,13 +1,13 @@
-import { Label, SimpleLabelType, Control, ContourProps, LabelManager, WorkspaceManager, SettingsManager, BasicLabelTypeOptions } from "@infolks/labelmore-devkit";
+import { Label, SimpleLabelType, Control, PolylineProps, LabelManager, WorkspaceManager, SettingsManager, BasicLabelTypeOptions } from "@infolks/labelmore-devkit";
 import { Path, PaperScope } from "paper";
-export declare class ContourLabel extends SimpleLabelType<ContourProps> {
-    readonly title = "Contour";
+export declare class PolylineLabel extends SimpleLabelType<PolylineProps> {
+    readonly title = "Polyline";
     readonly name: string;
     readonly options: Partial<BasicLabelTypeOptions>;
     constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope);
-    vectorize(label: Label<ContourProps>): Path;
+    vectorize(label: Label<PolylineProps>): Path;
     controls(path: Path): Control[];
-    apply(path: Path): ContourProps;
+    apply(path: Path): PolylineProps;
 }
 declare const _default: {
     install(vue: any, opts: any): void;

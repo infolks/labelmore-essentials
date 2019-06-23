@@ -1,11 +1,18 @@
-import { SimpleLabelType, Control} from "@infolks/labelmore-devkit";
-import { LabelClass, DEFAULT_LABEL_TYPES, Label } from "@infolks/labelmore-devkit";
-import { LabelManager } from "@infolks/labelmore-devkit";
-import { WorkspaceManager } from "@infolks/labelmore-devkit";
-import { SettingsManager } from "@infolks/labelmore-devkit";
+import { 
+    LabelClass, 
+    DEFAULT_LABEL_TYPES, 
+    Label, 
+    SimpleLabelType, 
+    Control,
+    BoundboxProps,
+    LabelManager,
+    WorkspaceManager,
+    SettingsManager
+} from "@infolks/labelmore-devkit";
+
 import { PathItem, PaperScope } from "paper";
 
-export class BoundboxLabel extends SimpleLabelType {
+export class BoundboxLabel extends SimpleLabelType<BoundboxProps> {
 
     public readonly title = 'Boundbox'
     public readonly name = DEFAULT_LABEL_TYPES.boundbox
@@ -14,11 +21,11 @@ export class BoundboxLabel extends SimpleLabelType {
         super(labeller, workspace, settings, paper)
     }
 
-    tagContent(label: Label, labelClass: LabelClass): string {
+    tagContent(label: Label<BoundboxProps>, labelClass: LabelClass): string {
         return labelClass.name
     }
 
-    vectorize (label: Label) {
+    vectorize (label: Label<BoundboxProps>) {
 
         const min = new this.paper.Point(label.props.xmin, label.props.ymin)
         const max = new this.paper.Point(label.props.xmax, label.props.ymax)
@@ -78,7 +85,7 @@ export class BoundboxLabel extends SimpleLabelType {
         ]
     }
 
-    apply(path: PathItem): any {
+    apply(path: PathItem): BoundboxProps {
 
         const {topLeft, bottomRight} = path.bounds
 

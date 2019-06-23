@@ -2,11 +2,13 @@
 import SelectTool from "./tools/select.tool"
 import BoundboxTool from "./tools/boundbox.tool"
 import ContourTool from "./tools/contour.tool"
+import LineTool from "./tools/line.tool"
 import PanTool from "./tools/pan.tool"
 
 // labels
 import BoundboxLabel from "./labels/boundbox.label"
 import ContourLabel from "./labels/contour.label"
+import PolylineLabel from "./labels/polyline.label"
 
 // wizards
 import LocalizationWizard from "./wizards/localization.wizard"
@@ -33,11 +35,13 @@ export default {
         vue.use(SelectTool)
         vue.use(BoundboxTool)
         vue.use(ContourTool)
+        vue.use(LineTool)
         vue.use(PanTool)
 
         // labels
         vue.use(BoundboxLabel)
         vue.use(ContourLabel)
+        vue.use(PolylineLabel)
 
         // wizards
         vue.use(LocalizationWizard)

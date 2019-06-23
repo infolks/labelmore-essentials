@@ -58,7 +58,6 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue'
     import {DEFAULT_SETTINGS, NAME} from "./settings"
     import { deepAssign } from './helpers';
 

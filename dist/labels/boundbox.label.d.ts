@@ -1,17 +1,13 @@
-import { SimpleLabelType, Control } from "@infolks/labelmore-devkit";
-import { LabelClass, Label } from "@infolks/labelmore-devkit";
-import { LabelManager } from "@infolks/labelmore-devkit";
-import { WorkspaceManager } from "@infolks/labelmore-devkit";
-import { SettingsManager } from "@infolks/labelmore-devkit";
+import { LabelClass, Label, SimpleLabelType, Control, BoundboxProps, LabelManager, WorkspaceManager, SettingsManager } from "@infolks/labelmore-devkit";
 import { PathItem, PaperScope } from "paper";
-export declare class BoundboxLabel extends SimpleLabelType {
+export declare class BoundboxLabel extends SimpleLabelType<BoundboxProps> {
     readonly title = "Boundbox";
     readonly name: string;
     constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope);
-    tagContent(label: Label, labelClass: LabelClass): string;
-    vectorize(label: Label): paper.Path.Rectangle;
+    tagContent(label: Label<BoundboxProps>, labelClass: LabelClass): string;
+    vectorize(label: Label<BoundboxProps>): paper.Path.Rectangle;
     controls(path: PathItem): Control[];
-    apply(path: PathItem): any;
+    apply(path: PathItem): BoundboxProps;
 }
 declare const _default: {
     install(vue: any, opts: any): void;

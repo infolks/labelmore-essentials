@@ -1,7 +1,4 @@
-import { AnnotationToolOptions, AnnotationTool } from "@infolks/labelmore-devkit";
-import { LabelManager } from "@infolks/labelmore-devkit";
-import { WorkspaceManager } from "@infolks/labelmore-devkit";
-import { SettingsManager } from "@infolks/labelmore-devkit";
+import { AnnotationToolOptions, AnnotationTool, LabelManager, WorkspaceManager, SettingsManager } from "@infolks/labelmore-devkit";
 import { ToolEvent, PaperScope, KeyEvent } from "paper";
 import { GeneralToolSettings, ContourToolSettings } from "../settings";
 /**

@@ -68,7 +68,7 @@ class JsonEncoder extends Encoder {
         }]
     }
 
-    private convertLabel(label: Label, class_: LabelClass) {
+    private convertLabel(label: Label<any>, class_: LabelClass) {
 
         if (label.type === DEFAULT_LABEL_TYPES.boundbox) {
 

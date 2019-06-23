@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.6
+ * @infolks/labelmore-essentials v0.5.7
  * (c) infolks
  * Released under the ISC License.
  */
@@ -103,7 +103,7 @@ var __vue_staticRenderFns__ = [];
   /* style */
   const __vue_inject_styles__ = undefined;
   /* scoped */
-  const __vue_scope_id__ = "data-v-19479fc8";
+  const __vue_scope_id__ = "data-v-cf052e94";
   /* module identifier */
   const __vue_module_identifier__ = undefined;
   /* functional template */
@@ -440,7 +440,6 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
     }
     onmousemove(event) {
         if (this.points.length) {
-            const ratio = 1 / this.workspace.zoom;
             this.createContour();
             this.createPreview(event.point);
             if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance) {
@@ -494,9 +493,7 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             if (class_) {
                 // console.log('making label')
                 this.labeller.add({
-                    id: new Date().getTime(),
                     type: labelmoreDevkit.DEFAULT_LABEL_TYPES.contour,
-                    class_id: class_.id,
                     props: {
                         points: this.points.map(p => ({ x: p.x, y: p.y }))
                     }
@@ -573,6 +570,128 @@ var ContourTool$1 = {
                     const contour = new ContourTool(this.$labeller, this.$workspace, this.$settings, this.$paper);
                     if (!this.$tools.hasTool(contour.name)) {
                         this.$tools.register(contour.name, contour);
+                    }
+                }
+            }
+        });
+    }
+};
+
+class LineTool extends labelmoreDevkit.AnnotationTool {
+    constructor(labeller, workspace, settings, paper) {
+        super(workspace, settings, paper);
+        this.labeller = labeller;
+        this.workspace = workspace;
+        this.settings = settings;
+        this.paper = paper;
+        this.name = 'tools.default.line';
+        this.title = 'Polyline';
+        this.icon = `<i>&#9585;</i>`;
+        this.cursor = 'crosshair';
+        this.points = [];
+        this.options = {
+            showGuide: true,
+            limitToArtboard: true
+        };
+    }
+    get ratio() {
+        return 1 / this.workspace.zoom;
+    }
+    get generalPrefs() {
+        return this.settings.getSettings(NAME).tools.general;
+    }
+    get lastPoint() {
+        return this.points[this.points.length - 1];
+    }
+    onmousedown(event) {
+        this.points.push(event.point);
+        this.createContour();
+    }
+    onmousemove(event) {
+        if (this.points.length) {
+            this.createPreview(event.point);
+        }
+    }
+    onkeyup(event) {
+        const key = event.key;
+        if (key === 'backspace') {
+            // if there are points
+            if (this.points && this.points.length) {
+                // pop last point
+                this.points.pop();
+                // update preview
+                if (this.preview.segments.length > 1) {
+                    this.createPreview(this.preview.segments[1].point);
+                    this.createContour();
+                }
+                else {
+                    this.preview.remove();
+                }
+            }
+        }
+        else if (key === 'enter') {
+            this.makeLabel();
+        }
+    }
+    reset() {
+        this.preview && this.preview.remove();
+        this.contour && this.contour.remove();
+        this.contourJoints && this.contourJoints.remove();
+        this.preview = this.contour = this.contourJoints = null;
+        this.points = [];
+    }
+    makeLabel() {
+        if (this.labeller.class) {
+            this.labeller.add({
+                type: labelmoreDevkit.DEFAULT_LABEL_TYPES.line,
+                props: {
+                    points: this.points.map(p => ({ x: p.x, y: p.y }))
+                }
+            });
+            this.reset();
+        }
+    }
+    createContour() {
+        this.contour && this.contour.remove();
+        this.contourJoints && this.contourJoints.remove();
+        if (this.points.length) {
+            this.contour = new this.paper.Path(this.points);
+            this.contourJoints = new this.paper.Group();
+            // joints
+            for (let point of this.points) {
+                this.contourJoints.addChild(new this.paper.Path.Circle(point, this.generalPrefs.preview.width * 5));
+            }
+            const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
+            // @ts-ignore
+            this.contour.style = {
+                strokeColor: new paper.Color(color),
+                fillColor: null,
+                strokeWidth: this.generalPrefs.preview.width * this.ratio
+            };
+            this.contourJoints.fillColor = new paper.Color(color);
+        }
+    }
+    createPreview(cursorPoint) {
+        if (this.lastPoint && cursorPoint) {
+            this.preview && this.preview.remove();
+            this.preview = new this.paper.Path([this.lastPoint, cursorPoint]);
+            this.preview.style = {
+                strokeWidth: this.generalPrefs.preview.width * this.ratio,
+                fillColor: null,
+                strokeColor: this.generalPrefs.preview.color,
+                dashArray: this.generalPrefs.preview.dashed ? [6 * this.ratio, 3 * this.ratio] : []
+            };
+        }
+    }
+}
+var LineTool$1 = {
+    install(vue, opts) {
+        vue.mixin({
+            beforeCreate() {
+                if (this.$labeller && this.$tools && this.$workspace && this.$settings) {
+                    const line = new LineTool(this.$labeller, this.$workspace, this.$settings, this.$paper);
+                    if (!this.$tools.hasTool(line.name)) {
+                        this.$tools.register(line.name, line);
                     }
                 }
             }
@@ -760,6 +879,53 @@ var ContourLabel$1 = {
                     const contourLabel = new ContourLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
                     if (!this.$labeller.has(contourLabel.name))
                         this.$labeller.register(contourLabel.name, contourLabel);
+                }
+            }
+        });
+    }
+};
+
+class PolylineLabel extends labelmoreDevkit.SimpleLabelType {
+    constructor(labeller, workspace, settings, paper) {
+        super(labeller, workspace, settings, paper);
+        this.title = 'Polyline';
+        this.name = labelmoreDevkit.DEFAULT_LABEL_TYPES.line;
+        this.options = {
+            showLabelTag: false,
+            hasFill: false
+        };
+    }
+    vectorize(label) {
+        const p = new this.paper.Path();
+        for (let point of label.props.points) {
+            p.add(new paper.Point(point.x, point.y));
+        }
+        return p;
+    }
+    controls(path) {
+        return path.segments.map((s) => {
+            return {
+                hotspot: s.point,
+                cursor: 'pointer'
+            };
+        });
+    }
+    apply(path) {
+        return {
+            points: path.segments.map(s => {
+                return { x: s.point.x, y: s.point.y };
+            })
+        };
+    }
+}
+var PolylineLabel$1 = {
+    install(vue, opts) {
+        vue.mixin({
+            beforeCreate() {
+                if (this.$labeller && this.$workspace && this.$settings) {
+                    const polylineLabel = new PolylineLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
+                    if (!this.$labeller.has(polylineLabel.name))
+                        this.$labeller.register(polylineLabel.name, polylineLabel);
                 }
             }
         });
@@ -1185,11 +1351,11 @@ var __vue_staticRenderFns__$4 = [];
   /* style */
   const __vue_inject_styles__$4 = function (inject) {
     if (!inject) return
-    inject("data-v-15a50a61_0", { source: ".class-attribute-item[data-v-15a50a61]{margin-top:1rem}.class-attribute-item[data-v-15a50a61]:first-child{margin-top:0}", map: undefined, media: undefined });
+    inject("data-v-dea5ccde_0", { source: ".class-attribute-item[data-v-dea5ccde]{margin-top:1rem}.class-attribute-item[data-v-dea5ccde]:first-child{margin-top:0}", map: undefined, media: undefined });
 
   };
   /* scoped */
-  const __vue_scope_id__$4 = "data-v-15a50a61";
+  const __vue_scope_id__$4 = "data-v-dea5ccde";
   /* module identifier */
   const __vue_module_identifier__$4 = undefined;
   /* functional template */
@@ -1325,10 +1491,12 @@ var index = {
         vue.use(SelectTool$1);
         vue.use(BoundboxTool$1);
         vue.use(ContourTool$1);
+        vue.use(LineTool$1);
         vue.use(PanTool$1);
         // labels
         vue.use(BoundboxLabel$1);
         vue.use(ContourLabel$1);
+        vue.use(PolylineLabel$1);
         // wizards
         vue.use(LocalizationWizard$1);
         // sources

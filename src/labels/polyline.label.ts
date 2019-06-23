@@ -3,7 +3,7 @@ import {
     Label, 
     SimpleLabelType, 
     Control,
-    ContourProps,
+    PolylineProps,
     LabelManager,
     WorkspaceManager,
     SettingsManager,
@@ -11,20 +11,21 @@ import {
 } from "@infolks/labelmore-devkit";
 import { Path, Point, PaperScope } from "paper";
 
-export class ContourLabel extends SimpleLabelType<ContourProps> {
+export class PolylineLabel extends SimpleLabelType<PolylineProps> {
 
-    public readonly title = 'Contour'
-    public readonly name = DEFAULT_LABEL_TYPES.contour
+    public readonly title = 'Polyline'
+    public readonly name = DEFAULT_LABEL_TYPES.line
 
     public readonly options: Partial<BasicLabelTypeOptions> = {
-        showLabelTag: false
+        showLabelTag: false,
+        hasFill: false
     }
 
     constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope) {
         super(labeller, workspace, settings, paper)
     }
 
-    vectorize(label: Label<ContourProps>) {
+    vectorize(label: Label<PolylineProps>) {
 
         const p = new this.paper.Path()
 
@@ -32,8 +33,6 @@ export class ContourLabel extends SimpleLabelType<ContourProps> {
 
             p.add(new Point(point.x, point.y))
         }
-
-        p.closePath()
 
         return p
     }
@@ -48,7 +47,7 @@ export class ContourLabel extends SimpleLabelType<ContourProps> {
     }
 
 
-    apply(path: Path): ContourProps {
+    apply(path: Path): PolylineProps {
         
         return {
             points: path.segments.map(s => {
@@ -69,9 +68,9 @@ export default {
                 
                 if (this.$labeller && this.$workspace && this.$settings) {
 
-                    const contourLabel = new ContourLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
+                    const polylineLabel = new PolylineLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
 
-                    if (!this.$labeller.has(contourLabel.name)) this.$labeller.register(contourLabel.name, contourLabel)
+                    if (!this.$labeller.has(polylineLabel.name)) this.$labeller.register(polylineLabel.name, polylineLabel)
 
                 }
             }

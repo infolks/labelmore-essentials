@@ -1,9 +1,5 @@
-import { AnnotationToolOptions, AnnotationTool } from "@infolks/labelmore-devkit";
-import { LabelManager } from "@infolks/labelmore-devkit";
-import { WorkspaceManager } from "@infolks/labelmore-devkit";
-import { SettingsManager } from "@infolks/labelmore-devkit";
+import { AnnotationToolOptions, AnnotationTool, LabelManager, WorkspaceManager, SettingsManager, DEFAULT_LABEL_TYPES } from "@infolks/labelmore-devkit";
 import { ToolEvent, Path, Point, Color, PaperScope, KeyEvent, Key, Group } from "paper";
-import { DEFAULT_LABEL_TYPES } from "@infolks/labelmore-devkit";
 import {NAME as ESSENTAIL_SETTINGS, GeneralToolSettings, ContourToolSettings} from "../settings";
 /**
  * Settings
@@ -76,8 +72,6 @@ export class ContourTool extends AnnotationTool {
     onmousemove(event: ToolEvent) {
 
         if (this.points.length) {
-
-            const ratio = 1/this.workspace.zoom
 
             this.createContour()
 
@@ -170,9 +164,7 @@ export class ContourTool extends AnnotationTool {
                 // console.log('making label')
     
                 this.labeller.add({
-                    id: new Date().getTime(),
                     type: DEFAULT_LABEL_TYPES.contour,
-                    class_id: class_.id,
                     props: {
                         points: this.points.map(p => ({x: p.x, y: p.y}))
                     }
