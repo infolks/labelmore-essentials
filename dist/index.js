@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.8
+ * @infolks/labelmore-essentials v0.5.9
  * (c) infolks
  * Released under the ISC License.
  */
@@ -202,7 +202,7 @@ class SelectTool extends labelmoreDevkit.AnnotationTool {
     // deslect any selection on deactivation of tool
     ondeactivate() {
         this.preview && this.preview.remove();
-        this.labeller.deselect();
+        // this.labeller.deselect()
     }
     onmousedown(event) {
         const item = event.item;
@@ -327,7 +327,11 @@ class BoundboxTool extends labelmoreDevkit.AnnotationTool {
         }
     }
     onmousedown(event) {
-        this.downPoint = event.point;
+        if (!(event.item &&
+            event.item.data &&
+            event.item.data.index === this.workspace.RESERVED_ITEMS.CONTROL)) {
+            this.downPoint = event.point;
+        }
     }
     onmouseup(event) {
         if (this.preview && this.preview.area > this.prefs.minArea && this.labeller.class) {
@@ -341,6 +345,9 @@ class BoundboxTool extends labelmoreDevkit.AnnotationTool {
                 }
             });
         }
+        this.reset();
+    }
+    reset() {
         this.preview && this.preview.remove();
         this.hotspots && this.hotspots.remove();
         this.preview = null;
@@ -433,27 +440,30 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
         return 1 / this.workspace.zoom;
     }
     onmousedown(event) {
-        if (this.closePathActive) {
-            this.makeLabel();
+        if (event.modifiers.shift) {
+            this.onmousedown_shift(event);
+        }
+        else if (event.modifiers.alt) {
+            this.onmousedown_alt(event);
         }
         else {
-            this.points.push(event.point);
+            // perform normal mouse down action if not on top of control
+            if (!(event.item &&
+                event.item.data &&
+                event.item.data.index === this.workspace.RESERVED_ITEMS.CONTROL)) {
+                this.onmousedown_normal(event);
+            }
         }
-        this.createContour();
     }
     onmousemove(event) {
-        if (this.points.length) {
-            this.createContour();
-            this.createPreview(event.point);
-            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance * this.ratio) {
-                this.createClosePoint();
-                this.closePathActive = true;
-            }
-            else {
-                this.closePoint && this.closePoint.remove();
-                this.closePoint = null;
-                this.closePathActive = false;
-            }
+        if (event.modifiers.shift) {
+            this.onmousemove_shift(event);
+        }
+        else if (event.modifiers.alt) {
+            this.onmousemove_alt(event);
+        }
+        else {
+            this.onmousemove_normal(event);
         }
     }
     onkeyup(event) {
@@ -476,17 +486,120 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
         else if (key === 'enter') {
             this.makeLabel();
         }
+        // modify labels
     }
+    /// PRIVATE
     reset() {
         this.preview && this.preview.remove();
         this.contour && this.contour.remove();
         this.contourJoints && this.contourJoints.remove();
         this.closePoint && this.closePoint.remove();
-        this.preview = this.contour = this.closePoint = null;
+        this.hotspot && this.hotspot.remove();
+        this.preview = this.contour = this.closePoint = this.hotspot = null;
         this.closePathActive = false;
         this.points = [];
         this.workspace.cursor = this.cursor;
     }
+    // ===================
+    //  MOUSE DOWN EVENTS
+    // ===================
+    onmousedown_normal(event) {
+        if (this.closePathActive) {
+            this.makeLabel();
+        }
+        else {
+            this.points.push(event.point);
+        }
+        this.createContour();
+    }
+    onmousedown_shift(event) {
+        const label = this.labeller.selected;
+        if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.contour) {
+            const path = this.workspace.getPath(this.labeller.selected);
+            const loc = path.getNearestLocation(event.point);
+            if (path.divideAt(loc)) {
+                this.labeller.apply(label.id, path);
+            }
+            this.hotspot && this.hotspot.remove();
+            this.hotspot = null;
+        }
+    }
+    onmousedown_alt(event) {
+        const label = this.labeller.selected;
+        if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.contour) {
+            // get path
+            const path = this.workspace.getPath(label);
+            // get nearest segment
+            const seg = path.getNearestLocation(event.point).segment;
+            // if path has more than 3 segments remove
+            if (path.segments.length > 3) {
+                seg.remove();
+                // apply path
+                this.labeller.apply(label.id, path);
+                // remove hotspot
+                this.hotspot && this.hotspot.remove();
+            }
+        }
+    }
+    // ===================
+    //  MOUSE MOVE EVENTS
+    // ===================
+    onmousemove_normal(event) {
+        if (this.points.length) {
+            this.createContour();
+            this.createPreview(event.point);
+            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance * this.ratio) {
+                this.createClosePoint();
+                this.closePathActive = true;
+            }
+            else {
+                this.closePoint && this.closePoint.remove();
+                this.closePoint = null;
+                this.closePathActive = false;
+            }
+        }
+        // remove hotspot
+        this.hotspot && this.hotspot.remove();
+    }
+    /**
+     * move with shift modifier
+     * @param event Tool Event
+     */
+    onmousemove_shift(event) {
+        const label = this.labeller.selected;
+        if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.contour) {
+            // remove old hotspot
+            this.hotspot && this.hotspot.remove();
+            // get selected label's path
+            const path = this.workspace.getPath(label);
+            // get nearest point
+            const point = path.getNearestPoint(event.point);
+            // get stroke width of label
+            const strokeWidth = this.settings.general.workspace.labels.stroke.width;
+            // create hotspot
+            this.hotspot = new this.paper.Path.Circle(point, strokeWidth * this.ratio * 5);
+            this.hotspot.fillColor = path.strokeColor;
+        }
+    }
+    onmousemove_alt(event) {
+        const label = this.labeller.selected;
+        if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.contour) {
+            // remove hotspot
+            this.hotspot && this.hotspot.remove();
+            // get path
+            const path = this.workspace.getPath(label);
+            // get nearest segment
+            const seg = path.getNearestLocation(event.point).segment;
+            // get radius of control
+            const radius = this.settings.general.workspace.control.radius;
+            // create hotspot
+            this.hotspot = new this.paper.Path.Circle(seg.point, radius * this.ratio);
+            this.hotspot.fillColor = path.strokeColor;
+        }
+    }
+    // =================
+    //  PREVIEW METHODS
+    // =================
     /**
      * Complete the label
      */
@@ -506,7 +619,9 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             this.reset();
         }
     }
-    /// PRIVATE
+    /**
+     * Create the contour
+     */
     createContour() {
         this.contour && this.contour.remove();
         this.contourJoints && this.contourJoints.remove();
@@ -543,6 +658,10 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             };
         }
     }
+    /**
+     * Create preiew dotted
+     * @param cursorPoint current cursor position
+     */
     createPreview(cursorPoint) {
         if (this.firstPoint && cursorPoint) {
             this.preview && this.preview.remove();
@@ -604,13 +723,30 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
         return this.points[this.points.length - 1];
     }
     onmousedown(event) {
-        this.points.push(event.point);
-        this.createContour();
+        if (event.modifiers.shift) {
+            this.onmousedown_shift(event);
+        }
+        else if (event.modifiers.alt) {
+            this.onmousedown_alt(event);
+        }
+        else {
+            // perform normal mouse down action if not on top of control
+            if (!(event.item &&
+                event.item.data &&
+                event.item.data.index === this.workspace.RESERVED_ITEMS.CONTROL)) {
+                this.onmousedown_normal(event);
+            }
+        }
     }
     onmousemove(event) {
-        if (this.points.length) {
-            this.createContour();
-            this.createPreview(event.point);
+        if (event.modifiers.shift) {
+            this.onmousemove_shift(event);
+        }
+        else if (event.modifiers.alt) {
+            this.onmousemove_alt(event);
+        }
+        else {
+            this.onmousemove_normal(event);
         }
     }
     onkeyup(event) {
@@ -634,10 +770,95 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
             this.makeLabel();
         }
     }
+    // =========
+    //  PRIVATE
+    // =========
+    // ===================
+    //  MOUSE DOWN EVENTS
+    // ===================
+    onmousedown_normal(event) {
+        this.points.push(event.point);
+        this.createContour();
+    }
+    onmousedown_shift(event) {
+        const label = this.labeller.selected;
+        if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.line) {
+            const path = this.workspace.getPath(this.labeller.selected);
+            const loc = path.getNearestLocation(event.point);
+            if (path.divideAt(loc)) {
+                this.labeller.apply(label.id, path);
+            }
+            this.hotspot && this.hotspot.remove();
+            this.hotspot = null;
+        }
+    }
+    onmousedown_alt(event) {
+        const label = this.labeller.selected;
+        if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.line) {
+            // get path
+            const path = this.workspace.getPath(label);
+            // get nearest segment
+            const seg = path.getNearestLocation(event.point).segment;
+            // if path has more than 3 segments remove
+            if (path.segments.length > 2) {
+                seg.remove();
+                // apply path
+                this.labeller.apply(label.id, path);
+                // remove hotspot
+                this.hotspot && this.hotspot.remove();
+            }
+        }
+    }
+    // ===================
+    //  MOUSE MOVE EVENTS
+    // ===================
+    onmousemove_normal(event) {
+        if (this.points.length) {
+            this.createContour();
+            this.createPreview(event.point);
+        }
+    }
+    /**
+     * move with shift modifier
+     * @param event Tool Event
+     */
+    onmousemove_shift(event) {
+        const label = this.labeller.selected;
+        if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.line) {
+            // remove old hotspot
+            this.hotspot && this.hotspot.remove();
+            // get selected label's path
+            const path = this.workspace.getPath(label);
+            // get nearest point
+            const point = path.getNearestPoint(event.point);
+            // get stroke width of label
+            const strokeWidth = this.settings.general.workspace.labels.stroke.width;
+            // create hotspot
+            this.hotspot = new this.paper.Path.Circle(point, strokeWidth * this.ratio * 5);
+            this.hotspot.fillColor = path.strokeColor;
+        }
+    }
+    onmousemove_alt(event) {
+        const label = this.labeller.selected;
+        if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.line) {
+            // remove hotspot
+            this.hotspot && this.hotspot.remove();
+            // get path
+            const path = this.workspace.getPath(label);
+            // get nearest segment
+            const seg = path.getNearestLocation(event.point).segment;
+            // get radius of control
+            const radius = this.settings.general.workspace.control.radius;
+            // create hotspot
+            this.hotspot = new this.paper.Path.Circle(seg.point, radius * this.ratio);
+            this.hotspot.fillColor = path.strokeColor;
+        }
+    }
     reset() {
         this.preview && this.preview.remove();
         this.contour && this.contour.remove();
         this.contourJoints && this.contourJoints.remove();
+        this.hotspot && this.hotspot.remove();
         this.preview = this.contour = this.contourJoints = null;
         this.points = [];
     }

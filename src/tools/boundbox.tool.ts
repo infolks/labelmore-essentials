@@ -79,7 +79,13 @@ export class BoundboxTool extends AnnotationTool {
 
     onmousedown(event: ToolEvent) {
 
-        this.downPoint = event.point
+        if (!(
+            event.item &&
+            event.item.data &&
+            event.item.data.index === this.workspace.RESERVED_ITEMS.CONTROL
+        )) {
+            this.downPoint = event.point
+        }
     }
 
     onmouseup(event: ToolEvent) {
@@ -97,6 +103,11 @@ export class BoundboxTool extends AnnotationTool {
             })
 
         }
+
+        this.reset()
+    }
+
+    private reset() {
 
         this.preview && this.preview.remove();
         this.hotspots && this.hotspots.remove()

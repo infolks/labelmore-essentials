@@ -1,5 +1,5 @@
 import { AnnotationToolOptions, AnnotationTool, LabelManager, WorkspaceManager, SettingsManager, DEFAULT_LABEL_TYPES } from "@infolks/labelmore-devkit";
-import { ToolEvent, Path, Point, Color, PaperScope, KeyEvent, Key, Group } from "paper";
+import { ToolEvent, Path, Point, Color, PaperScope, KeyEvent, Group } from "paper";
 import {NAME as ESSENTAIL_SETTINGS, GeneralToolSettings, ContourToolSettings} from "../settings";
 /**
  * Settings
@@ -18,6 +18,7 @@ export class ContourTool extends AnnotationTool {
     private contour: Path
     private contourJoints: Group
     private closePoint: Path
+    private hotspot: Path
 
     private closePathActive: boolean = false
 
@@ -59,46 +60,46 @@ export class ContourTool extends AnnotationTool {
 
     onmousedown(event: ToolEvent) {
 
-        if (this.closePathActive) {
+        if (event.modifiers.shift) {
 
-            this.makeLabel()
+            this.onmousedown_shift(event)
+        }
+
+        else if (event.modifiers.alt) {
+
+            this.onmousedown_alt(event)
         }
 
         else {
 
-            this.points.push(event.point)
+            // perform normal mouse down action if not on top of control
+            if (!(
+                event.item &&
+                event.item.data &&
+                event.item.data.index === this.workspace.RESERVED_ITEMS.CONTROL)
+            ) {
 
+                this.onmousedown_normal(event)
+
+            }
         }
-
-        this.createContour()
     }
 
     onmousemove(event: ToolEvent) {
 
-        if (this.points.length) {
+        if (event.modifiers.shift) {
 
-            this.createContour()
+            this.onmousemove_shift(event)
 
-            this.createPreview(event.point)
+        }
 
+        else if (event.modifiers.alt) {
+            this.onmousemove_alt(event)
+        }
 
-            
-            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance*this.ratio) {
+        else {
 
-                this.createClosePoint()
-
-                this.closePathActive = true
-            }
-
-            else {
-
-                this.closePoint && this.closePoint.remove()
-
-                this.closePoint = null
-
-                this.closePathActive = false
-            }
-
+            this.onmousemove_normal(event)
         }
     }
 
@@ -135,7 +136,14 @@ export class ContourTool extends AnnotationTool {
             this.makeLabel()
             
         }
+
+        // modify labels
+
     }
+
+    
+    /// PRIVATE
+
 
     private reset() {
 
@@ -143,8 +151,9 @@ export class ContourTool extends AnnotationTool {
         this.contour && this.contour.remove()
         this.contourJoints && this.contourJoints.remove()
         this.closePoint && this.closePoint.remove()
+        this.hotspot && this.hotspot.remove()
 
-        this.preview = this.contour = this.closePoint = null
+        this.preview = this.contour = this.closePoint = this.hotspot = null
 
         this.closePathActive = false
 
@@ -153,6 +162,163 @@ export class ContourTool extends AnnotationTool {
         this.workspace.cursor = this.cursor
 
     }
+
+    // ===================
+    //  MOUSE DOWN EVENTS
+    // ===================
+    private onmousedown_normal(event: ToolEvent) {
+
+        if (this.closePathActive) {
+
+            this.makeLabel()
+        }
+
+        else {
+
+            this.points.push(event.point)
+
+        }
+
+        this.createContour()
+    }
+
+    private onmousedown_shift(event: ToolEvent) {
+
+        const label = this.labeller.selected
+
+        if (label && label.type === DEFAULT_LABEL_TYPES.contour) {
+
+            const path = <Path>this.workspace.getPath(this.labeller.selected)
+
+            const loc = path.getNearestLocation(event.point)
+
+            if (path.divideAt(loc)) {
+                this.labeller.apply(label.id, path)
+            }
+
+            this.hotspot && this.hotspot.remove()
+            this.hotspot = null
+        }
+    }
+
+    private onmousedown_alt(event: ToolEvent) {
+
+        const label = this.labeller.selected
+
+        if (label && label.type === DEFAULT_LABEL_TYPES.contour) {
+
+            // get path
+            const path = <Path>this.workspace.getPath(label)
+
+            // get nearest segment
+            const seg = path.getNearestLocation(event.point).segment
+
+            // if path has more than 3 segments remove
+            if (path.segments.length > 3) {
+
+                seg.remove()
+
+                // apply path
+                this.labeller.apply(label.id, path)
+
+                // remove hotspot
+                this.hotspot && this.hotspot.remove()
+            }
+
+        }
+    }
+    
+    // ===================
+    //  MOUSE MOVE EVENTS
+    // ===================
+    private onmousemove_normal(event: ToolEvent) {
+
+        if (this.points.length) {
+
+            this.createContour()
+
+            this.createPreview(event.point)
+
+            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance*this.ratio) {
+
+                this.createClosePoint()
+
+                this.closePathActive = true
+            }
+
+            else {
+
+                this.closePoint && this.closePoint.remove()
+
+                this.closePoint = null
+
+                this.closePathActive = false
+            }
+
+        }
+
+        // remove hotspot
+        this.hotspot && this.hotspot.remove()
+
+    }
+
+    /**
+     * move with shift modifier
+     * @param event Tool Event
+     */
+    private onmousemove_shift(event: ToolEvent) {
+
+        const label = this.labeller.selected
+
+        if (label && label.type === DEFAULT_LABEL_TYPES.contour) {
+
+            // remove old hotspot
+            this.hotspot && this.hotspot.remove()
+
+            // get selected label's path
+            const path = <Path>this.workspace.getPath(label)
+
+            // get nearest point
+            const point = path.getNearestPoint(event.point)
+
+            // get stroke width of label
+            const strokeWidth = this.settings.general.workspace.labels.stroke.width
+
+            // create hotspot
+            this.hotspot = new this.paper.Path.Circle(point, strokeWidth*this.ratio*5)
+            this.hotspot.fillColor = path.strokeColor
+
+        }
+
+    }
+
+    private onmousemove_alt(event: ToolEvent) {
+
+        const label = this.labeller.selected
+
+        if (label && label.type === DEFAULT_LABEL_TYPES.contour) {
+
+            // remove hotspot
+            this.hotspot && this.hotspot.remove()
+
+            // get path
+            const path = this.workspace.getPath(label)
+
+            // get nearest segment
+            const seg = path.getNearestLocation(event.point).segment
+
+            // get radius of control
+            const radius = this.settings.general.workspace.control.radius
+
+            // create hotspot
+            this.hotspot = new this.paper.Path.Circle(seg.point, radius*this.ratio)
+            this.hotspot.fillColor = path.strokeColor
+        }
+    }
+
+    // =================
+    //  PREVIEW METHODS
+    // =================
 
     /**
      * Complete the label
@@ -184,7 +350,9 @@ export class ContourTool extends AnnotationTool {
     }
 
 
-    /// PRIVATE
+    /**
+     * Create the contour
+     */
     private createContour() {
 
 
@@ -238,6 +406,10 @@ export class ContourTool extends AnnotationTool {
         }
     }
 
+    /**
+     * Create preiew dotted
+     * @param cursorPoint current cursor position
+     */
     private createPreview(cursorPoint: Point) {
 
         if (this.firstPoint && cursorPoint) {

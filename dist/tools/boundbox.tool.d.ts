@@ -23,6 +23,7 @@ export declare class BoundboxTool extends AnnotationTool {
     onmousedrag(event: ToolEvent): void;
     onmousedown(event: ToolEvent): void;
     onmouseup(event: ToolEvent): void;
+    private reset;
     private createHotspot;
 }
 declare const _default: {

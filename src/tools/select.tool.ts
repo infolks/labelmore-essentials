@@ -50,7 +50,7 @@ class SelectTool extends AnnotationTool {
     // deslect any selection on deactivation of tool
     ondeactivate () {
         this.preview && this.preview.remove()
-        this.labeller.deselect()
+        // this.labeller.deselect()
     }
 
     onmousedown (event: ToolEvent) {

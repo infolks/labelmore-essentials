@@ -21,6 +21,7 @@ export declare class ContourTool extends AnnotationTool {
     private contour;
     private contourJoints;
     private closePoint;
+    private hotspot;
     private closePathActive;
     private points;
     protected options: Partial<AnnotationToolOptions>;
@@ -34,15 +35,32 @@ export declare class ContourTool extends AnnotationTool {
     onmousemove(event: ToolEvent): void;
     onkeyup(event: KeyEvent): void;
     private reset;
+    private onmousedown_normal;
+    private onmousedown_shift;
+    private onmousedown_alt;
+    private onmousemove_normal;
+    /**
+     * move with shift modifier
+     * @param event Tool Event
+     */
+    private onmousemove_shift;
+    private onmousemove_alt;
     /**
      * Complete the label
      */
     private makeLabel;
+    /**
+     * Create the contour
+     */
     private createContour;
     /**
      * Create the circle used to close the path
      */
     private createClosePoint;
+    /**
+     * Create preiew dotted
+     * @param cursorPoint current cursor position
+     */
     private createPreview;
 }
 declare const _default: {
