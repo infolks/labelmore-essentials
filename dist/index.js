@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.9
+ * @infolks/labelmore-essentials v0.5.10
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1252,9 +1252,7 @@ class DiskSource extends labelmoreDevkit.Source {
         });
     }
     join(dir, subdir) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return (dir + '/' + subdir).replace(/(\/)+/, '/');
-        });
+        return (dir + '/' + subdir).replace(/(\/)+/, '/');
     }
 }
 var DiskSource$1 = {
@@ -1675,21 +1673,54 @@ class JsonEncoder extends labelmoreDevkit.Encoder {
     }
     convertLabel(label, class_) {
         if (label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.boundbox) {
-            return {
-                name: this.labeller.getName(label),
-                description: {
-                    type: label.type
-                },
-                tags: label.props.tags || [],
-                classTitle: class_.name,
-                attributes: label.props.attributes || {},
-                points: {
-                    exterior: [[label.props.xmin, label.props.ymin], [label.props.xmax, label.props.ymax]],
-                    interior: []
-                }
-            };
+            return this.convertBoundbox(label, class_);
         }
-        return null;
+        else if (label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.contour) {
+            return this.convertPoly(label, class_);
+        }
+        else if (label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.line) {
+            return this.convertPoly(label, class_);
+        }
+        return this.convertGeneral(label, class_);
+    }
+    convertBoundbox(label, class_) {
+        return {
+            name: this.labeller.getName(label),
+            description: {
+                type: label.type
+            },
+            classTitle: class_.name,
+            attributes: label.attributes || {},
+            points: {
+                exterior: [[label.props.xmin, label.props.ymin], [label.props.xmax, label.props.ymax]],
+                interior: []
+            }
+        };
+    }
+    convertPoly(label, class_) {
+        return {
+            name: this.labeller.getName(label),
+            description: {
+                type: label.type
+            },
+            classTitle: class_.name,
+            attributes: label.attributes || {},
+            points: {
+                exterior: label.props.points.map(p => [p.x, p.y]),
+                interior: []
+            }
+        };
+    }
+    convertGeneral(label, class_) {
+        return {
+            name: this.labeller.getName(label),
+            description: {
+                type: label.type
+            },
+            classTitle: class_.name,
+            attributes: label.attributes || {},
+            props: label.props || {}
+        };
     }
 }
 var JsonEncoder$1 = {

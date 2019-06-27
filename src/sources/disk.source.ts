@@ -46,7 +46,7 @@ class DiskSource extends Source {
         return await this.fileManager.write(dir, filename, data)
     }
 
-    async join(dir: string, subdir: string): Promise<string> {
+    join(dir: string, subdir: string): string {
 
         return (dir + '/' + subdir).replace(/(\/)+/, '/')
     }

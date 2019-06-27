@@ -1,4 +1,4 @@
-import { Encoder, Project, FileWriteInfo } from "@infolks/labelmore-devkit";
+import { Encoder, Project, FileWriteInfo, BoundboxProps, ContourProps, PolylineProps } from "@infolks/labelmore-devkit";
 import { Frame } from "@infolks/labelmore-devkit";
 import { Label, DEFAULT_LABEL_TYPES, LabelClass } from "@infolks/labelmore-devkit";
 import { ProjectManager } from "@infolks/labelmore-devkit";
@@ -72,24 +72,66 @@ class JsonEncoder extends Encoder {
 
         if (label.type === DEFAULT_LABEL_TYPES.boundbox) {
 
-            return {
-                name: this.labeller.getName(label),
-                description: {
-                    type: label.type
-                },
-                tags: label.props.tags || [],
-                classTitle: class_.name,
-                attributes: label.props.attributes || {},
-                points: {
-                    exterior: [[label.props.xmin, label.props.ymin], [label.props.xmax, label.props.ymax]],
-                    interior: []
-                }
-
-            }
+            return this.convertBoundbox(label, class_)
         }
 
-        return null;
+        else if (label.type === DEFAULT_LABEL_TYPES.contour) {
 
+            return this.convertPoly(label, class_)
+        }
+
+        else if (label.type === DEFAULT_LABEL_TYPES.line) {
+            return this.convertPoly(label, class_)
+        }
+
+        return this.convertGeneral(label, class_)
+
+    }
+
+    private convertBoundbox(label: Label<BoundboxProps>, class_:LabelClass) {
+
+        return {
+            name: this.labeller.getName(label),
+            description: {
+                type: label.type
+            },
+            classTitle: class_.name,
+            attributes: label.attributes || {},
+            points: {
+                exterior: [[label.props.xmin, label.props.ymin], [label.props.xmax, label.props.ymax]],
+                interior: []
+            }
+
+        }
+    }
+
+    private convertPoly(label: Label<ContourProps | PolylineProps>, class_: LabelClass) {
+
+        return {
+            name: this.labeller.getName(label),
+            description: {
+                type: label.type
+            },
+            classTitle: class_.name,
+            attributes: label.attributes || {},
+            points: {
+                exterior: label.props.points.map(p => [p.x, p.y]),
+                interior: []
+            }
+        }
+    }
+
+    private convertGeneral(label: Label<any>, class_: LabelClass) {
+
+        return {
+            name: this.labeller.getName(label),
+            description: {
+                type: label.type
+            },
+            classTitle: class_.name,
+            attributes: label.attributes || {},
+            props: label.props || {}
+        }
     }
 }
 
