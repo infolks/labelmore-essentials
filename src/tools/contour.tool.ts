@@ -1,4 +1,4 @@
-import { AnnotationToolOptions, AnnotationTool, LabelManager, WorkspaceManager, SettingsManager, DEFAULT_LABEL_TYPES } from "@infolks/labelmore-devkit";
+import { AnnotationToolOptions, AnnotationTool, LabelManager, WorkspaceManager, SettingsManager, DEFAULT_LABEL_TYPES, ContourProps, Label } from "@infolks/labelmore-devkit";
 import { ToolEvent, Path, Point, Color, PaperScope, KeyEvent, Group } from "paper";
 import {NAME as ESSENTAIL_SETTINGS, GeneralToolSettings, ContourToolSettings} from "../settings";
 /**
@@ -125,10 +125,43 @@ export class ContourTool extends AnnotationTool {
 
                 else {
                     this.preview.remove()
+                    this.contourJoints.remove()
                 }
 
             }
             
+        }
+
+        // snap on tab
+        else if (key === 'tab') {
+
+            console.log('snap on')
+
+            const label = this.labeller.selected
+
+            if (label && label.type === DEFAULT_LABEL_TYPES.contour) {
+
+                // get path
+                const path = <Path>this.workspace.getPath(label)
+
+                let changed = false
+
+                path.segments.forEach((segment) => {
+
+                    const nearest = this.getNearest(segment.point, label.id)
+
+                    if (segment.point.getDistance(nearest) < this.prefs.snap.distance*this.ratio) {
+
+                        segment.point.set(nearest.x, nearest.y)
+
+                        changed = true
+                    }
+                })
+
+                console.log(changed)
+
+                if (changed) this.labeller.apply(label.id, path)
+            }
         }
 
         else if (key === 'enter') {
@@ -199,6 +232,11 @@ export class ContourTool extends AnnotationTool {
             this.hotspot && this.hotspot.remove()
             this.hotspot = null
         }
+
+        else {
+
+            this.onmousedown_normal(event)
+        }
     }
 
     private onmousedown_alt(event: ToolEvent) {
@@ -226,6 +264,20 @@ export class ContourTool extends AnnotationTool {
             }
 
         }
+        
+        else {
+
+            if (this.prefs.snap.enabled) {
+                const nearest = this.getNearest(event.point)
+
+                if (event.point.getDistance(nearest) < this.prefs.snap.distance*this.ratio) {
+                    event.point = nearest
+                }
+
+            }
+
+            this.onmousedown_normal(event)
+        }
     }
     
     // ===================
@@ -239,7 +291,7 @@ export class ContourTool extends AnnotationTool {
 
             this.createPreview(event.point)
 
-            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance*this.ratio) {
+            if (event.point.getDistance(this.firstPoint) < this.prefs.closeDistance*this.ratio) {
 
                 this.createClosePoint()
 
@@ -253,6 +305,7 @@ export class ContourTool extends AnnotationTool {
                 this.closePoint = null
 
                 this.closePathActive = false
+
             }
 
         }
@@ -290,6 +343,10 @@ export class ContourTool extends AnnotationTool {
 
         }
 
+        else {
+            this.onmousemove_normal(event)
+        }
+
     }
 
     private onmousemove_alt(event: ToolEvent) {
@@ -314,11 +371,51 @@ export class ContourTool extends AnnotationTool {
             this.hotspot = new this.paper.Path.Circle(seg.point, radius*this.ratio)
             this.hotspot.fillColor = path.strokeColor
         }
+
+        else {
+            
+            if (this.prefs.snap.enabled) {
+                const nearest = this.getNearest(event.point)
+
+                if (event.point.getDistance(nearest) < this.prefs.snap.distance*this.ratio) {
+                    event.point = nearest
+                }
+            }
+
+            this.onmousemove_normal(event)
+        }
     }
 
     // =================
     //  PREVIEW METHODS
     // =================
+
+    /**
+     * get nearest point
+     */
+    private getNearest(evPoint: Point, avoid?: number): Point {
+
+        const contourLabels: Label<ContourProps>[] = this.labeller.all.filter(l => (l.type === DEFAULT_LABEL_TYPES.contour) && (l.id !== avoid))
+
+        const allPoints = contourLabels.reduce((points, item) => {
+            
+            return [...points, ...item.props.points.map(p => new Point(p.x, p.y))]
+
+        }, <Point[]>[])
+
+        const nearest = allPoints.slice(1).reduce((minPt, point) => {
+
+            const minDist = evPoint.getDistance(minPt)
+            const dist = evPoint.getDistance(point)
+
+            return (dist < minDist)? point:minPt
+
+        }, allPoints[0])
+
+        console.log(nearest)
+
+        return nearest
+    }
 
     /**
      * Complete the label
@@ -393,7 +490,7 @@ export class ContourTool extends AnnotationTool {
 
         if (this.points.length) {
 
-            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.snapDistance*this.ratio)
+            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.closeDistance*this.ratio)
 
             const color = this.labeller.class? this.labeller.class.color: '#ffff00'
 

@@ -1,4 +1,4 @@
-import { AnnotationTool, LabelManager, WorkspaceManager, SettingsManager, AnnotationToolOptions, DEFAULT_LABEL_TYPES } from "@infolks/labelmore-devkit";
+import { AnnotationTool, LabelManager, WorkspaceManager, SettingsManager, AnnotationToolOptions, DEFAULT_LABEL_TYPES, Label, PolylineProps } from "@infolks/labelmore-devkit";
 import { PaperScope, Point, Path, ToolEvent, KeyEvent, Group, Color } from "paper";
 import {NAME as ESSENTAIL_SETTINGS, GeneralToolSettings} from "../settings";
 
@@ -154,6 +154,11 @@ class LineTool extends AnnotationTool {
             this.hotspot && this.hotspot.remove()
             this.hotspot = null
         }
+
+        else {
+
+            this.onmousedown_normal(event)
+        }
     }
 
     private onmousedown_alt(event: ToolEvent) {
@@ -179,6 +184,12 @@ class LineTool extends AnnotationTool {
                 this.hotspot && this.hotspot.remove()
             }
         }
+
+        else {
+
+            this.onmousedown_normal(event)
+        }
+        
     }
     
     // ===================
@@ -192,6 +203,9 @@ class LineTool extends AnnotationTool {
 
             this.createPreview(event.point)
         }
+
+        // remove hotspot
+        this.hotspot && this.hotspot.remove()
 
     }
 
@@ -221,6 +235,10 @@ class LineTool extends AnnotationTool {
             this.hotspot = new this.paper.Path.Circle(point, strokeWidth*this.ratio*5)
             this.hotspot.fillColor = path.strokeColor
         }
+        else {
+            this.onmousemove_normal(event)
+        }
+
 
     }
 
@@ -246,6 +264,11 @@ class LineTool extends AnnotationTool {
             this.hotspot = new this.paper.Path.Circle(seg.point, radius*this.ratio)
             this.hotspot.fillColor = path.strokeColor
         }
+
+        else {
+            this.onmousemove_normal(event)
+        }
+
     }
 
     private reset() {

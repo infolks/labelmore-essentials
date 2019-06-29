@@ -15,7 +15,11 @@ export interface BoundboxToolSettings {
 }
 
 export interface ContourToolSettings {
-    snapDistance: number,
+    closeDistance: number
+    snap: {
+        enabled: boolean
+        distance: number
+    }
     minSides: number
 }
 
@@ -46,7 +50,11 @@ export const DEFAULT_SETTINGS: EssentialSettings = {
             minArea: 1
         },
         contour: {
-            snapDistance: 10,
+            closeDistance: 10,
+            snap: {
+                enabled: true,
+                distance: 10
+            },
             minSides: 3
         }
         // select: {
@@ -88,7 +96,7 @@ export default {
                     }
                 }
             }
-            
+
         })
     }
 }

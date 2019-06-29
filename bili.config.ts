@@ -1,7 +1,10 @@
 import { Config } from 'bili'
 
 const config: Config = {
-    input: './src/index.ts',
+    input: [
+        './src/index.ts',
+        './src/settings.ts'
+    ],
     banner: true,
     plugins: {
         babel: false,

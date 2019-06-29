@@ -11,7 +11,11 @@ export interface BoundboxToolSettings {
     minArea: number;
 }
 export interface ContourToolSettings {
-    snapDistance: number;
+    closeDistance: number;
+    snap: {
+        enabled: boolean;
+        distance: number;
+    };
     minSides: number;
 }
 export interface EssentialSettings {

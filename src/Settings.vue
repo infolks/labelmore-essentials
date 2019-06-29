@@ -43,13 +43,23 @@
         <div class="uk-margin">
             <div class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
-                    <label class="uk-form-label" for="min_snap_distance">Minimum Snap Distance</label>
-                    <input type="number" name="min_snap_distance" :min="5" :step="1" class="uk-input" v-model.number="settings.tools.contour.snapDistance">
+                    <label class="uk-form-label" for="min_close_distance">Minimum Close Distance</label>
+                    <input type="number" name="min_close_distance" :min="5" :step="1" class="uk-input" v-model.number="settings.tools.contour.closeDistance">
                 </div>
 
                 <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
                     <label class="uk-form-label" for="min_sides">Minimum Sides</label>
                     <input type="number" name="min_sides" :min="3" :step="1" class="uk-input" v-model.number="settings.tools.contour.minSides">
+                </div>
+
+                <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
+                    <label class="uk-form-label" for="snap_enabled">Snap to Point</label>
+                    <app-check-toggle class="uk-width-1-1" v-model="settings.tools.contour.snap.enabled">{{settings.tools.contour.snap.enabled? 'enabled' : 'disabled'}}</app-check-toggle>
+                </div>
+
+                <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m" v-if="settings.tools.contour.snap.enabled">
+                    <label class="uk-form-label" for="min_snap_distance">Minimum Snap Distance</label>
+                    <input type="number" name="min_snap_distance" :min="2" :step="1" class="uk-input" v-model.number="settings.tools.contour.snap.distance">
                 </div>
             </div>
         </div>

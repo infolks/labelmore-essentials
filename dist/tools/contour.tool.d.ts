@@ -46,6 +46,10 @@ export declare class ContourTool extends AnnotationTool {
     private onmousemove_shift;
     private onmousemove_alt;
     /**
+     * get nearest point
+     */
+    private getNearest;
+    /**
      * Complete the label
      */
     private makeLabel;

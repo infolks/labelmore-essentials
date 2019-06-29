@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.10
+ * @infolks/labelmore-essentials v0.5.11
  * (c) infolks
  * Released under the ISC License.
  */
@@ -97,13 +97,13 @@ var script = {
 const __vue_script__ = script;
 
 /* template */
-var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{attrs:{"id":"boundbox-settings-form"},on:{"submit":function($event){$event.preventDefault();return _vm.submit()}}},[_c('h5',{staticClass:"settings-sub-heading"},[_vm._v("Tool Settings")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Color: ")]),_vm._v(" "),_c('app-color-input',{attrs:{"pos":"bottom"},model:{value:(_vm.settings.tools.general.preview.color),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "color", $$v);},expression:"settings.tools.general.preview.color"}})],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Stroke Width:")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.general.preview.width),expression:"settings.tools.general.preview.width",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":1},domProps:{"value":(_vm.settings.tools.general.preview.width)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.general.preview, "width", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Dashed:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.dashed),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "dashed", $$v);},expression:"settings.tools.general.preview.dashed"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.dashed? 'dashed' : 'not dashed'))])],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Hotspots:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.hotspots),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "hotspots", $$v);},expression:"settings.tools.general.preview.hotspots"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.hotspots? 'enabled' : 'disabled'))])],1)])]),_vm._v(" "),_c('h5',{staticClass:"settings-sub-heading small"},[_vm._v("Boundbox Tool")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_area"}},[_vm._v("Minimum Area")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.boundbox.minArea),expression:"settings.tools.boundbox.minArea",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":0.01,"step":0.01},domProps:{"value":(_vm.settings.tools.boundbox.minArea)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.boundbox, "minArea", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})])])]),_vm._v(" "),_c('h5',{staticClass:"settings-sub-heading small"},[_vm._v("Contour Tool")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_snap_distance"}},[_vm._v("Minimum Snap Distance")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.snapDistance),expression:"settings.tools.contour.snapDistance",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_snap_distance","min":5,"step":1},domProps:{"value":(_vm.settings.tools.contour.snapDistance)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "snapDistance", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_sides"}},[_vm._v("Minimum Sides")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.minSides),expression:"settings.tools.contour.minSides",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_sides","min":3,"step":1},domProps:{"value":(_vm.settings.tools.contour.minSides)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "minSides", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})])])])])};
+var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{attrs:{"id":"boundbox-settings-form"},on:{"submit":function($event){$event.preventDefault();return _vm.submit()}}},[_c('h5',{staticClass:"settings-sub-heading"},[_vm._v("Tool Settings")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Color: ")]),_vm._v(" "),_c('app-color-input',{attrs:{"pos":"bottom"},model:{value:(_vm.settings.tools.general.preview.color),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "color", $$v);},expression:"settings.tools.general.preview.color"}})],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Stroke Width:")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.general.preview.width),expression:"settings.tools.general.preview.width",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":1},domProps:{"value":(_vm.settings.tools.general.preview.width)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.general.preview, "width", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Preview Dashed:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.dashed),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "dashed", $$v);},expression:"settings.tools.general.preview.dashed"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.dashed? 'dashed' : 'not dashed'))])],1),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"guide_color"}},[_vm._v("Hotspots:")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.general.preview.hotspots),callback:function ($$v) {_vm.$set(_vm.settings.tools.general.preview, "hotspots", $$v);},expression:"settings.tools.general.preview.hotspots"}},[_vm._v(_vm._s(_vm.settings.tools.general.preview.hotspots? 'enabled' : 'disabled'))])],1)])]),_vm._v(" "),_c('h5',{staticClass:"settings-sub-heading small"},[_vm._v("Boundbox Tool")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_area"}},[_vm._v("Minimum Area")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.boundbox.minArea),expression:"settings.tools.boundbox.minArea",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_area","min":0.01,"step":0.01},domProps:{"value":(_vm.settings.tools.boundbox.minArea)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.boundbox, "minArea", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})])])]),_vm._v(" "),_c('h5',{staticClass:"settings-sub-heading small"},[_vm._v("Contour Tool")]),_vm._v(" "),_c('div',{staticClass:"uk-margin"},[_c('div',{staticClass:"uk-grid-small",attrs:{"uk-grid":""}},[_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_close_distance"}},[_vm._v("Minimum Close Distance")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.closeDistance),expression:"settings.tools.contour.closeDistance",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_close_distance","min":5,"step":1},domProps:{"value":(_vm.settings.tools.contour.closeDistance)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "closeDistance", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_sides"}},[_vm._v("Minimum Sides")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.minSides),expression:"settings.tools.contour.minSides",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_sides","min":3,"step":1},domProps:{"value":(_vm.settings.tools.contour.minSides)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour, "minSides", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"snap_enabled"}},[_vm._v("Snap to Point")]),_vm._v(" "),_c('app-check-toggle',{staticClass:"uk-width-1-1",model:{value:(_vm.settings.tools.contour.snap.enabled),callback:function ($$v) {_vm.$set(_vm.settings.tools.contour.snap, "enabled", $$v);},expression:"settings.tools.contour.snap.enabled"}},[_vm._v(_vm._s(_vm.settings.tools.contour.snap.enabled? 'enabled' : 'disabled'))])],1),_vm._v(" "),(_vm.settings.tools.contour.snap.enabled)?_c('div',{staticClass:"uk-width-1-2 uk-width-1-3@s uk-width-1-6@m"},[_c('label',{staticClass:"uk-form-label",attrs:{"for":"min_snap_distance"}},[_vm._v("Minimum Snap Distance")]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model.number",value:(_vm.settings.tools.contour.snap.distance),expression:"settings.tools.contour.snap.distance",modifiers:{"number":true}}],staticClass:"uk-input",attrs:{"type":"number","name":"min_snap_distance","min":2,"step":1},domProps:{"value":(_vm.settings.tools.contour.snap.distance)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.settings.tools.contour.snap, "distance", _vm._n($event.target.value));},"blur":function($event){return _vm.$forceUpdate()}}})]):_vm._e()])])])};
 var __vue_staticRenderFns__ = [];
 
   /* style */
   const __vue_inject_styles__ = undefined;
   /* scoped */
-  const __vue_scope_id__ = "data-v-cf052e94";
+  const __vue_scope_id__ = "data-v-52454a18";
   /* module identifier */
   const __vue_module_identifier__ = undefined;
   /* functional template */
@@ -114,7 +114,7 @@ var __vue_staticRenderFns__ = [];
   
 
   
-  var SettingsComponent = __vue_normalize__(
+  __vue_normalize__(
     { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
     __vue_inject_styles__,
     __vue_script__,
@@ -140,40 +140,16 @@ const DEFAULT_SETTINGS = {
             minArea: 1
         },
         contour: {
-            snapDistance: 10,
+            closeDistance: 10,
+            snap: {
+                enabled: true,
+                distance: 10
+            },
             minSides: 3
         }
         // select: {
         //     highlight: false
         // }
-    }
-};
-class EssentialInterface extends labelmoreDevkit.Interface {
-    constructor() {
-        super(...arguments);
-        this.name = NAME;
-        this.title = 'Essentials';
-        this.icon = `<i class="fas fa-boxes"></i>`;
-        this.component = 'app-settings-essentials';
-    }
-}
-var EssentialSettings = {
-    install(vue, optns) {
-        vue.mixin({
-            beforeCreate() {
-                if (this.$settings) {
-                    // register settings
-                    if (!this.$settings.hasSettings(NAME))
-                        this.$settings.registerSettings(NAME, DEFAULT_SETTINGS);
-                    // register interface
-                    if (!this.$settings.hasInterface(NAME)) {
-                        const essInterface = new EssentialInterface();
-                        this.$settings.registerInterface(NAME, essInterface);
-                        vue.component(essInterface.component, SettingsComponent);
-                    }
-                }
-            }
-        });
     }
 };
 
@@ -480,7 +456,28 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
                 }
                 else {
                     this.preview.remove();
+                    this.contourJoints.remove();
                 }
+            }
+        }
+        // snap on tab
+        else if (key === 'tab') {
+            console.log('snap on');
+            const label = this.labeller.selected;
+            if (label && label.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.contour) {
+                // get path
+                const path = this.workspace.getPath(label);
+                let changed = false;
+                path.segments.forEach((segment) => {
+                    const nearest = this.getNearest(segment.point, label.id);
+                    if (segment.point.getDistance(nearest) < this.prefs.snap.distance * this.ratio) {
+                        segment.point.set(nearest.x, nearest.y);
+                        changed = true;
+                    }
+                });
+                console.log(changed);
+                if (changed)
+                    this.labeller.apply(label.id, path);
             }
         }
         else if (key === 'enter') {
@@ -523,6 +520,9 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             this.hotspot && this.hotspot.remove();
             this.hotspot = null;
         }
+        else {
+            this.onmousedown_normal(event);
+        }
     }
     onmousedown_alt(event) {
         const label = this.labeller.selected;
@@ -540,6 +540,15 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
                 this.hotspot && this.hotspot.remove();
             }
         }
+        else {
+            if (this.prefs.snap.enabled) {
+                const nearest = this.getNearest(event.point);
+                if (event.point.getDistance(nearest) < this.prefs.snap.distance * this.ratio) {
+                    event.point = nearest;
+                }
+            }
+            this.onmousedown_normal(event);
+        }
     }
     // ===================
     //  MOUSE MOVE EVENTS
@@ -548,7 +557,7 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
         if (this.points.length) {
             this.createContour();
             this.createPreview(event.point);
-            if (event.point.getDistance(this.firstPoint) < this.prefs.snapDistance * this.ratio) {
+            if (event.point.getDistance(this.firstPoint) < this.prefs.closeDistance * this.ratio) {
                 this.createClosePoint();
                 this.closePathActive = true;
             }
@@ -580,6 +589,9 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             this.hotspot = new this.paper.Path.Circle(point, strokeWidth * this.ratio * 5);
             this.hotspot.fillColor = path.strokeColor;
         }
+        else {
+            this.onmousemove_normal(event);
+        }
     }
     onmousemove_alt(event) {
         const label = this.labeller.selected;
@@ -596,10 +608,35 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
             this.hotspot = new this.paper.Path.Circle(seg.point, radius * this.ratio);
             this.hotspot.fillColor = path.strokeColor;
         }
+        else {
+            if (this.prefs.snap.enabled) {
+                const nearest = this.getNearest(event.point);
+                if (event.point.getDistance(nearest) < this.prefs.snap.distance * this.ratio) {
+                    event.point = nearest;
+                }
+            }
+            this.onmousemove_normal(event);
+        }
     }
     // =================
     //  PREVIEW METHODS
     // =================
+    /**
+     * get nearest point
+     */
+    getNearest(evPoint, avoid) {
+        const contourLabels = this.labeller.all.filter(l => (l.type === labelmoreDevkit.DEFAULT_LABEL_TYPES.contour) && (l.id !== avoid));
+        const allPoints = contourLabels.reduce((points, item) => {
+            return [...points, ...item.props.points.map(p => new paper.Point(p.x, p.y))];
+        }, []);
+        const nearest = allPoints.slice(1).reduce((minPt, point) => {
+            const minDist = evPoint.getDistance(minPt);
+            const dist = evPoint.getDistance(point);
+            return (dist < minDist) ? point : minPt;
+        }, allPoints[0]);
+        console.log(nearest);
+        return nearest;
+    }
     /**
      * Complete the label
      */
@@ -648,7 +685,7 @@ class ContourTool extends labelmoreDevkit.AnnotationTool {
     createClosePoint() {
         this.closePoint && this.closePoint.remove();
         if (this.points.length) {
-            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.snapDistance * this.ratio);
+            this.closePoint = new this.paper.Path.Circle(this.firstPoint, this.prefs.closeDistance * this.ratio);
             const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
             // @ts-ignore
             this.closePoint.style = {
@@ -791,6 +828,9 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
             this.hotspot && this.hotspot.remove();
             this.hotspot = null;
         }
+        else {
+            this.onmousedown_normal(event);
+        }
     }
     onmousedown_alt(event) {
         const label = this.labeller.selected;
@@ -808,6 +848,9 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
                 this.hotspot && this.hotspot.remove();
             }
         }
+        else {
+            this.onmousedown_normal(event);
+        }
     }
     // ===================
     //  MOUSE MOVE EVENTS
@@ -817,6 +860,8 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
             this.createContour();
             this.createPreview(event.point);
         }
+        // remove hotspot
+        this.hotspot && this.hotspot.remove();
     }
     /**
      * move with shift modifier
@@ -837,6 +882,9 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
             this.hotspot = new this.paper.Path.Circle(point, strokeWidth * this.ratio * 5);
             this.hotspot.fillColor = path.strokeColor;
         }
+        else {
+            this.onmousemove_normal(event);
+        }
     }
     onmousemove_alt(event) {
         const label = this.labeller.selected;
@@ -852,6 +900,9 @@ class LineTool extends labelmoreDevkit.AnnotationTool {
             // create hotspot
             this.hotspot = new this.paper.Path.Circle(seg.point, radius * this.ratio);
             this.hotspot.fillColor = path.strokeColor;
+        }
+        else {
+            this.onmousemove_normal(event);
         }
     }
     reset() {
@@ -1300,7 +1351,7 @@ var __vue_staticRenderFns__$1 = [];
   /* style */
   const __vue_inject_styles__$1 = undefined;
   /* scoped */
-  const __vue_scope_id__$1 = "data-v-04397312";
+  const __vue_scope_id__$1 = "data-v-45a5cb93";
   /* module identifier */
   const __vue_module_identifier__$1 = undefined;
   /* functional template */
@@ -1739,6 +1790,8 @@ var JsonEncoder$1 = {
 };
 
 // tools
+// settings
+// import EssentialSettings from "./settings"
 var index = {
     install(vue, opts) {
         // settings
@@ -1763,7 +1816,7 @@ var index = {
         // encoders
         vue.use(JsonEncoder$1);
         // settings
-        vue.use(EssentialSettings);
+        // vue.use(EssentialSettings)
     }
 };
 
