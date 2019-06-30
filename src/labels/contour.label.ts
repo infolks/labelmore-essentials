@@ -7,22 +7,35 @@ import {
     LabelManager,
     WorkspaceManager,
     SettingsManager,
-    BasicLabelTypeOptions
+    BasicLabelTypeOptions,
+    Plugin,
+    ProjectManager
 } from "@infolks/labelmore-devkit";
 import { Path, Point, PaperScope } from "paper";
+import { JsonEncoder } from "../encoders/json.encoder";
+import { PolyJsonFormat } from "./formats/poly.json.format";
 
 export class ContourLabel extends SimpleLabelType<ContourProps> {
 
     public readonly title = 'Contour'
-    public readonly name = DEFAULT_LABEL_TYPES.contour
 
     public options: Partial<BasicLabelTypeOptions> = {
         showLabelTag: false,
         hasFill: true
     }
 
-    constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope) {
+    constructor(projectManager: ProjectManager, labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope) {
         super(labeller, workspace, settings, paper)
+
+        if (projectManager.hasEncoder('encoders.default.json')) {
+
+            const jsonEnc = <JsonEncoder>projectManager.getEncoder('encoders.default.json')
+
+            if (!jsonEnc.hasFormat(DEFAULT_LABEL_TYPES.contour)) {
+
+                jsonEnc.registerFormat(DEFAULT_LABEL_TYPES.contour, new PolyJsonFormat(labeller))
+            }
+        }
     }
 
     vectorize(label: Label<ContourProps>) {
@@ -62,20 +75,32 @@ export class ContourLabel extends SimpleLabelType<ContourProps> {
 }
 
 
-export default {
-    install(vue: any, opts: any) {
+// export default {
+//     install(vue: any, opts: any) {
 
-        vue.mixin({
-            beforeCreate() {
+//         vue.mixin({
+//             beforeCreate() {
                 
-                if (this.$labeller && this.$workspace && this.$settings) {
+//                 if (this.$labeller && this.$workspace && this.$settings) {
 
-                    const contourLabel = new ContourLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
+//                     const contourLabel = new ContourLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
 
-                    if (!this.$labeller.has(contourLabel.name)) this.$labeller.register(contourLabel.name, contourLabel)
+//                     if (!this.$labeller.has(contourLabel.name)) this.$labeller.register(contourLabel.name, contourLabel)
 
-                }
-            }
-        })
-    }
-}
+//                 }
+//             }
+//         })
+//     }
+// }
+
+export default Plugin.Label({
+    name: DEFAULT_LABEL_TYPES.contour,
+    provides: ContourLabel,
+    uses: [
+        'projects',
+        'labeller',
+        'workspace',
+        'settings',
+        'paper'
+    ]
+})

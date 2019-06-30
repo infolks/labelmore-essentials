@@ -7,22 +7,35 @@ import {
     LabelManager,
     WorkspaceManager,
     SettingsManager,
-    BasicLabelTypeOptions
+    BasicLabelTypeOptions,
+    Plugin,
+    ProjectManager
 } from "@infolks/labelmore-devkit";
 import { Path, Point, PaperScope } from "paper";
+import { JsonEncoder } from "../encoders/json.encoder";
+import { PolyJsonFormat } from "./formats/poly.json.format";
 
 export class PolylineLabel extends SimpleLabelType<PolylineProps> {
 
     public readonly title = 'Polyline'
-    public readonly name = DEFAULT_LABEL_TYPES.line
 
     public options: Partial<BasicLabelTypeOptions> = {
         showLabelTag: false,
         hasFill: false
     }
 
-    constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope) {
+    constructor(projectManager: ProjectManager, labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope) {
         super(labeller, workspace, settings, paper)
+
+        if (projectManager.hasEncoder('encoders.default.json')) {
+
+            const jsonEnc = <JsonEncoder>projectManager.getEncoder('encoders.default.json')
+
+            if (!jsonEnc.hasFormat(DEFAULT_LABEL_TYPES.line)) {
+
+                jsonEnc.registerFormat(DEFAULT_LABEL_TYPES.line, new PolyJsonFormat(labeller))
+            }
+        }
     }
 
     vectorize(label: Label<PolylineProps>) {
@@ -60,20 +73,32 @@ export class PolylineLabel extends SimpleLabelType<PolylineProps> {
 }
 
 
-export default {
-    install(vue: any, opts: any) {
+// export default {
+//     install(vue: any, opts: any) {
 
-        vue.mixin({
-            beforeCreate() {
+//         vue.mixin({
+//             beforeCreate() {
                 
-                if (this.$labeller && this.$workspace && this.$settings) {
+//                 if (this.$labeller && this.$workspace && this.$settings) {
 
-                    const polylineLabel = new PolylineLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
+//                     const polylineLabel = new PolylineLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
 
-                    if (!this.$labeller.has(polylineLabel.name)) this.$labeller.register(polylineLabel.name, polylineLabel)
+//                     if (!this.$labeller.has(polylineLabel.name)) this.$labeller.register(polylineLabel.name, polylineLabel)
 
-                }
-            }
-        })
-    }
-}
+//                 }
+//             }
+//         })
+//     }
+// }
+
+export default Plugin.Label({
+    name: DEFAULT_LABEL_TYPES.line,
+    provides: PolylineLabel,
+    uses: [
+        'projects',
+        'labeller',
+        'workspace',
+        'settings',
+        'paper'
+    ]
+})

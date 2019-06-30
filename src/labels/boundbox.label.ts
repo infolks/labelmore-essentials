@@ -7,18 +7,33 @@ import {
     BoundboxProps,
     LabelManager,
     WorkspaceManager,
-    SettingsManager
+    SettingsManager,
+    Plugin,
+    ProjectManager
 } from "@infolks/labelmore-devkit";
 
 import { PathItem, PaperScope } from "paper";
+import { JsonEncoder } from "../encoders/json.encoder";
+import { BoundboxJsonFormat } from "./formats/boundbox.json.format";
 
 export class BoundboxLabel extends SimpleLabelType<BoundboxProps> {
 
     public readonly title = 'Boundbox'
-    public readonly name = DEFAULT_LABEL_TYPES.boundbox
 
-    constructor(labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope) {
+    constructor(projectManager: ProjectManager, labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope) {
         super(labeller, workspace, settings, paper)
+
+        // register json format
+
+        if (projectManager.hasEncoder('encoders.default.json')) {
+
+            const jsonEnc = <JsonEncoder>projectManager.getEncoder('encoders.default.json')
+
+            if (!jsonEnc.hasFormat(DEFAULT_LABEL_TYPES.boundbox)) {
+
+                jsonEnc.registerFormat(DEFAULT_LABEL_TYPES.boundbox, new BoundboxJsonFormat(labeller))
+            }
+        }
     }
 
     tagContent(label: Label<BoundboxProps>, labelClass: LabelClass): string {
@@ -98,20 +113,32 @@ export class BoundboxLabel extends SimpleLabelType<BoundboxProps> {
     }
 }
 
-export default {
-    install(vue: any, opts: any) {
+// export default {
+//     install(vue: any, opts: any) {
 
-        vue.mixin({
-            beforeCreate() {
+//         vue.mixin({
+//             beforeCreate() {
                 
-                if (this.$labeller && this.$workspace && this.$settings) {
+//                 if (this.$labeller && this.$workspace && this.$settings) {
 
-                    const boundboxLabel = new BoundboxLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
+//                     const boundboxLabel = new BoundboxLabel(this.$labeller, this.$workspace, this.$settings, this.$paper);
 
-                    if (!this.$labeller.has(boundboxLabel.name)) this.$labeller.register(boundboxLabel.name, boundboxLabel)
+//                     if (!this.$labeller.has(boundboxLabel.name)) this.$labeller.register(boundboxLabel.name, boundboxLabel)
 
-                }
-            }
-        })
-    }
-}
+//                 }
+//             }
+//         })
+//     }
+// }
+
+export default Plugin.Label({
+    name: DEFAULT_LABEL_TYPES.boundbox,
+    provides: BoundboxLabel,
+    uses: [
+        'projects',
+        'labeller',
+        'workspace',
+        'settings',
+        'paper'
+    ]
+})
