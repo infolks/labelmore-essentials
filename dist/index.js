@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.11
+ * @infolks/labelmore-essentials v0.6.0
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1275,11 +1275,11 @@ class DiskSource extends labelmoreDevkit.Source {
             const options = {
                 properties: ["openDirectory", "createDirectory"]
             };
-            const dir = yield this.fileManager.browse(options);
-            if (dir.filePaths)
-                return dir.filePaths[0];
-            else
-                return null;
+            const dir = yield this.fileManager.showOpenDialog(options);
+            if (dir && dir.length) {
+                return dir[0];
+            }
+            return null;
         });
     }
     list(dir) {
@@ -1291,19 +1291,16 @@ class DiskSource extends labelmoreDevkit.Source {
             return files;
         });
     }
-    read(dir, filename) {
+    read(...paths) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const data = yield this.fileManager.read(dir, filename);
+            const data = yield this.fileManager.read(...paths);
             return data;
         });
     }
-    write(dir, filename, data) {
+    write(data, ...paths) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return yield this.fileManager.write(dir, filename, data);
+            return yield this.fileManager.write(data, ...paths);
         });
-    }
-    join(dir, subdir) {
-        return (dir + '/' + subdir).replace(/(\/)+/, '/');
     }
 }
 var DiskSource$1 = {
@@ -1794,29 +1791,27 @@ var JsonEncoder$1 = {
 // import EssentialSettings from "./settings"
 var index = {
     install(vue, opts) {
+        // encoders
+        vue.use(JsonEncoder$1);
+        // wizards
+        vue.use(LocalizationWizard$1);
+        // sources
+        vue.use(DiskSource$1);
+        // labels
+        vue.use(BoundboxLabel$1);
+        vue.use(ContourLabel$1);
+        vue.use(PolylineLabel$1);
         // settings
         vue.use(SelectTool$1);
         vue.use(BoundboxTool$1);
         vue.use(ContourTool$1);
         vue.use(LineTool$1);
         vue.use(PanTool$1);
-        // labels
-        vue.use(BoundboxLabel$1);
-        vue.use(ContourLabel$1);
-        vue.use(PolylineLabel$1);
-        // wizards
-        vue.use(LocalizationWizard$1);
-        // sources
-        vue.use(DiskSource$1);
         // panels
         vue.use(LabelClassesPanel);
         vue.use(KeypointsPanel$1);
         vue.use(ClassAttributesPanel$1);
         vue.use(SceneAttributesPanel$1);
-        // encoders
-        vue.use(JsonEncoder$1);
-        // settings
-        // vue.use(EssentialSettings)
     }
 };
 

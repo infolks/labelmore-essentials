@@ -31,17 +31,8 @@ import JsonEncoder from "./encoders/json.encoder"
 export default {
     install(vue: any, opts: any) {
 
-        // settings
-        vue.use(SelectTool)
-        vue.use(BoundboxTool)
-        vue.use(ContourTool)
-        vue.use(LineTool)
-        vue.use(PanTool)
-
-        // labels
-        vue.use(BoundboxLabel)
-        vue.use(ContourLabel)
-        vue.use(PolylineLabel)
+        // encoders
+        vue.use(JsonEncoder)
 
         // wizards
         vue.use(LocalizationWizard)
@@ -49,16 +40,23 @@ export default {
         // sources
         vue.use(DiskSource)
 
+        // labels
+        vue.use(BoundboxLabel)
+        vue.use(ContourLabel)
+        vue.use(PolylineLabel)
+
+        // settings
+        vue.use(SelectTool)
+        vue.use(BoundboxTool)
+        vue.use(ContourTool)
+        vue.use(LineTool)
+        vue.use(PanTool)
+
         // panels
         vue.use(LabelClassesPanel)
         vue.use(KeypointsPanel)
         vue.use(ClassAttributesPanel)
         vue.use(SceneAttributesPanel)
 
-        // encoders
-        vue.use(JsonEncoder)
-
-        // settings
-        // vue.use(EssentialSettings)
     }
 }

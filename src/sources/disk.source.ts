@@ -18,10 +18,14 @@ class DiskSource extends Source {
             properties: ["openDirectory", "createDirectory"]
         }
         
-        const dir = await this.fileManager.browse(options)
+        const dir = await this.fileManager.showOpenDialog(options)
 
-        if (dir.filePaths) return dir.filePaths[0]
-        else return null
+        if (dir && dir.length) {
+
+            return dir[0]
+        }
+
+        return null
     }    
     
     async list(dir: string): Promise<string[]> {
@@ -34,22 +38,22 @@ class DiskSource extends Source {
         return files
     }
 
-    async read(dir: string, filename: string): Promise<Buffer> {
+    async read(...paths: string[]): Promise<Buffer> {
         
-        const data = await this.fileManager.read(dir, filename)
+        const data = await this.fileManager.read(...paths)
 
         return data
     }
 
-    async write(dir: string, filename: string, data: Buffer): Promise<void> {
+    async write(data: Buffer, ...paths: string[]): Promise<void> {
         
-        return await this.fileManager.write(dir, filename, data)
+        return await this.fileManager.write(data, ...paths)
     }
 
-    join(dir: string, subdir: string): string {
+    // join(dir: string, subdir: string): string {
 
-        return (dir + '/' + subdir).replace(/(\/)+/, '/')
-    }
+    //     return (dir + '/' + subdir).replace(/(\/)+/, '/')
+    // }
 
 }
 

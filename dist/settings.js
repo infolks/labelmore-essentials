@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.5.11
+ * @infolks/labelmore-essentials v0.6.0
  * (c) infolks
  * Released under the ISC License.
  */
