@@ -19,11 +19,12 @@
             scene: {
                 handler(attrs) {
                     
-                    this.$projects.scene = attrs
+                    // this.$projects.scene = attrs
                 },
                 deep: true
             },
             sceneVals() {
+                console.log(this.sceneVals)
                 this.scene = this.sceneVals || {}
             }
         },
@@ -36,9 +37,11 @@
                 return this.$projects.scene
             }
         },
-        created() {
-            if (this.$projects.scene)
+        mounted() {
+            if (this.$projects.scene && Object.keys(this.$projects.scene).length > 0){
+                
                 this.scene = this.$projects.scene
+            }
         }
     }
 </script>

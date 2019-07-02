@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.6.1
+ * @infolks/labelmore-essentials v0.6.2
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1186,6 +1186,7 @@ class ContourLabel extends labelmoreDevkit.SimpleLabelType {
         const p = new this.paper.Path();
         for (let point of label.props.points) {
             p.add(new paper.Point(point.x, point.y));
+            p.selected = true;
         }
         p.closePath();
         return p;
@@ -1679,6 +1680,7 @@ var script$4 = {
             deep: true
         },
         sceneVals() {
+            console.log(this.sceneVals);
             this.scene = this.sceneVals || {};
         }
     },
@@ -1690,9 +1692,11 @@ var script$4 = {
             return this.$projects.scene;
         }
     },
-    created() {
-        if (this.$projects.scene)
+    mounted() {
+        if (this.$projects.scene && Object.keys(this.$projects.scene).length > 0) {
+            console.log(this.$projects.scene);
             this.scene = this.$projects.scene;
+        }
     }
 };
 
@@ -1706,11 +1710,11 @@ var __vue_staticRenderFns__$4 = [];
   /* style */
   const __vue_inject_styles__$4 = function (inject) {
     if (!inject) return
-    inject("data-v-dea5ccde_0", { source: ".class-attribute-item[data-v-dea5ccde]{margin-top:1rem}.class-attribute-item[data-v-dea5ccde]:first-child{margin-top:0}", map: undefined, media: undefined });
+    inject("data-v-0e0fbe76_0", { source: ".class-attribute-item[data-v-0e0fbe76]{margin-top:1rem}.class-attribute-item[data-v-0e0fbe76]:first-child{margin-top:0}", map: undefined, media: undefined });
 
   };
   /* scoped */
-  const __vue_scope_id__$4 = "data-v-dea5ccde";
+  const __vue_scope_id__$4 = "data-v-0e0fbe76";
   /* module identifier */
   const __vue_module_identifier__$4 = undefined;
   /* functional template */

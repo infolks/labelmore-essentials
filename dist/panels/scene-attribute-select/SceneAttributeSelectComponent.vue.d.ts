@@ -14,6 +14,6 @@ declare const _default: {
         attributes(): any;
         sceneVals(): any;
     };
-    created(): void;
+    mounted(): void;
 };
 export default _default;

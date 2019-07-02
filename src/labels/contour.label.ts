@@ -45,6 +45,8 @@ export class ContourLabel extends SimpleLabelType<ContourProps> {
         for (let point of label.props.points) {
 
             p.add(new Point(point.x, point.y))
+
+            p.selected = true
         }
 
         p.closePath()
