@@ -1,6 +1,6 @@
 {
   "name": "@infolks/labelmore-essentials",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "Essential plugin package for labelmore",
   "main": "dist/index.js",
   "scripts": {
