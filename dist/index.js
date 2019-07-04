@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v0.6.2
+ * @infolks/labelmore-essentials v0.6.3
  * (c) infolks
  * Released under the ISC License.
  */
@@ -114,7 +114,7 @@ var __vue_staticRenderFns__ = [];
   
 
   
-  __vue_normalize__(
+  var SettingsComponent = __vue_normalize__(
     { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
     __vue_inject_styles__,
     __vue_script__,
@@ -150,6 +150,34 @@ const DEFAULT_SETTINGS = {
         // select: {
         //     highlight: false
         // }
+    }
+};
+class EssentialInterface extends labelmoreDevkit.Interface {
+    constructor() {
+        super(...arguments);
+        this.name = NAME;
+        this.title = 'Essentials';
+        this.icon = `<i class="fas fa-boxes"></i>`;
+        this.component = 'app-settings-essentials';
+    }
+}
+var EssentialSettings = {
+    install(vue, optns) {
+        vue.mixin({
+            beforeCreate() {
+                if (this.$settings) {
+                    // register settings
+                    if (!this.$settings.hasSettings(NAME))
+                        this.$settings.registerSettings(NAME, DEFAULT_SETTINGS);
+                    // register interface
+                    if (!this.$settings.hasInterface(NAME)) {
+                        const essInterface = new EssentialInterface();
+                        this.$settings.registerInterface(NAME, essInterface);
+                        vue.component(essInterface.component, SettingsComponent);
+                    }
+                }
+            }
+        });
     }
 };
 
@@ -1675,7 +1703,7 @@ var script$4 = {
     watch: {
         scene: {
             handler(attrs) {
-                this.$projects.scene = attrs;
+                // this.$projects.scene = attrs
             },
             deep: true
         },
@@ -1694,7 +1722,6 @@ var script$4 = {
     },
     mounted() {
         if (this.$projects.scene && Object.keys(this.$projects.scene).length > 0) {
-            console.log(this.$projects.scene);
             this.scene = this.$projects.scene;
         }
     }
@@ -1710,11 +1737,11 @@ var __vue_staticRenderFns__$4 = [];
   /* style */
   const __vue_inject_styles__$4 = function (inject) {
     if (!inject) return
-    inject("data-v-0e0fbe76_0", { source: ".class-attribute-item[data-v-0e0fbe76]{margin-top:1rem}.class-attribute-item[data-v-0e0fbe76]:first-child{margin-top:0}", map: undefined, media: undefined });
+    inject("data-v-cf7c57c0_0", { source: ".class-attribute-item[data-v-cf7c57c0]{margin-top:1rem}.class-attribute-item[data-v-cf7c57c0]:first-child{margin-top:0}", map: undefined, media: undefined });
 
   };
   /* scoped */
-  const __vue_scope_id__$4 = "data-v-0e0fbe76";
+  const __vue_scope_id__$4 = "data-v-cf7c57c0";
   /* module identifier */
   const __vue_module_identifier__$4 = undefined;
   /* functional template */
@@ -1855,8 +1882,6 @@ var JsonEncoder$1 = labelmoreDevkit.Plugin.Encoder({
 });
 
 // tools
-// settings
-// import EssentialSettings from "./settings"
 var index = {
     install(vue, opts) {
         // encoders
@@ -1880,6 +1905,8 @@ var index = {
         vue.use(KeypointsPanel$1);
         vue.use(ClassAttributesPanel$1);
         vue.use(SceneAttributesPanel$1);
+        // settings
+        vue.use(EssentialSettings);
     }
 };
 

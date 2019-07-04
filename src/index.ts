@@ -26,7 +26,7 @@ import SceneAttributesPanel from "./panels/scene-attribute-select"
 import JsonEncoder from "./encoders/json.encoder"
 
 // settings
-// import EssentialSettings from "./settings"
+import EssentialSettings from "./settings"
 
 export default {
     install(vue: any, opts: any) {
@@ -57,6 +57,9 @@ export default {
         vue.use(KeypointsPanel)
         vue.use(ClassAttributesPanel)
         vue.use(SceneAttributesPanel)
+
+        // settings
+        vue.use(EssentialSettings)
 
     }
 }

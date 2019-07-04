@@ -2,8 +2,7 @@ import { Config } from 'bili'
 
 const config: Config = {
     input: [
-        './src/index.ts',
-        './src/settings.ts'
+        './src/index.ts'
     ],
     banner: true,
     plugins: {
@@ -15,7 +14,7 @@ const config: Config = {
     },
     output: {
         extractCSS: false,
-        fileName: '[name].js'
+        fileName: '[name].js',
     }
 
 }
