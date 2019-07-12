@@ -14,6 +14,7 @@ import {
 import { Path, Point, PaperScope } from "paper";
 import { JsonEncoder } from "../encoders/json.encoder";
 import { PolyJsonFormat } from "./formats/poly.json.format";
+import {NAME as ESSENTAIL_SETTINGS, ContourLabelSettings} from "../settings";
 
 export class ContourLabel extends SimpleLabelType<ContourProps> {
 
@@ -38,6 +39,10 @@ export class ContourLabel extends SimpleLabelType<ContourProps> {
         }
     }
 
+    private get prefs(): ContourLabelSettings {
+        return this.settings.getSettings(ESSENTAIL_SETTINGS).labels.contour
+    }
+
     vectorize(label: Label<ContourProps>) {
 
         const p = new this.paper.Path()
@@ -46,7 +51,7 @@ export class ContourLabel extends SimpleLabelType<ContourProps> {
 
             p.add(new Point(point.x, point.y))
 
-            p.selected = true
+            if(this.prefs.showPoints) p.selected = true
         }
 
         p.closePath()

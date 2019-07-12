@@ -23,6 +23,10 @@ export interface ContourToolSettings {
     minSides: number
 }
 
+export interface ContourLabelSettings {
+    showPoints: boolean
+}
+
 // export interface SelectToolSettings {
 // }
 
@@ -32,6 +36,9 @@ export interface EssentialSettings {
         boundbox: BoundboxToolSettings
         contour: ContourToolSettings
         // select: SelectToolSettings
+    },
+    labels: {
+        contour: ContourLabelSettings
     }
 }
 
@@ -60,6 +67,11 @@ export const DEFAULT_SETTINGS: EssentialSettings = {
         // select: {
         //     highlight: false
         // }
+    },
+    labels: {
+        contour: {
+            showPoints: true
+        }
     }
 }
 

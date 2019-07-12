@@ -4,6 +4,7 @@ export declare class ContourLabel extends SimpleLabelType<ContourProps> {
     readonly title = "Contour";
     options: Partial<BasicLabelTypeOptions>;
     constructor(projectManager: ProjectManager, labeller: LabelManager, workspace: WorkspaceManager, settings: SettingsManager, paper: PaperScope);
+    private readonly prefs;
     vectorize(label: Label<ContourProps>): Path;
     controls(path: Path): Control[];
     apply(path: Path): ContourProps;

@@ -64,6 +64,19 @@
             </div>
         </div>
 
+        <!-- Label Settings -->
+        <h5 class="settings-sub-heading">Label Settings</h5>
+
+        <!-- Contour Label -->
+        <h5 class="settings-sub-heading small">Contour Tool</h5>
+        <div class="uk-margin">
+            <div class="uk-grid-small" uk-grid>
+                <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
+                    <app-checkbox v-model="settings.labels.contour.showPoints">Show Vertex Points</app-checkbox>
+                </div>
+            </div>
+        </div>
+
     </form>
 </template>
 

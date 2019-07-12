@@ -18,11 +18,17 @@ export interface ContourToolSettings {
     };
     minSides: number;
 }
+export interface ContourLabelSettings {
+    showPoints: boolean;
+}
 export interface EssentialSettings {
     tools: {
         general: GeneralToolSettings;
         boundbox: BoundboxToolSettings;
         contour: ContourToolSettings;
+    };
+    labels: {
+        contour: ContourLabelSettings;
     };
 }
 export declare const NAME = "settings.default.essentials";
