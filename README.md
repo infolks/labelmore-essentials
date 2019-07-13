@@ -286,4 +286,4 @@ The essentials package comes with its own settings.
 6. Minimum Close Distance   : Minimum distance needed to trigger the auto-close circle
 7. Minimum Sides            : Minimum sides needed for the polygon *(minimum value is 3)*
 8. Snap to Point            : Snap to the closest point on the workspace *(Useful when working with semantic segmentations)*
-9. Minimum Snap Distance    : Minimum distance needed between the points 
+9. Minimum Snap Distance    : Minimum distance needed between the points
