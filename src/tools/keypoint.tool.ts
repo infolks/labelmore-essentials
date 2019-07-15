@@ -93,6 +93,8 @@ class KeypointTool extends AnnotationTool {
             this.makeLabel()
 
             this.boundboxMode = true
+
+            this.reset()
         }
     }
 

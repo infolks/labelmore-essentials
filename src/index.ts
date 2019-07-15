@@ -10,6 +10,7 @@ import PanTool from "./tools/pan.tool"
 import BoundboxLabel from "./labels/boundbox.label"
 import ContourLabel from "./labels/contour.label"
 import PolylineLabel from "./labels/polyline.label"
+import KeypointLabel from "./labels/keypoint.label"
 
 // wizards
 import LocalizationWizard from "./wizards/localization.wizard"
@@ -45,6 +46,7 @@ export default {
         vue.use(BoundboxLabel)
         vue.use(ContourLabel)
         vue.use(PolylineLabel)
+        vue.use(KeypointLabel)
 
         // tools
         vue.use(SelectTool)

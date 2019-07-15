@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
         "outDir": "./dist/",
-        "sourceMap": true,
+        "sourceMap": false,
         "module": "commonjs",
         "moduleResolution": "node",
         "target": "es6",
         "strict": false,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "declaration": true,
+        "declaration": false,
         "skipLibCheck": true
     },
     "include": [

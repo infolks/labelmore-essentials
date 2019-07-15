@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.0.2
+ * @infolks/labelmore-essentials v1.0.3
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1206,7 +1206,7 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
     }
 }
 KeypointLabel.NAME = 'types.default.keypoint';
-labelmoreDevkit.Plugin.Label({
+var KeypointLabel$1 = labelmoreDevkit.Plugin.Label({
     name: KeypointLabel.NAME,
     provides: KeypointLabel,
     uses: [
@@ -1275,6 +1275,7 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
         else if (key === 'enter') {
             this.makeLabel();
             this.boundboxMode = true;
+            this.reset();
         }
     }
     /*
@@ -2290,6 +2291,7 @@ var index = {
         vue.use(BoundboxLabel$1);
         vue.use(ContourLabel$1);
         vue.use(PolylineLabel$1);
+        vue.use(KeypointLabel$1);
         // tools
         vue.use(SelectTool$1);
         vue.use(BoundboxTool$1);
