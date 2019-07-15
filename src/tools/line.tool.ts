@@ -106,20 +106,20 @@ class LineTool extends AnnotationTool {
                     this.createPreview(this.preview.segments[1].point)
 
                     this.createContour()
-                } 
+                }
 
                 else {
                     this.preview.remove()
                 }
 
             }
-            
+
         }
 
         else if (key === 'enter') {
 
             this.makeLabel()
-            
+
         }
     }
 

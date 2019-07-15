@@ -29,7 +29,7 @@ These are used to export the annotation project into a target format
 
 ### JSON Encoder
 
-Exports the annotation in a COCO JSON format.
+Exports the annotation in a JSON format.
 The JSON encoder by default doesn't contain any export formats.
 Format for each label type can be registered using the ```registerFormat``` method of the encoder.
 

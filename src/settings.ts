@@ -27,6 +27,14 @@ export interface ContourLabelSettings {
     showPoints: boolean
 }
 
+export interface KeypointLabelSettings {
+    keypoint: {
+        radius: number,
+        // thickness: number
+    },
+    skeleton: boolean
+}
+
 // export interface SelectToolSettings {
 // }
 
@@ -38,7 +46,8 @@ export interface EssentialSettings {
         // select: SelectToolSettings
     },
     labels: {
-        contour: ContourLabelSettings
+        contour: ContourLabelSettings,
+        keypoints: KeypointLabelSettings
     }
 }
 
@@ -71,6 +80,13 @@ export const DEFAULT_SETTINGS: EssentialSettings = {
     labels: {
         contour: {
             showPoints: true
+        },
+        keypoints: {
+            keypoint: {
+                radius: 3,
+                // thickness: 1
+            },
+            skeleton: true
         }
     }
 }

@@ -1,3 +1,5 @@
+import { Keypoint } from "@infolks/labelmore-devkit";
+
 /**
  * remove extension from a file name
  * @param str string file name
@@ -43,4 +45,49 @@ export function deepAssign(object1: {[key:string]:any}, object2: {[key:string]:a
     }
 
     return object1;
+}
+
+/**
+ * Return the skeleton for the array of keypoints
+ * @param projectKeypoints project keypoints
+ */
+export function getSkeleton(projectKeypoints: Keypoint[]) {
+
+    // create a dictionary to connect ids
+
+    const kpDict = {}
+
+    for (let i=0; i<projectKeypoints.length; i++) {
+        
+        kpDict[projectKeypoints[i].name] = i
+
+    }
+
+    // we have a dictionary with names mapped to index
+
+    // we will create an array of edges from this dictionary
+    const edges: number[][] = []
+
+    // lets clone the keypoints array
+    const keypoints: Keypoint[] = JSON.parse(JSON.stringify(projectKeypoints))
+
+    for (let i=0; i<keypoints.length; i++) {
+
+        const kp = keypoints[i]
+
+        for (let conn of kp.connections) {
+
+            const j = kpDict[conn]
+
+            if (j) {
+                // push connection to edges array
+                edges.push([i, j])
+
+                // remove the reverse connection
+                keypoints[j].connections = keypoints[j].connections.filter(c => c!==kp.name)
+            }
+        }
+    }
+
+    return edges
 }

@@ -4,7 +4,7 @@ import { LabelManager } from "@infolks/labelmore-devkit";
 import { WorkspaceManager } from "@infolks/labelmore-devkit";
 import {SettingsManager} from '@infolks/labelmore-devkit';
 import { AnnotationToolOptions, AnnotationTool } from "@infolks/labelmore-devkit";
-import {NAME as ESSENTAIL_SETTINGS, BoundboxToolSettings, GeneralToolSettings} from "../settings"
+import {NAME as ESSENTIAL_SETTINGS, BoundboxToolSettings, GeneralToolSettings} from "../settings"
 
 export class BoundboxTool extends AnnotationTool {
 
@@ -32,11 +32,11 @@ export class BoundboxTool extends AnnotationTool {
     }
 
     get prefs(): BoundboxToolSettings {
-        return this.settings.getSettings(ESSENTAIL_SETTINGS).tools.boundbox
+        return this.settings.getSettings(ESSENTIAL_SETTINGS).tools.boundbox
     }
 
     get generalPrefs(): GeneralToolSettings {
-        return this.settings.getSettings(ESSENTAIL_SETTINGS).tools.general
+        return this.settings.getSettings(ESSENTIAL_SETTINGS).tools.general
     }
 
     onmousedrag(event: ToolEvent) {

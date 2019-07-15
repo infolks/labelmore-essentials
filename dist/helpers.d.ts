@@ -1,3 +1,4 @@
+import { Keypoint } from "@infolks/labelmore-devkit";
 /**
  * remove extension from a file name
  * @param str string file name
@@ -15,3 +16,8 @@ export declare function deepAssign(object1: {
 }): {
     [key: string]: any;
 };
+/**
+ * Return the skeleton for the array of keypoints
+ * @param projectKeypoints project keypoints
+ */
+export declare function getSkeleton(projectKeypoints: Keypoint[]): number[][];

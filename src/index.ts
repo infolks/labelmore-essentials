@@ -3,6 +3,7 @@ import SelectTool from "./tools/select.tool"
 import BoundboxTool from "./tools/boundbox.tool"
 import ContourTool from "./tools/contour.tool"
 import LineTool from "./tools/line.tool"
+import KeypointTool from "./tools/keypoint.tool";
 import PanTool from "./tools/pan.tool"
 
 // labels
@@ -45,11 +46,12 @@ export default {
         vue.use(ContourLabel)
         vue.use(PolylineLabel)
 
-        // settings
+        // tools
         vue.use(SelectTool)
         vue.use(BoundboxTool)
         vue.use(ContourTool)
         vue.use(LineTool)
+        vue.use(KeypointTool)
         vue.use(PanTool)
 
         // panels

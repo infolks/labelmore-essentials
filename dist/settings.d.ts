@@ -21,6 +21,12 @@ export interface ContourToolSettings {
 export interface ContourLabelSettings {
     showPoints: boolean;
 }
+export interface KeypointLabelSettings {
+    keypoint: {
+        radius: number;
+    };
+    skeleton: boolean;
+}
 export interface EssentialSettings {
     tools: {
         general: GeneralToolSettings;
@@ -29,6 +35,7 @@ export interface EssentialSettings {
     };
     labels: {
         contour: ContourLabelSettings;
+        keypoints: KeypointLabelSettings;
     };
 }
 export declare const NAME = "settings.default.essentials";
