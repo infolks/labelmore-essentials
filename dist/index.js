@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.0.3
+ * @infolks/labelmore-essentials v1.0.4
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1047,12 +1047,12 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
         this.title = 'Keypoint';
         this.options = {
             showLabelTag: false,
-            hasFill: false
+            hasFill: true
         };
         if (projectManager.hasEncoder('encoders.default.json')) ;
     }
     get prefs() {
-        return this.settings.getSettings(NAME).labels.contour;
+        return this.settings.getSettings(NAME).labels.keypoints;
     }
     get ratio() {
         return 1 / this.workspace.zoom;
@@ -1064,11 +1064,12 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
         const { xmin, xmax, ymin, ymax } = label.props.boundbox;
         const bbox = new this.paper.Path.Rectangle(new this.paper.Point(xmin, ymin), new this.paper.Point(xmax, ymax));
         const points = new this.paper.Group();
-        for (let kp of label.props.keypoints) {
+        label.props.keypoints.forEach((kp, i) => {
             const kp_path = this.keypointPath(kp.point.x, kp.point.y);
             kp_path.data.name = kp.name;
+            kp_path.data.index = i;
             points.addChild(kp_path);
-        }
+        });
         if (this.prefs.skeleton) {
             return new this.paper.Group([bbox, this.createSkeleton(label), points]);
         }
@@ -1180,23 +1181,26 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
         // const plus = r1.unite(r2)
         // r1.remove()
         // r2.remove()
-        return new this.paper.Path.Circle(new this.paper.Point(x, y), radius);
+        return new this.paper.Path.Circle(new this.paper.Point(x, y), radius * this.ratio);
     }
     createSkeleton(label) {
         const skeleton = getSkeleton(this.keypoints);
+        console.log('Skeleton', skeleton);
         // make dictionary to get index of keypoints from names
         const kpDict = {};
         for (let i = 0; i < this.keypoints.length; i++) {
             kpDict[this.keypoints[i].name] = i;
         }
+        console.log('Dict', kpDict);
         // make correspond list to check which all keypoints are in the label
         const kpCorr = [];
         for (let keypoint of label.props.keypoints) {
             kpCorr[kpDict[keypoint.name]] = keypoint;
         }
+        console.log('kpCorr', kpCorr);
         // create lines for each bone in skeleton and make a group
         const skeletonPath = new this.paper.Group();
-        for (let bone in skeleton) {
+        for (let bone of skeleton) {
             const from = kpCorr[bone[0]];
             const to = kpCorr[bone[1]];
             if (from && to)
@@ -1243,10 +1247,8 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
     get generalPrefs() {
         return this.settings.getSettings(NAME).tools.general;
     }
-    activate() {
-        // this.boundboxMode = true
-    }
     onmouseup(event) {
+        console.log('keypoint mouseup', `boxmode: ${this.boundboxMode}`);
         if (this.boundboxMode) {
             this.onmouseup_bbox(event);
         }
@@ -1254,12 +1256,24 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
             this.onmouseup_kp(event);
         }
     }
+    onmousemove(event) {
+        console.log('keypoint mousemove', `boxmode: ${this.boundboxMode}`);
+        this.createContour();
+    }
     onmousedown(event) {
-        if (this.boundboxMode) {
+        console.log('keypoint mousedown', `boxmode: ${this.boundboxMode}`);
+        if (event.modifiers.shift) {
+            this.onmousedown_shift(event);
+        }
+        else if (event.modifiers.alt) {
+            this.onmousedown_alt(event);
+        }
+        else if (this.boundboxMode) {
             this.onmousedown_bbox(event);
         }
     }
     onmousedrag(event) {
+        console.log('keypoint mousedrag', `boxmode: ${this.boundboxMode}`);
         if (this.boundboxMode) {
             this.onmousedrag_bbox(event);
         }
@@ -1269,6 +1283,11 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
         if (key === 'backspace') {
             if (this.points && this.points.length) {
                 this.points.pop();
+                this.createContour();
+            }
+            else if (this.bbox) {
+                this.bbox = null;
+                this.boundboxMode = true;
                 this.createContour();
             }
         }
@@ -1305,6 +1324,51 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
                     })
                 }
             });
+        }
+    }
+    /*
+     |---------------------------------
+     | Alt Press : Delete Points
+     |---------------------------------
+    */
+    onmousedown_alt(event) {
+        const label = this.labeller.selected;
+        const item = event.item;
+        if (label &&
+            label.type === KeypointLabel.NAME &&
+            item.data.index === this.workspace.RESERVED_ITEMS.CONTROL) {
+            const path = this.workspace.getPath(this.labeller.selected);
+            const points = path.children[2];
+            const kp = points.hitTest(item.position).item;
+            kp.remove();
+            this.labeller.apply(label.id, path);
+        }
+    }
+    /*
+     |---------------------------------
+     | Shift Press : Add Points
+     |---------------------------------
+    */
+    onmousedown_shift(event) {
+        const label = this.labeller.selected;
+        if (label &&
+            label.type === KeypointLabel.NAME) {
+            const keypoint = this.labeller.keypoint;
+            console.log(keypoint);
+            if (keypoint) {
+                this.labeller.update(label.id, {
+                    props: {
+                        boundbox: label.props.boundbox,
+                        keypoints: [...label.props.keypoints, {
+                                point: {
+                                    x: event.point.x,
+                                    y: event.point.y
+                                },
+                                name: keypoint.name
+                            }]
+                    }
+                });
+            }
         }
     }
     /*
@@ -1357,13 +1421,14 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
         }
     }
     onmouseup_bbox(event) {
-        if (this.preview && this.labeller.class) {
+        if (this.preview && this.preview.area > 0 && this.labeller.class) {
             this.bbox = this.preview.bounds;
             this.preview.remove();
             this.preview = null;
             this.createContour();
             this.boundboxMode = false;
         }
+        this.downPoint = null;
     }
     reset() {
         this.preview && this.preview.remove();
@@ -1377,23 +1442,22 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
     createContour() {
         this.contour && this.contour.remove();
         this.contourPoints && this.contourPoints.remove();
+        const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
         if (this.bbox) {
             this.contour = new this.paper.Path.Rectangle(this.bbox);
+            this.contour.style = {
+                strokeColor: new this.paper.Color(color),
+                fillColor: null,
+                strokeWidth: this.generalPrefs.preview.width * this.ratio
+            };
         }
         if (this.points.length) {
             this.contourPoints = new this.paper.Group();
             for (let kp of this.points) {
-                this.contourPoints.addChild(new this.paper.Path.Circle(kp.point, this.generalPrefs.preview.width * this.ratio * 5));
+                this.contourPoints.addChild(new this.paper.Path.Circle(kp.point, this.generalPrefs.preview.width * this.ratio * 3));
             }
-            this.contour.addChild(this.contourPoints);
+            this.contourPoints.fillColor = new this.paper.Color(color);
         }
-        const color = this.labeller.class ? this.labeller.class.color : '#ffff00';
-        this.contour.style = {
-            strokeColor: new this.paper.Color(color),
-            fillColor: null,
-            strokeWidth: this.generalPrefs.preview.width * this.ratio
-        };
-        this.contourPoints.fillColor = new this.paper.Color(color);
     }
 }
 var KeypointTool$1 = labelmoreDevkit.Plugin.Tool({

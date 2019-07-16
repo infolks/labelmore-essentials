@@ -1,7 +1,7 @@
-import { AnnotationTool, AnnotationToolOptions, LabelManager, WorkspaceManager, SettingsManager, Plugin } from "@infolks/labelmore-devkit";
-import { Point, Path, PaperScope, ToolEvent, Group, Rectangle, KeyEvent } from "paper";
+import { AnnotationTool, AnnotationToolOptions, LabelManager, WorkspaceManager, SettingsManager, Plugin, DEFAULT_LABEL_TYPES, Label } from "@infolks/labelmore-devkit";
+import { Point, Path, PaperScope, ToolEvent, Group, Rectangle, KeyEvent, Item } from "paper";
 import {NAME as ESSENTIAL_SETTINGS, GeneralToolSettings } from "../settings";
-import { KeypointLabel } from "../labels/keypoint.label";
+import { KeypointLabel, KeypointProps } from "../labels/keypoint.label";
 
 const NAME = 'tools.default.keypoint'
 
@@ -42,11 +42,9 @@ class KeypointTool extends AnnotationTool {
         return this.settings.getSettings(ESSENTIAL_SETTINGS).tools.general
     }
 
-    activate() {
-        // this.boundboxMode = true
-    }
-
     onmouseup(event: ToolEvent) {
+
+        console.log('keypoint mouseup', `boxmode: ${this.boundboxMode}`)
 
         if (this.boundboxMode) {
 
@@ -60,14 +58,35 @@ class KeypointTool extends AnnotationTool {
         }
     }
 
+    onmousemove(event: ToolEvent) {
+
+        console.log('keypoint mousemove', `boxmode: ${this.boundboxMode}`)
+
+        this.createContour()
+
+    }
+
     onmousedown(event: ToolEvent) {
 
-        if (this.boundboxMode) {
+        console.log('keypoint mousedown', `boxmode: ${this.boundboxMode}`)
+
+        if (event.modifiers.shift) {
+            this.onmousedown_shift(event)
+        }
+
+        else if (event.modifiers.alt) {
+
+            this.onmousedown_alt(event)
+        }
+
+        else if (this.boundboxMode) {
             this.onmousedown_bbox(event)
         }
     }
 
     onmousedrag(event: ToolEvent) {
+
+        console.log('keypoint mousedrag', `boxmode: ${this.boundboxMode}`)
 
         if (this.boundboxMode) {
             this.onmousedrag_bbox(event)
@@ -83,6 +102,14 @@ class KeypointTool extends AnnotationTool {
             if (this.points && this.points.length) {
 
                 this.points.pop()
+
+                this.createContour()
+            }
+
+            else if (this.bbox) {
+
+                this.bbox = null
+                this.boundboxMode = true
 
                 this.createContour()
             }
@@ -130,6 +157,75 @@ class KeypointTool extends AnnotationTool {
             })
         }
     }
+    
+    /*
+     |---------------------------------
+     | Alt Press : Delete Points
+     |---------------------------------
+    */
+    private onmousedown_alt(event: ToolEvent) {
+
+        const label = this.labeller.selected
+
+        const item = event.item
+
+        if (
+            label && 
+            label.type === KeypointLabel.NAME && 
+            item.data.index === this.workspace.RESERVED_ITEMS.CONTROL
+        ) {
+
+            const path = <Item>this.workspace.getPath(this.labeller.selected)
+
+            const points = path.children[2]
+
+            const kp = points.hitTest(item.position).item
+
+            kp.remove()
+
+            this.labeller.apply(label.id, path)
+
+        }
+    }
+
+    /*
+     |---------------------------------
+     | Shift Press : Add Points
+     |---------------------------------
+    */
+    private onmousedown_shift(event: ToolEvent) {
+
+            const label: Label<KeypointProps> = this.labeller.selected
+
+            if (
+                label && 
+                label.type === KeypointLabel.NAME
+            ) {
+
+                const keypoint = this.labeller.keypoint
+
+                console.log(keypoint)
+
+                if (keypoint) {
+
+                    this.labeller.update(label.id, {
+                        props: {
+                            boundbox: label.props.boundbox,
+                            keypoints: [...label.props.keypoints, {
+                                point: {
+                                    x: event.point.x,
+                                    y: event.point.y
+                                },
+                                name: keypoint.name
+                            }]
+                        }
+                    })
+
+                }
+
+
+            }
+        }
 
     /* 
      |---------------------------------
@@ -207,7 +303,7 @@ class KeypointTool extends AnnotationTool {
 
     private onmouseup_bbox(event: ToolEvent) {
 
-        if (this.preview && this.labeller.class) {
+        if (this.preview && this.preview.area > 0 && this.labeller.class) {
 
             this.bbox = this.preview.bounds
             
@@ -219,6 +315,8 @@ class KeypointTool extends AnnotationTool {
             this.boundboxMode = false
 
         }
+
+        this.downPoint = null
     }
 
    private reset() {
@@ -240,9 +338,17 @@ class KeypointTool extends AnnotationTool {
         this.contour && this.contour.remove()
         this.contourPoints && this.contourPoints.remove()
 
+        const color = this.labeller.class ? this.labeller.class.color: '#ffff00'
+
         if (this.bbox) {
 
             this.contour = new this.paper.Path.Rectangle(this.bbox)
+
+            this.contour.style = {
+                strokeColor: new this.paper.Color(color),
+                fillColor: null,
+                strokeWidth: this.generalPrefs.preview.width*this.ratio
+            }
             
         }
 
@@ -251,21 +357,11 @@ class KeypointTool extends AnnotationTool {
             this.contourPoints = new this.paper.Group()
 
             for (let kp of this.points) {
-                this.contourPoints.addChild(new this.paper.Path.Circle(kp.point, this.generalPrefs.preview.width*this.ratio*5))
+                this.contourPoints.addChild(new this.paper.Path.Circle(kp.point, this.generalPrefs.preview.width*this.ratio*3))
             }
             
-            this.contour.addChild(this.contourPoints)
+            this.contourPoints.fillColor = new this.paper.Color(color)
         }
-
-        const color = this.labeller.class ? this.labeller.class.color: '#ffff00'
-
-        this.contour.style = {
-            strokeColor: new this.paper.Color(color),
-            fillColor: null,
-            strokeWidth: this.generalPrefs.preview.width*this.ratio
-        }
-
-        this.contourPoints.fillColor = new this.paper.Color(color)
 
     }
 

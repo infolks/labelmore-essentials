@@ -1,7 +1,7 @@
-import { SimpleLabelType, BoundboxProps, BasicLabelTypeOptions, SettingsManager, WorkspaceManager, LabelManager, ProjectManager, Plugin, Label, Keypoint, Control } from "@infolks/labelmore-devkit";
 import { PaperScope, Point } from "paper";
 import { NAME as ESSENTIAL_SETTINGS, KeypointLabelSettings } from "../settings";
 import { getSkeleton } from "../helpers";
+import { SimpleLabelType, BoundboxProps, BasicLabelTypeOptions, SettingsManager, WorkspaceManager, LabelManager, ProjectManager, Plugin, Label, Keypoint, Control } from "@infolks/labelmore-devkit";
 
 export interface KeypointProps {
     boundbox: BoundboxProps
@@ -19,7 +19,7 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
 
     public options: Partial<BasicLabelTypeOptions> = {
         showLabelTag: false,
-        hasFill: false
+        hasFill: true
     }
 
     constructor(
@@ -38,7 +38,7 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
     }
 
     private get prefs(): KeypointLabelSettings {
-        return this.settings.getSettings(ESSENTIAL_SETTINGS).labels.contour
+        return this.settings.getSettings(ESSENTIAL_SETTINGS).labels.keypoints
     }
 
     private get ratio(): number {
@@ -60,14 +60,15 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
 
         const points = new this.paper.Group()
 
-        for (let kp of label.props.keypoints) {
+        label.props.keypoints.forEach( (kp, i) => {
 
             const kp_path = this.keypointPath(kp.point.x, kp.point.y)
 
             kp_path.data.name = kp.name
+            kp_path.data.index = i
 
             points.addChild(kp_path)
-        }
+        })
 
         if (this.prefs.skeleton) {
             return new this.paper.Group([bbox, this.createSkeleton(label), points])
@@ -206,12 +207,14 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
         // r1.remove()
         // r2.remove()
 
-        return new this.paper.Path.Circle(new this.paper.Point(x, y), radius)
+        return new this.paper.Path.Circle(new this.paper.Point(x, y), radius*this.ratio)
     }
 
     private createSkeleton(label: Label<KeypointProps>) {
 
         const skeleton = getSkeleton(this.keypoints)
+
+        console.log('Skeleton', skeleton)
 
         // make dictionary to get index of keypoints from names
         const kpDict = {}
@@ -221,6 +224,8 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
             kpDict[this.keypoints[i].name] = i
 
         }
+
+        console.log('Dict', kpDict)
 
         // make correspond list to check which all keypoints are in the label
 
@@ -232,10 +237,12 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
 
         }
 
+        console.log('kpCorr', kpCorr)
+
         // create lines for each bone in skeleton and make a group
         const skeletonPath = new this.paper.Group()
 
-        for (let bone in skeleton) {
+        for (let bone of skeleton) {
 
             const from = kpCorr[bone[0]]
             const to = kpCorr[bone[1]]
