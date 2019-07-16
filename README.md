@@ -287,6 +287,101 @@ It contains:
 *Note: Default shortcuts are set in the tool in-built and cannot be changed.*
 *Note: Shortcuts can be changed for each project*
 
+### Select Tool
+
+Used to select annotation labels.
+
+**Actions**
+
+| Trigger           | Interaction       | Action                            |
+| ----------------- | ----------------- | --------------------------------- |
+| Left Mouse        | Click             | Select annotation                 |
+| Delete Key        | Press             | Delete selected annotation        |
+| Up Arrow Key      | Press             | Bring selected annotation forward |
+| Down Arrow Key    | Press             | Take selected annotation backward |
+
+### Boundbox Tool
+
+Used for creating box annotations.
+
+**Actions**
+
+| Trigger           | Interaction       | Action                            |
+| ----------------- | ----------------- | --------------------------------- |
+| Left Mouse        | Click & Drag      | Create annotation                 |
+
+### Contour Tool
+
+Used for creating polygon/contour annotations.
+
+**Actions**
+
+| Trigger           | Interaction       | Action                                                    |
+| ----------------- | ----------------- | --------------------------------------------------------- |
+| Left Mouse        | Click             | Add a point while drawing                                 |
+| ''                | Alt + Click       | Remove point from selected annotation                     |
+| ''                | Shift + Click     | Add point to selected annotation                          |
+| Backspace         | Press             | Backtrack last point while drawing                        |
+| Alt               | Press & Hold      | Enable snapping mode while drawing                        |
+| Tab               | Press             | Snap points of selected annotation to nearby annotations  |
+
+### Polyline Tool
+
+Used for creating polyline annotations.
+
+**Actions**
+
+| Trigger           | Interaction       | Action                                                    |
+| ----------------- | ----------------- | --------------------------------------------------------- |
+| Left Mouse        | Click             | Add a point while drawing                                 |
+| ''                | Alt + Click       | Remove point from selected annotation                     |
+| ''                | Shift + Click     | Add point to selected annotation                          |
+| Backspace         | Press             | Backtrack last point while drawing                        |
+
+### Keypoint Tool
+
+Used for creating keypoint annotations
+
+#### Boundbox Mode
+
+Boundbox mode is active during the start of annotation.
+This mode is deactivated once boundbox is drawn.
+
+**Actions**
+
+| Trigger           | Interaction       | Action                            |
+| ----------------- | ----------------- | --------------------------------- |
+| Left Mouse        | Click & Drag      | Create bounding box               |
+
+#### Keypoint Mode
+
+This mode is activated once boundbox is drawn.
+You can start adding keypoints in this mode.
+
+| Trigger           | Interaction       | Action                                            |
+| ----------------- | ----------------- | ------------------------------------------------- |
+| Left Mouse        | Click             | Add keypoint *(A keypoint need to be selected)*   |
+| ''                | Alt + Click       | Remove a keypoint from selected annotation        |
+| ''                | Shift + Click     | Add an extra keypoint to selected annotation      |
+| Backspace         | Press             | Remove last added point *(or boundbox)*           |
+| V                 | Alt + Click       | Toggle visibility mode                            |
+
+*Note:*
+- *on pressing backspace, if no keypoint is added, the boundbox is deleted and the tool is set to Boundbox Mode.*
+- *The visibility mode can be accessed from the **store** dependency as:* ```store.state.globals['tools.default.keypoint.visibility']```
+    - The value **2** equals to visible
+    - The value **1** equals to invisible
+- *The boundbox mode and keypoint mode cannot be set manually*
+
+### Pan Tool
+
+The pan tool is used to scroll through the workspace area.
+
+| Trigger           | Interaction       | Action                                            |
+| ----------------- | ----------------- | ------------------------------------------------- |
+| Left Mouse        | Click & Drag      | Scroll through the workspace view                 |
+
+
 ## Wizards
 
 The essential package includes a basic localization annotation project.
@@ -295,7 +390,7 @@ The essential package includes a basic localization annotation project.
 
 The essentials package comes with its own settings.
 
-![Settings](https://i.ibb.co/fYSvynX/settings-preview.jpg)
+![Settings](https://i.ibb.co/DWCPkKx/settings.jpg)
 
 ### Tool Settings
 
@@ -314,3 +409,14 @@ The essentials package comes with its own settings.
 7. Minimum Sides            : Minimum sides needed for the polygon *(minimum value is 3)*
 8. Snap to Point            : Snap to the closest point on the workspace *(Useful when working with semantic segmentations)*
 9. Minimum Snap Distance    : Minimum distance needed between the points for them to snap together
+
+### Label Settings
+
+#### Contour Label
+
+10. Show Vertex Points      : Make vertex points visible for contour label
+
+#### Keypoint Label
+
+11. Keypoint Radius         : Radius of the keypoint label
+12. Skeleton                : Show skeleton of the keypoints or not

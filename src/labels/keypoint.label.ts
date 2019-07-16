@@ -2,12 +2,15 @@ import { PaperScope, Point } from "paper";
 import { NAME as ESSENTIAL_SETTINGS, KeypointLabelSettings } from "../settings";
 import { getSkeleton } from "../helpers";
 import { SimpleLabelType, BoundboxProps, BasicLabelTypeOptions, SettingsManager, WorkspaceManager, LabelManager, ProjectManager, Plugin, Label, Keypoint, Control } from "@infolks/labelmore-devkit";
+import { JsonEncoder } from "../encoders/json.encoder";
+import { KeypointJsonFormat } from "./formats/keypoint.json.format";
 
 export interface KeypointProps {
     boundbox: BoundboxProps
     keypoints: {
         point: {x: number, y: number},
-        name: string
+        name: string,
+        visibility: number
     }[]
 }
 
@@ -33,7 +36,13 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
 
         if (projectManager.hasEncoder('encoders.default.json')) {
 
-            // register json format
+            const jsonEnc = <JsonEncoder>projectManager.getEncoder('encoders.default.json')
+
+            if (!jsonEnc.hasFormat(KeypointLabel.NAME)) {
+
+                jsonEnc.registerFormat(KeypointLabel.NAME, new KeypointJsonFormat(this.labeller))
+                
+            }
         }
     }
 
@@ -62,10 +71,11 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
 
         label.props.keypoints.forEach( (kp, i) => {
 
-            const kp_path = this.keypointPath(kp.point.x, kp.point.y)
+            const kp_path = this.keypointPath(kp.point.x, kp.point.y, kp.visibility === 2)
 
             kp_path.data.name = kp.name
             kp_path.data.index = i
+            kp_path.data.visibility = kp.visibility
 
             points.addChild(kp_path)
         })
@@ -110,7 +120,8 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
                 point: {
                     x: kp.position.x,
                     y: kp.position.y
-                }
+                },
+                visibility: kp.data.visibility
             })
         }
 
@@ -184,7 +195,7 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
         ]
     }
 
-    private keypointPath(x: number, y: number) {
+    private keypointPath(x: number, y: number, visible: boolean) {
 
         const radius    = this.prefs.keypoint.radius
         // const thickness = this.prefs.keypoint.thickness
@@ -207,7 +218,17 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
         // r1.remove()
         // r2.remove()
 
-        return new this.paper.Path.Circle(new this.paper.Point(x, y), radius*this.ratio)
+        if (visible) return new this.paper.Path.Circle(new this.paper.Point(x, y), radius*this.ratio)
+
+        else {
+            
+            const net_radius = radius*this.ratio
+
+            return new this.paper.Path.Rectangle(
+                new this.paper.Point(x-net_radius, y-net_radius),
+                new this.paper.Point(x+net_radius, y+net_radius),
+            )
+        }
     }
 
     private createSkeleton(label: Label<KeypointProps>) {

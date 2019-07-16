@@ -90,9 +90,6 @@
                     <input type="number" name="min_close_distance" :min="2" :step="0.5" :max="settings.labels.keypoints.keypoint.radius" class="uk-input" v-model.number="settings.labels.keypoints.keypoint.thickness">
                 </div> -->
                 <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
-                    <app-checkbox v-model="settings.labels.keypoints.skeleton">Show Skeleton</app-checkbox>
-                </div>
-                <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
                     <label class="uk-form-label" for="snap_enabled">Skeleton</label>
                     <app-check-toggle class="uk-width-1-1" v-model="settings.labels.keypoints.skeleton">{{settings.labels.keypoints.skeleton? 'enabled' : 'disabled'}}</app-check-toggle>
                 </div>

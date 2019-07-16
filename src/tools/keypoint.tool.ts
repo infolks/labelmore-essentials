@@ -12,7 +12,7 @@ class KeypointTool extends AnnotationTool {
     public readonly icon = `<i class="far fa-dot-circle"></i>`
     public readonly cursor = 'crosshair'
 
-    private points: {name: string, point: Point}[] = []
+    private points: {name: string, point: Point, visibility: number}[] = []
     private bbox: Rectangle
     private preview: Path
     private boundboxMode: boolean = true
@@ -26,16 +26,30 @@ class KeypointTool extends AnnotationTool {
     }
 
     constructor(
-        protected labeller: LabelManager, 
-        protected workspace: WorkspaceManager, 
-        protected settings: SettingsManager,
-        protected paper: PaperScope
+        protected store     : any,
+        protected labeller  : LabelManager, 
+        protected workspace : WorkspaceManager, 
+        protected settings  : SettingsManager,
+        protected paper     : PaperScope
     ) {
         super(workspace, settings, paper)
+
+        this.visibility = 2
     }
 
     private get ratio() {
         return 1/this.workspace.zoom
+    }
+
+    private get visibility() {
+        return this.store.state.globals[`${this.name}.visibility`]
+    }
+
+    private set visibility(val: number) {
+        this.store.dispatch('setGlobal', {
+            key: `${this.name}.visibility`,
+            value: val
+        })
     }
 
     get generalPrefs(): GeneralToolSettings {
@@ -95,6 +109,57 @@ class KeypointTool extends AnnotationTool {
 
     onkeyup(event: KeyEvent) {
 
+        if (event.modifiers.alt) {
+            this.onkeyup_alt(event)
+        }
+
+        else {
+            this.onkeyup_normal(event)
+        }
+    }
+
+    /*
+     |------------------------
+     | Private
+     |------------------------
+    */
+
+    private makeLabel() {
+
+        if (this.labeller.class) {
+
+            this.labeller.add({
+                type: KeypointLabel.NAME,
+                props: {
+                    boundbox: {
+                        xmin: this.bbox.topLeft.x,
+                        ymin: this.bbox.topLeft.y,
+                        xmax: this.bbox.bottomRight.x,
+                        ymax: this.bbox.bottomRight.y
+                    },
+                    keypoints: this.points.map(kp => {
+                        return {
+                            point: {
+                                x: kp.point.x,
+                                y: kp.point.y
+                            },
+                            name: kp.name,
+                            visibility: kp.visibility
+                        }
+                    })
+                }
+            })
+        }
+    }
+
+    /*
+     |--------------------------------
+     | Keyup Modifiers
+     |--------------------------------
+    */
+
+    private onkeyup_normal(event: KeyEvent) {
+
         const key = event.key
 
         if (key === 'backspace') {
@@ -125,42 +190,19 @@ class KeypointTool extends AnnotationTool {
         }
     }
 
-    /*
-     |------------------------
-     | Private
-     |------------------------
-    */
+    private onkeyup_alt(event: KeyEvent) {
+        const key = event.key
 
-    private makeLabel() {
+        if (key.toLowerCase() === 'v') {
 
-        if (this.labeller.class) {
+            this.visibility = this.visibility === 1 ? 2 : 1
 
-            this.labeller.add({
-                type: KeypointLabel.NAME,
-                props: {
-                    boundbox: {
-                        xmin: this.bbox.topLeft.x,
-                        ymin: this.bbox.topLeft.y,
-                        xmax: this.bbox.bottomRight.x,
-                        ymax: this.bbox.bottomRight.y
-                    },
-                    keypoints: this.points.map(kp => {
-                        return {
-                            point: {
-                                x: kp.point.x,
-                                y: kp.point.y
-                            },
-                            name: kp.name
-                        }
-                    })
-                }
-            })
         }
     }
     
     /*
      |---------------------------------
-     | Alt Press : Delete Points
+     | Mousedown Modifiers
      |---------------------------------
     */
     private onmousedown_alt(event: ToolEvent) {
@@ -188,11 +230,6 @@ class KeypointTool extends AnnotationTool {
         }
     }
 
-    /*
-     |---------------------------------
-     | Shift Press : Add Points
-     |---------------------------------
-    */
     private onmousedown_shift(event: ToolEvent) {
 
             const label: Label<KeypointProps> = this.labeller.selected
@@ -216,7 +253,8 @@ class KeypointTool extends AnnotationTool {
                                     x: event.point.x,
                                     y: event.point.y
                                 },
-                                name: keypoint.name
+                                name: keypoint.name,
+                                visibility: this.visibility
                             }]
                         }
                     })
@@ -240,7 +278,8 @@ class KeypointTool extends AnnotationTool {
         if (keypoint) {
             this.points.push({
                 name: keypoint.name,
-                point: event.point
+                point: event.point,
+                visibility: this.visibility
             })
             this.createContour()
         }
@@ -371,6 +410,7 @@ export default Plugin.Tool({
     name: NAME,
     provides: KeypointTool,
     uses: [
+        'store',
         'labeller',
         'workspace',
         'settings',
