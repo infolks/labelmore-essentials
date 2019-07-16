@@ -9,6 +9,9 @@ The **Essentials** plugin package provides the necessary tools to start up the L
 
 *Note: The **Essentials** is a core package and cannot be removed from the tool.*
 
+> **What's New**
+> - Added Keypoint Annotation Support
+
 ## Contents
 
 - [Encoders](#encoders)
@@ -22,6 +25,8 @@ The **Essentials** plugin package provides the necessary tools to start up the L
 - [Tools](#tools)
 - [Wizards](#wizards)
 - [Settings](#settings)
+
+---
 
 ## Encoders
 
@@ -181,7 +186,7 @@ this.labeller.add({
 
 ### Contour Label
 
-The default contour or polygon tool, implements the ContourProps.
+The default contour or polygon label, implements the ContourProps.
 Represents a closed polygon shape.
 
 To draw a contour label into workspace:
@@ -207,7 +212,7 @@ this.labeller.add({
 
 ### Polyline Label
 
-The default polyline tool, implements the PolylineProps.
+The default polyline label, implements the PolylineProps.
 Represents an open polyline shape.
 
 To draw a polyline label into workspace:
@@ -230,6 +235,27 @@ this.labeller.add({
     }
 })
 ```
+
+### Keypoint Label
+
+The default keypoint label.
+Represents a keypoint skeleton.
+
+To draw a keypoint label into workspace:
+
+- The type should be set as **types.default.keypoint**
+- The props should have:
+    - boundbox *Object* : props of a boundbox label
+        - xmin *Number* : X co-ordinate of top left point
+        - ymin *Number* : Y co-ordinate of top left point
+        - xmax *Number* : X co-ordinate of bottom right point
+        - ymax *Number* : Y co-ordinate of bottom right point
+    - keypoints *Array* : An array of object each of the form:
+        - name *String* : name of the keypoint
+        - point *Object*: coordinate of the point
+            - x *Number*: x co-ordinate of the point
+            - y *Number*: y co-ordinate of the point
+
 
 ## Panels
 
@@ -255,6 +281,7 @@ It contains:
 | Boundbox  | R                |
 | Contour   | C                |
 | Polyline  | W                |
+| Keypoint  | X                |
 | Pan       | D                |
 
 *Note: Default shortcuts are set in the tool in-built and cannot be changed.*
@@ -286,4 +313,4 @@ The essentials package comes with its own settings.
 6. Minimum Close Distance   : Minimum distance needed to trigger the auto-close circle
 7. Minimum Sides            : Minimum sides needed for the polygon *(minimum value is 3)*
 8. Snap to Point            : Snap to the closest point on the workspace *(Useful when working with semantic segmentations)*
-9. Minimum Snap Distance    : Minimum distance needed between the points
+9. Minimum Snap Distance    : Minimum distance needed between the points for them to snap together

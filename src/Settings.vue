@@ -80,7 +80,7 @@
         <!-- Keypoint Label -->
         <h5 class="settings-sub-heading small">Keypoint Label</h5>
         <div class="uk-margin">
-            <div class="uk-grid-small" uk-grid>
+            <div class="uk-grid-small uk-flex-middle" uk-grid>
                 <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
                     <label class="uk-form-label" for="min_close_distance">Keypoint Radius</label>
                     <input type="number" name="min_close_distance" :min="2" :step="1" class="uk-input" v-model.number="settings.labels.keypoints.keypoint.radius">
@@ -91,6 +91,10 @@
                 </div> -->
                 <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
                     <app-checkbox v-model="settings.labels.keypoints.skeleton">Show Skeleton</app-checkbox>
+                </div>
+                <div class="uk-width-1-2 uk-width-1-3@s uk-width-1-6@m">
+                    <label class="uk-form-label" for="snap_enabled">Skeleton</label>
+                    <app-check-toggle class="uk-width-1-1" v-model="settings.labels.keypoints.skeleton">{{settings.labels.keypoints.skeleton? 'enabled' : 'disabled'}}</app-check-toggle>
                 </div>
             </div>
         </div>
