@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.1.2
+ * @infolks/labelmore-essentials v1.1.4
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1088,7 +1088,7 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
         if (projectManager.hasEncoder('encoders.default.json')) {
             const jsonEnc = projectManager.getEncoder('encoders.default.json');
             if (!jsonEnc.hasFormat(KeypointLabel.NAME)) {
-                jsonEnc.registerFormat(KeypointLabel.NAME, new KeypointJsonFormat(this.labeller));
+                jsonEnc.registerFormat(KeypointLabel.NAME, new KeypointJsonFormat(this.labeller, this.projectManager));
             }
         }
     }

@@ -40,7 +40,7 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
 
             if (!jsonEnc.hasFormat(KeypointLabel.NAME)) {
 
-                jsonEnc.registerFormat(KeypointLabel.NAME, new KeypointJsonFormat(this.labeller))
+                jsonEnc.registerFormat(KeypointLabel.NAME, new KeypointJsonFormat(this.labeller, this.projectManager))
                 
             }
         }
