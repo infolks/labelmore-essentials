@@ -23,31 +23,57 @@
         </div>
         
     </div> -->
-    <div class="uk-list uk-list-clickable">
-        <li :class="{'uk-active': keypoint && (keypoint.name === kp.name)}" v-for="kp in keypoints" :key="kp.name">
-            <div class="uk-padding-small keypoint-item" @click="$labeller.selectKeypoint(kp.name)">
-                <span class="uk-margin-right uk-text-primary">
-                    <i class="far fa-dot-circle" v-if="keypoint && (keypoint.name === kp.name)"></i>
-                    <i class="far fa-circle" v-else></i>
-                </span>
-                {{kp.name}}
-            </div>
-        </li>
+    <div>
+        <div class="uk-padding-small uk-flex">
+            <button @click="visible = !visible" uk-tooltip="title: Toggle Visibility" class="uk-button uk-button-small" :class="{'uk-button-default' : !visible, 'uk-button-primary': visible}">
+                <i class="fas fa-eye"></i> {{visible? 'visible' : 'hidden'}}
+            </button>
+        </div>
+        <div class="uk-list uk-list-clickable">
+            <li :class="{'uk-active': keypoint && (keypoint.name === kp.name)}" v-for="kp in keypoints" :key="kp.name">
+                <div class="uk-padding-small keypoint-item" @click="$labeller.selectKeypoint(kp.name)">
+                    <span class="uk-margin-right uk-text-primary">
+                        <i class="far fa-dot-circle" v-if="keypoint && (keypoint.name === kp.name)"></i>
+                        <i class="far fa-circle" v-else></i>
+                    </span>
+                    {{kp.name}}
+                </div>
+            </li>
+        </div>
     </div>
+    
 </template>
 
 <script lang="ts">
+    import { KeypointLabel } from '../../labels/keypoint.label';
+
+    const VISIBILITY = `tools.default.keypoint.visibility`
 
     export default {
         name: 'app-panel-keypoints',
         computed: {
             keypoints() {
-                console.log(this, this.$labeller)
                 return this.$labeller.keypoints
             },
 
             keypoint() {
                 return this.$labeller.keypoint
+            },
+
+            visible: {
+                get() {
+                    return this.$store.state.globals[VISIBILITY] === 2
+                },
+
+                set(val: boolean) {
+
+                    const visibility = val? 2 : 1
+
+                    this.$store.dispatch('setGlobal', {
+                        key: VISIBILITY,
+                        value: visibility
+                    })
+                }
             }
         }
     }

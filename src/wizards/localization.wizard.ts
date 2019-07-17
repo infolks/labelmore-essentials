@@ -15,6 +15,7 @@ export class LocalizationWizard extends Wizard {
         allowPanelSelection: true,
         allowLabelClassCreation: true,
         allowClassAttributeCreation: true,
+        allowKeypointCreation: true,
         allowSceneAttributeCreation: false,
     };
 
@@ -40,10 +41,7 @@ export class LocalizationWizard extends Wizard {
     }
 
     fields(): Field[] {
-        return [
-            new TextField('annotator', 'Annotator Name'),
-            new TextField('approver', 'Approver Name')
-        ]
+        return []
     }
 
 }

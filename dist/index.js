@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.1.1
+ * @infolks/labelmore-essentials v1.1.2
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1888,6 +1888,7 @@ class LocalizationWizard extends labelmoreDevkit.Wizard {
             allowPanelSelection: true,
             allowLabelClassCreation: true,
             allowClassAttributeCreation: true,
+            allowKeypointCreation: true,
             allowSceneAttributeCreation: false,
         };
     }
@@ -1908,10 +1909,7 @@ class LocalizationWizard extends labelmoreDevkit.Wizard {
         });
     }
     fields() {
-        return [
-            new labelmoreDevkit.TextField('annotator', 'Annotator Name'),
-            new labelmoreDevkit.TextField('approver', 'Approver Name')
-        ];
+        return [];
     }
 }
 var LocalizationWizard$1 = {
@@ -2065,15 +2063,27 @@ var LabelClassesPanel = {
     }
 };
 
+const VISIBILITY = `tools.default.keypoint.visibility`;
 var script$2 = {
     name: 'app-panel-keypoints',
     computed: {
         keypoints() {
-            console.log(this, this.$labeller);
             return this.$labeller.keypoints;
         },
         keypoint() {
             return this.$labeller.keypoint;
+        },
+        visible: {
+            get() {
+                return this.$store.state.globals[VISIBILITY] === 2;
+            },
+            set(val) {
+                const visibility = val ? 2 : 1;
+                this.$store.dispatch('setGlobal', {
+                    key: VISIBILITY,
+                    value: visibility
+                });
+            }
         }
     }
 };
@@ -2082,13 +2092,13 @@ var script$2 = {
 const __vue_script__$2 = script$2;
 
 /* template */
-var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-list uk-list-clickable"},_vm._l((_vm.keypoints),function(kp){return _c('li',{key:kp.name,class:{'uk-active': _vm.keypoint && (_vm.keypoint.name === kp.name)}},[_c('div',{staticClass:"uk-padding-small keypoint-item",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_c('span',{staticClass:"uk-margin-right uk-text-primary"},[(_vm.keypoint && (_vm.keypoint.name === kp.name))?_c('i',{staticClass:"far fa-dot-circle"}):_c('i',{staticClass:"far fa-circle"})]),_vm._v("\n            "+_vm._s(kp.name)+"\n        ")])])}),0)};
+var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"uk-padding-small uk-flex"},[_c('button',{staticClass:"uk-button uk-button-small",class:{'uk-button-default' : !_vm.visible, 'uk-button-primary': _vm.visible},attrs:{"uk-tooltip":"title: Toggle Visibility"},on:{"click":function($event){_vm.visible = !_vm.visible;}}},[_c('i',{staticClass:"fas fa-eye"}),_vm._v(" "+_vm._s(_vm.visible? 'visible' : 'hidden')+"\n        ")])]),_vm._v(" "),_c('div',{staticClass:"uk-list uk-list-clickable"},_vm._l((_vm.keypoints),function(kp){return _c('li',{key:kp.name,class:{'uk-active': _vm.keypoint && (_vm.keypoint.name === kp.name)}},[_c('div',{staticClass:"uk-padding-small keypoint-item",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_c('span',{staticClass:"uk-margin-right uk-text-primary"},[(_vm.keypoint && (_vm.keypoint.name === kp.name))?_c('i',{staticClass:"far fa-dot-circle"}):_c('i',{staticClass:"far fa-circle"})]),_vm._v("\n                "+_vm._s(kp.name)+"\n            ")])])}),0)])};
 var __vue_staticRenderFns__$2 = [];
 
   /* style */
   const __vue_inject_styles__$2 = undefined;
   /* scoped */
-  const __vue_scope_id__$2 = "data-v-a92710a0";
+  const __vue_scope_id__$2 = "data-v-79088f02";
   /* module identifier */
   const __vue_module_identifier__$2 = undefined;
   /* functional template */
