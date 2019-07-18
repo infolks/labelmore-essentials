@@ -26,7 +26,7 @@
     <div>
         <div class="uk-padding-small uk-flex">
             <button @click="visible = !visible" uk-tooltip="title: Toggle Visibility" class="uk-button uk-button-small" :class="{'uk-button-default' : !visible, 'uk-button-primary': visible}">
-                <i class="fas fa-eye"></i> {{visible? 'visible' : 'hidden'}}
+                <i class="fas fa-eye"></i> <span class="uk-margin-left">{{visible? 'visible' : 'hidden'}}</span>
             </button>
         </div>
         <div class="uk-list uk-list-clickable">

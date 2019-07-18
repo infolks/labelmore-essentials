@@ -5,11 +5,11 @@ import { getSkeleton } from "../../helpers";
 
 export class KeypointJsonFormat implements EncodeFormat {
 
-    constructor(private labeller: LabelManager, private projectManager: ProjectManager) {}
+    constructor(private labeller: LabelManager) {}
 
     encode(label: Label<KeypointProps>, class_: LabelClass) {
 
-        const keypoints = this.projectManager.project.options.keypoints.filter(kp => kp.classes.indexOf(class_.name) !== -1)
+        const keypoints = this.labeller.keypoints
 
         return {
             name: this.labeller.getName(label),
