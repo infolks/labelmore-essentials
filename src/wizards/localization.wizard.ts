@@ -16,7 +16,7 @@ export class LocalizationWizard extends Wizard {
         allowLabelClassCreation: true,
         allowClassAttributeCreation: true,
         allowKeypointCreation: true,
-        allowSceneAttributeCreation: false,
+        allowSceneAttributeCreation: true,
     };
 
     constructor(private fileManager: FileManager) {

@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.1.6
+ * @infolks/labelmore-essentials v1.1.7
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1888,7 +1888,7 @@ class LocalizationWizard extends labelmoreDevkit.Wizard {
             allowLabelClassCreation: true,
             allowClassAttributeCreation: true,
             allowKeypointCreation: true,
-            allowSceneAttributeCreation: false,
+            allowSceneAttributeCreation: true,
         };
     }
     input(title, dir, files, options) {
