@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.1.5
+ * @infolks/labelmore-essentials v1.1.6
  * (c) infolks
  * Released under the ISC License.
  */
@@ -2371,7 +2371,8 @@ class JsonEncoder extends labelmoreDevkit.Encoder {
             path: `${project.options.inputPath}/${frame.name}`,
             description: project.title,
             output: {
-                objects: labelData
+                objects: labelData,
+                image: Object.assign({ name: removeExtension(frame.name) }, frame.props.size, { attributes: frame.props.scene })
             },
             time_labeled: new Date().getTime(),
             labeled: labelData.length > 0

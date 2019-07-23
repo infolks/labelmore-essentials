@@ -48,7 +48,12 @@ export class JsonEncoder extends Encoder {
             path: `${project.options.inputPath}/${frame.name}`,
             description: project.title,
             output: {
-                objects: labelData
+                objects: labelData,
+                image: {
+                    name: removeExtension(frame.name),
+                    ...frame.props.size,
+                    attributes: frame.props.scene
+                }
             },
             time_labeled: new Date().getTime(),
             labeled: labelData.length > 0
