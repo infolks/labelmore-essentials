@@ -1,8 +1,8 @@
 <template>
     <div class="uk-padding-small">
         <div class="uk-width-1-1 class-attribute-item" v-for="attr in attributes" :key="attr.name">
-            <div class="uk-text-small">{{attr.name | beautify}}</div>
-            <app-multi-select
+            <!-- <div class="uk-text-small">{{attr.name | beautify}}</div> -->
+            <!-- <app-multi-select
                 v-model="attributeValues[attr.name]"
                 :options="attr.values"
                 :multiple="attr.multi"
@@ -10,7 +10,9 @@
                 :limit="3"
                 :limit-text="limitText"
                 :close-on-select="!attr.multi">
-            </app-multi-select>
+            </app-multi-select> -->
+
+            <app-field :field="attr" v-model="attributeValues[attr.name]" :required="true"></app-field>
         </div>
     </div>
 </template>
@@ -50,15 +52,6 @@
         created() {
             if (this.$labeller.attributeValues)
                 this.attributeValues = this.$labeller.attributeValues
-        },
-        filters: {
-            beautify(value) {
-                if (!value) return ''
-                
-                value = value.toString()
-
-                return value.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")
-            }
         }
     }
 </script>

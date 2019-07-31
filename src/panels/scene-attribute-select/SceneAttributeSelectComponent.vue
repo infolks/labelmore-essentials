@@ -18,13 +18,13 @@
         watch: {
             scene: {
                 handler(attrs) {
-                    
-                    // this.$projects.scene = attrs
+                    console.log('sc',this.scene)
+                    this.$projects.scene = attrs
                 },
                 deep: true
             },
             sceneVals() {
-                console.log(this.sceneVals)
+                console.log('scene', this.sceneVals)
                 this.scene = this.sceneVals || {}
             }
         },
@@ -38,7 +38,7 @@
             }
         },
         mounted() {
-            if (this.$projects.scene && Object.keys(this.$projects.scene).length > 0){
+            if (this.sceneVals && Object.keys(this.sceneVals).length > 0){
                 
                 this.scene = this.$projects.scene
             }

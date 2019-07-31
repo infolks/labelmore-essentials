@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.1.7
+ * @infolks/labelmore-essentials v1.1.8
  * (c) infolks
  * Released under the ISC License.
  */
@@ -2181,14 +2181,6 @@ var script$3 = {
     created() {
         if (this.$labeller.attributeValues)
             this.attributeValues = this.$labeller.attributeValues;
-    },
-    filters: {
-        beautify(value) {
-            if (!value)
-                return '';
-            value = value.toString();
-            return value.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
-        }
     }
 };
 
@@ -2196,17 +2188,17 @@ var script$3 = {
 const __vue_script__$3 = script$3;
 
 /* template */
-var __vue_render__$3 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-padding-small"},_vm._l((_vm.attributes),function(attr){return _c('div',{key:attr.name,staticClass:"uk-width-1-1 class-attribute-item"},[_c('div',{staticClass:"uk-text-small"},[_vm._v(_vm._s(_vm._f("beautify")(attr.name)))]),_vm._v(" "),_c('app-multi-select',{attrs:{"options":attr.values,"multiple":attr.multi,"placeholder":"Select","limit":3,"limit-text":_vm.limitText,"close-on-select":!attr.multi},model:{value:(_vm.attributeValues[attr.name]),callback:function ($$v) {_vm.$set(_vm.attributeValues, attr.name, $$v);},expression:"attributeValues[attr.name]"}})],1)}),0)};
+var __vue_render__$3 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"uk-padding-small"},_vm._l((_vm.attributes),function(attr){return _c('div',{key:attr.name,staticClass:"uk-width-1-1 class-attribute-item"},[_c('app-field',{attrs:{"field":attr,"required":true},model:{value:(_vm.attributeValues[attr.name]),callback:function ($$v) {_vm.$set(_vm.attributeValues, attr.name, $$v);},expression:"attributeValues[attr.name]"}})],1)}),0)};
 var __vue_staticRenderFns__$3 = [];
 
   /* style */
   const __vue_inject_styles__$3 = function (inject) {
     if (!inject) return
-    inject("data-v-d52a87aa_0", { source: ".class-attribute-item[data-v-d52a87aa]:nth-child(n+2){margin-top:.5rem}", map: undefined, media: undefined });
+    inject("data-v-3faa6309_0", { source: ".class-attribute-item[data-v-3faa6309]:nth-child(n+2){margin-top:.5rem}", map: undefined, media: undefined });
 
   };
   /* scoped */
-  const __vue_scope_id__$3 = "data-v-d52a87aa";
+  const __vue_scope_id__$3 = "data-v-3faa6309";
   /* module identifier */
   const __vue_module_identifier__$3 = undefined;
   /* functional template */
@@ -2264,12 +2256,13 @@ var script$4 = {
     watch: {
         scene: {
             handler(attrs) {
-                // this.$projects.scene = attrs
+                console.log('sc', this.scene);
+                this.$projects.scene = attrs;
             },
             deep: true
         },
         sceneVals() {
-            console.log(this.sceneVals);
+            console.log('scene', this.sceneVals);
             this.scene = this.sceneVals || {};
         }
     },
@@ -2282,7 +2275,7 @@ var script$4 = {
         }
     },
     mounted() {
-        if (this.$projects.scene && Object.keys(this.$projects.scene).length > 0) {
+        if (this.sceneVals && Object.keys(this.sceneVals).length > 0) {
             this.scene = this.$projects.scene;
         }
     }
@@ -2298,11 +2291,11 @@ var __vue_staticRenderFns__$4 = [];
   /* style */
   const __vue_inject_styles__$4 = function (inject) {
     if (!inject) return
-    inject("data-v-cf7c57c0_0", { source: ".class-attribute-item[data-v-cf7c57c0]{margin-top:1rem}.class-attribute-item[data-v-cf7c57c0]:first-child{margin-top:0}", map: undefined, media: undefined });
+    inject("data-v-c6218ee8_0", { source: ".class-attribute-item[data-v-c6218ee8]{margin-top:1rem}.class-attribute-item[data-v-c6218ee8]:first-child{margin-top:0}", map: undefined, media: undefined });
 
   };
   /* scoped */
-  const __vue_scope_id__$4 = "data-v-cf7c57c0";
+  const __vue_scope_id__$4 = "data-v-c6218ee8";
   /* module identifier */
   const __vue_module_identifier__$4 = undefined;
   /* functional template */
