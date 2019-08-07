@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.1.8
+ * @infolks/labelmore-essentials v1.2.0
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1046,6 +1046,7 @@ class KeypointJsonFormat {
     }
     encode(label, class_) {
         const keypoints = this.labeller.keypoints;
+        const bndbox = label.props.boundbox;
         return {
             name: this.labeller.getName(label),
             description: {
@@ -1054,6 +1055,10 @@ class KeypointJsonFormat {
             classTitle: class_.name,
             attributes: label.attributes || {},
             skeleton: getSkeleton(keypoints),
+            bndbox: [
+                [bndbox.xmin, bndbox.ymin],
+                [bndbox.xmax, bndbox.ymax]
+            ],
             points: keypoints.map(kp => {
                 const annotation = label.props.keypoints.find(ann => ann.name === kp.name);
                 if (annotation) {

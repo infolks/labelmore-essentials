@@ -10,6 +10,7 @@ export class KeypointJsonFormat implements EncodeFormat {
     encode(label: Label<KeypointProps>, class_: LabelClass) {
 
         const keypoints = this.labeller.keypoints
+        const bndbox = label.props.boundbox
 
         return {
             name: this.labeller.getName(label),
@@ -19,6 +20,10 @@ export class KeypointJsonFormat implements EncodeFormat {
             classTitle: class_.name,
             attributes: label.attributes || {},
             skeleton: getSkeleton(keypoints),
+            bndbox: [
+                [bndbox.xmin, bndbox.ymin],
+                [bndbox.xmax, bndbox.ymax]
+            ],
             points: keypoints.map(kp => {
 
                 const annotation = label.props.keypoints.find(ann => ann.name === kp.name)
