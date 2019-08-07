@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.2.0
+ * @infolks/labelmore-essentials v1.2.1
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1041,11 +1041,15 @@ var LineTool$1 = {
 };
 
 class KeypointJsonFormat {
-    constructor(labeller) {
+    constructor(pm, labeller) {
+        this.pm = pm;
         this.labeller = labeller;
     }
     encode(label, class_) {
-        const keypoints = this.labeller.keypoints;
+        const keypoints = this.pm.project.options.keypoints
+            .filter((kp) => {
+            return kp.classes.some(cl => cl === class_.id);
+        });
         const bndbox = label.props.boundbox;
         return {
             name: this.labeller.getName(label),
@@ -1092,7 +1096,7 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
         if (projectManager.hasEncoder('encoders.default.json')) {
             const jsonEnc = projectManager.getEncoder('encoders.default.json');
             if (!jsonEnc.hasFormat(KeypointLabel.NAME)) {
-                jsonEnc.registerFormat(KeypointLabel.NAME, new KeypointJsonFormat(this.labeller));
+                jsonEnc.registerFormat(KeypointLabel.NAME, new KeypointJsonFormat(this.projectManager, this.labeller));
             }
         }
     }

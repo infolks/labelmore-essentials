@@ -1,15 +1,20 @@
 import { EncodeFormat } from "../../encoders/json.encoder";
-import { LabelManager, Label, LabelClass, ProjectManager } from "@infolks/labelmore-devkit";
+import { LabelManager, Label, LabelClass, ProjectManager, Keypoint } from "@infolks/labelmore-devkit";
 import { KeypointProps } from "../keypoint.label";
 import { getSkeleton } from "../../helpers";
 
 export class KeypointJsonFormat implements EncodeFormat {
 
-    constructor(private labeller: LabelManager) {}
+    constructor(private pm: ProjectManager, private labeller: LabelManager) {}
 
     encode(label: Label<KeypointProps>, class_: LabelClass) {
 
-        const keypoints = this.labeller.keypoints
+        const keypoints = this.pm.project.options.keypoints
+            .filter((kp: Keypoint) => {
+                        
+                return kp.classes.some(cl => cl === class_.id)
+            })
+
         const bndbox = label.props.boundbox
 
         return {
