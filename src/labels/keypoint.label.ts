@@ -1,4 +1,4 @@
-import { PaperScope, Point } from "paper";
+import { PaperScope, Point, Group } from "paper";
 import { NAME as ESSENTIAL_SETTINGS, KeypointLabelSettings } from "../settings";
 import { getSkeleton } from "../helpers";
 import { SimpleLabelType, BoundboxProps, BasicLabelTypeOptions, SettingsManager, WorkspaceManager, LabelManager, ProjectManager, Plugin, Label, Keypoint, Control } from "@infolks/labelmore-devkit";
@@ -71,13 +71,13 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
 
         label.props.keypoints.forEach( (kp, i) => {
 
-            const kp_path = this.keypointPath(kp.point.x, kp.point.y, kp.visibility === 2)
+            const {path} = this.keypointPath(kp, label)
 
-            kp_path.data.name = kp.name
-            kp_path.data.index = i
-            kp_path.data.visibility = kp.visibility
+            path.data.name = kp.name
+            path.data.index = i
+            path.data.visibility = kp.visibility
 
-            points.addChild(kp_path)
+            points.addChild(path)
         })
 
         if (this.prefs.skeleton) {
@@ -100,7 +100,7 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
 
     apply(path: paper.Item): KeypointProps {
 
-        const [bbox, skeleton, points] = path.children
+        const [bbox, skeleton, points, labels] = path.children
 
         const {topLeft, bottomRight} = bbox.bounds
 
@@ -195,40 +195,44 @@ export class KeypointLabel extends SimpleLabelType<KeypointProps> {
         ]
     }
 
-    private keypointPath(x: number, y: number, visible: boolean) {
+    private keypointPath(kp: any, parent: Label<KeypointProps>) {
 
         const radius    = this.prefs.keypoint.radius
-        // const thickness = this.prefs.keypoint.thickness
-        
-        // const hor = {
-        //     start   : new this.paper.Point(x-radius, y-thickness/2),
-        //     end     : new this.paper.Point(x+radius, y+thickness/2)
-        // }
 
-        // const ver = {
-        //     start   : new this.paper.Point(x-thickness/2, y-radius),
-        //     end     : new this.paper.Point(x+thickness/2, y+radius)
-        // }
+        const visible = kp.visibility === 2
+        const x = kp.point.x
+        const y = kp.point.y
+        const name = kp.name
 
-        // const r1 = new this.paper.Path.Rectangle(hor.start, hor.end)
-        // const r2 = new this.paper.Path.Rectangle(ver.start, ver.end)
+        let path:paper.Path;
 
-        // const plus = r1.unite(r2)
-
-        // r1.remove()
-        // r2.remove()
-
-        if (visible) return new this.paper.Path.Circle(new this.paper.Point(x, y), radius*this.ratio)
+        if (visible) {
+            path = new this.paper.Path.Circle(new this.paper.Point(x, y), radius*this.ratio)
+        }
 
         else {
             
             const net_radius = radius*this.ratio
 
-            return new this.paper.Path.Rectangle(
+            path = new this.paper.Path.Rectangle(
                 new this.paper.Point(x-net_radius, y-net_radius),
                 new this.paper.Point(x+net_radius, y+net_radius),
             )
         }
+
+        const padding = 2*this.ratio;
+
+        const text = new this.paper.PointText(new Point(0,0))
+
+        text.content = name
+        text.fontSize = 10*this.ratio
+        text.fontWeight = 600
+        text.fillColor = this.labeller.getClass(parent.class_id).color
+
+        text.bounds.topLeft = path.bounds.bottomRight.add([padding, padding])
+        text.locked = true
+
+        return {path, text}
     }
 
     private createSkeleton(label: Label<KeypointProps>) {

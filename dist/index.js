@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.2.1
+ * @infolks/labelmore-essentials v1.2.2
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1114,11 +1114,11 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
         const bbox = new this.paper.Path.Rectangle(new this.paper.Point(xmin, ymin), new this.paper.Point(xmax, ymax));
         const points = new this.paper.Group();
         label.props.keypoints.forEach((kp, i) => {
-            const kp_path = this.keypointPath(kp.point.x, kp.point.y, kp.visibility === 2);
-            kp_path.data.name = kp.name;
-            kp_path.data.index = i;
-            kp_path.data.visibility = kp.visibility;
-            points.addChild(kp_path);
+            const { path } = this.keypointPath(kp, label);
+            path.data.name = kp.name;
+            path.data.index = i;
+            path.data.visibility = kp.visibility;
+            points.addChild(path);
         });
         if (this.prefs.skeleton) {
             return new this.paper.Group([bbox, this.createSkeleton(label), points]);
@@ -1134,7 +1134,7 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
         ];
     }
     apply(path) {
-        const [bbox, skeleton, points] = path.children;
+        const [bbox, skeleton, points, labels] = path.children;
         const { topLeft, bottomRight } = bbox.bounds;
         const boundbox = {
             xmin: topLeft.x,
@@ -1216,28 +1216,29 @@ class KeypointLabel extends labelmoreDevkit.SimpleLabelType {
             }
         ];
     }
-    keypointPath(x, y, visible) {
+    keypointPath(kp, parent) {
         const radius = this.prefs.keypoint.radius;
-        // const thickness = this.prefs.keypoint.thickness
-        // const hor = {
-        //     start   : new this.paper.Point(x-radius, y-thickness/2),
-        //     end     : new this.paper.Point(x+radius, y+thickness/2)
-        // }
-        // const ver = {
-        //     start   : new this.paper.Point(x-thickness/2, y-radius),
-        //     end     : new this.paper.Point(x+thickness/2, y+radius)
-        // }
-        // const r1 = new this.paper.Path.Rectangle(hor.start, hor.end)
-        // const r2 = new this.paper.Path.Rectangle(ver.start, ver.end)
-        // const plus = r1.unite(r2)
-        // r1.remove()
-        // r2.remove()
-        if (visible)
-            return new this.paper.Path.Circle(new this.paper.Point(x, y), radius * this.ratio);
+        const visible = kp.visibility === 2;
+        const x = kp.point.x;
+        const y = kp.point.y;
+        const name = kp.name;
+        let path;
+        if (visible) {
+            path = new this.paper.Path.Circle(new this.paper.Point(x, y), radius * this.ratio);
+        }
         else {
             const net_radius = radius * this.ratio;
-            return new this.paper.Path.Rectangle(new this.paper.Point(x - net_radius, y - net_radius), new this.paper.Point(x + net_radius, y + net_radius));
+            path = new this.paper.Path.Rectangle(new this.paper.Point(x - net_radius, y - net_radius), new this.paper.Point(x + net_radius, y + net_radius));
         }
+        const padding = 2 * this.ratio;
+        const text = new this.paper.PointText(new paper.Point(0, 0));
+        text.content = name;
+        text.fontSize = 10 * this.ratio;
+        text.fontWeight = 600;
+        text.fillColor = this.labeller.getClass(parent.class_id).color;
+        text.bounds.topLeft = path.bounds.bottomRight.add([padding, padding]);
+        text.locked = true;
+        return { path, text };
     }
     createSkeleton(label) {
         const skeleton = getSkeleton(this.keypoints);
@@ -2178,8 +2179,8 @@ var script$3 = {
             },
             deep: true
         },
-        attributeVals() {
-            this.attributeValues = this.$labeller.attributeValues;
+        attributeVals(val) {
+            this.attributeValues = val;
         }
     },
     methods: {
@@ -2203,11 +2204,11 @@ var __vue_staticRenderFns__$3 = [];
   /* style */
   const __vue_inject_styles__$3 = function (inject) {
     if (!inject) return
-    inject("data-v-3faa6309_0", { source: ".class-attribute-item[data-v-3faa6309]:nth-child(n+2){margin-top:.5rem}", map: undefined, media: undefined });
+    inject("data-v-4de32cd0_0", { source: ".class-attribute-item[data-v-4de32cd0]:nth-child(n+2){margin-top:.5rem}", map: undefined, media: undefined });
 
   };
   /* scoped */
-  const __vue_scope_id__$3 = "data-v-3faa6309";
+  const __vue_scope_id__$3 = "data-v-4de32cd0";
   /* module identifier */
   const __vue_module_identifier__$3 = undefined;
   /* functional template */

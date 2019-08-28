@@ -40,8 +40,8 @@
                 },
                 deep: true
             },
-            attributeVals() {
-                this.attributeValues = this.$labeller.attributeValues
+            attributeVals(val) {
+                this.attributeValues = val
             }
         },
         methods: {
