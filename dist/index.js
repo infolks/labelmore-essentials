@@ -1,5 +1,5 @@
 /*!
- * @infolks/labelmore-essentials v1.2.2
+ * @infolks/labelmore-essentials v1.2.3
  * (c) infolks
  * Released under the ISC License.
  */
@@ -1299,6 +1299,7 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
             limitToArtboard: true
         };
         this.visibility = 2;
+        this.mode = 0;
     }
     get ratio() {
         return 1 / this.workspace.zoom;
@@ -1309,6 +1310,15 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
     set visibility(val) {
         this.store.dispatch('setGlobal', {
             key: `${this.name}.visibility`,
+            value: val
+        });
+    }
+    get mode() {
+        return this.store.state.globals[`${this.name}.mode`];
+    }
+    set mode(val) {
+        this.store.dispatch('setGlobal', {
+            key: `${this.name}.mode`,
             value: val
         });
     }
@@ -1335,6 +1345,9 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
         }
         else if (event.modifiers.alt) {
             this.onmousedown_alt(event);
+        }
+        else if (this.mode == KeypointTool.MODE.EDIT) {
+            this.onmousedown_edit(event);
         }
         else if (this.boundboxMode) {
             this.onmousedown_bbox(event);
@@ -1413,6 +1426,9 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
         if (key.toLowerCase() === 'v') {
             this.visibility = this.visibility === 1 ? 2 : 1;
         }
+        else if (key.toLowerCase() === 'm') {
+            this.mode = this.mode === 1 ? 0 : 1;
+        }
     }
     /*
      |---------------------------------
@@ -1453,6 +1469,25 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
                     }
                 });
             }
+        }
+    }
+    /*
+     |---------------------------------
+     | Edit mode drawing
+     |---------------------------------
+    */
+    onmousedown_edit(event) {
+        const label = this.labeller.selected;
+        const item = event.item;
+        if (label &&
+            label.type === KeypointLabel.NAME &&
+            item.data.index === this.workspace.RESERVED_ITEMS.CONTROL) {
+            const path = this.workspace.getPath(this.labeller.selected);
+            const points = path.children[2];
+            const kp = points.hitTest(item.position).item;
+            console.log(kp);
+            kp.data.visibility = kp.data.visibility === 1 ? 2 : 1;
+            this.labeller.apply(label.id, path);
         }
     }
     /*
@@ -1545,6 +1580,10 @@ class KeypointTool extends labelmoreDevkit.AnnotationTool {
         }
     }
 }
+KeypointTool.MODE = {
+    NORMAL: 0,
+    EDIT: 1
+};
 var KeypointTool$1 = labelmoreDevkit.Plugin.Tool({
     name: NAME$1,
     provides: KeypointTool,
@@ -2073,6 +2112,7 @@ var LabelClassesPanel = {
 };
 
 const VISIBILITY = `tools.default.keypoint.visibility`;
+const MODE = `tools.default.keypoint.mode`;
 var script$2 = {
     name: 'app-panel-keypoints',
     computed: {
@@ -2093,6 +2133,18 @@ var script$2 = {
                     value: visibility
                 });
             }
+        },
+        editMode: {
+            get() {
+                return this.$store.state.globals[MODE] == 1;
+            },
+            set(val) {
+                const mode = val ? 1 : 0;
+                this.$store.dispatch('setGlobal', {
+                    key: MODE,
+                    value: mode
+                });
+            }
         }
     }
 };
@@ -2101,13 +2153,13 @@ var script$2 = {
 const __vue_script__$2 = script$2;
 
 /* template */
-var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"uk-padding-small uk-flex"},[_c('button',{staticClass:"uk-button uk-button-small",class:{'uk-button-default' : !_vm.visible, 'uk-button-primary': _vm.visible},attrs:{"uk-tooltip":"title: Toggle Visibility"},on:{"click":function($event){_vm.visible = !_vm.visible;}}},[_c('i',{staticClass:"fas fa-eye"}),_vm._v(" "),_c('span',{staticClass:"uk-margin-left"},[_vm._v(_vm._s(_vm.visible? 'visible' : 'hidden'))])])]),_vm._v(" "),_c('div',{staticClass:"uk-list uk-list-clickable"},_vm._l((_vm.keypoints),function(kp){return _c('li',{key:kp.name,class:{'uk-active': _vm.keypoint && (_vm.keypoint.name === kp.name)}},[_c('div',{staticClass:"uk-padding-small keypoint-item",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_c('span',{staticClass:"uk-margin-right uk-text-primary"},[(_vm.keypoint && (_vm.keypoint.name === kp.name))?_c('i',{staticClass:"far fa-dot-circle"}):_c('i',{staticClass:"far fa-circle"})]),_vm._v("\n                "+_vm._s(kp.name)+"\n            ")])])}),0)])};
+var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"uk-padding-small uk-flex"},[_c('button',{staticClass:"uk-button uk-button-small",class:{'uk-button-default' : !_vm.visible, 'uk-button-primary': _vm.visible},attrs:{"uk-tooltip":"title: Toggle Visibility"},on:{"click":function($event){_vm.visible = !_vm.visible;}}},[_c('i',{staticClass:"fas fa-eye"}),_vm._v(" "),_c('span',{staticClass:"uk-margin-left"},[_vm._v(_vm._s(_vm.visible? 'visible' : 'hidden'))])]),_vm._v(" "),_c('button',{staticClass:"uk-button uk-button-small uk-margin-left",class:{'uk-button-default' : !_vm.editMode, 'uk-button-primary': _vm.editMode},attrs:{"uk-tooltip":"title: Toggle Edit Mode"},on:{"click":function($event){_vm.editMode = !_vm.editMode;}}},[_c('i',{staticClass:"fas fa-cog"}),_vm._v(" "),_c('span',{staticClass:"uk-margin-left"},[_vm._v(_vm._s(_vm.editMode? 'Edit' : 'Normal'))])])]),_vm._v(" "),_c('div',{staticClass:"uk-list uk-list-clickable"},_vm._l((_vm.keypoints),function(kp){return _c('li',{key:kp.name,class:{'uk-active': _vm.keypoint && (_vm.keypoint.name === kp.name)}},[_c('div',{staticClass:"uk-padding-small keypoint-item",on:{"click":function($event){return _vm.$labeller.selectKeypoint(kp.name)}}},[_c('span',{staticClass:"uk-margin-right uk-text-primary"},[(_vm.keypoint && (_vm.keypoint.name === kp.name))?_c('i',{staticClass:"far fa-dot-circle"}):_c('i',{staticClass:"far fa-circle"})]),_vm._v("\n                "+_vm._s(kp.name)+"\n            ")])])}),0)])};
 var __vue_staticRenderFns__$2 = [];
 
   /* style */
   const __vue_inject_styles__$2 = undefined;
   /* scoped */
-  const __vue_scope_id__$2 = "data-v-1352d58e";
+  const __vue_scope_id__$2 = "data-v-4f0ac421";
   /* module identifier */
   const __vue_module_identifier__$2 = undefined;
   /* functional template */

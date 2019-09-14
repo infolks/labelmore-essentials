@@ -7,6 +7,11 @@ const NAME = 'tools.default.keypoint'
 
 class KeypointTool extends AnnotationTool {
 
+    public static MODE = {
+        NORMAL: 0,
+        EDIT: 1
+    }
+
     public readonly name = NAME
     public readonly title = 'Keypoint'
     public readonly icon = `<i class="far fa-dot-circle"></i>`
@@ -35,6 +40,8 @@ class KeypointTool extends AnnotationTool {
         super(workspace, settings, paper)
 
         this.visibility = 2
+        this.mode = 0
+
     }
 
     private get ratio() {
@@ -44,10 +51,19 @@ class KeypointTool extends AnnotationTool {
     private get visibility() {
         return this.store.state.globals[`${this.name}.visibility`]
     }
-
     private set visibility(val: number) {
         this.store.dispatch('setGlobal', {
             key: `${this.name}.visibility`,
+            value: val
+        })
+    }
+
+    private get mode() {
+        return this.store.state.globals[`${this.name}.mode`]
+    }
+    private set mode(val: number) {
+        this.store.dispatch('setGlobal', {
+            key: `${this.name}.mode`,
             value: val
         })
     }
@@ -91,6 +107,10 @@ class KeypointTool extends AnnotationTool {
         else if (event.modifiers.alt) {
 
             this.onmousedown_alt(event)
+        }
+
+        else if (this.mode == KeypointTool.MODE.EDIT) {
+            this.onmousedown_edit(event);
         }
 
         else if (this.boundboxMode) {
@@ -198,6 +218,14 @@ class KeypointTool extends AnnotationTool {
             this.visibility = this.visibility === 1 ? 2 : 1
 
         }
+
+        else if (key.toLowerCase() === 'm') {
+
+            this.mode = this.mode === 1 ? 0 : 1
+
+        }
+
+
     }
     
     /*
@@ -232,38 +260,71 @@ class KeypointTool extends AnnotationTool {
 
     private onmousedown_shift(event: ToolEvent) {
 
-            const label: Label<KeypointProps> = this.labeller.selected
+        const label: Label<KeypointProps> = this.labeller.selected
 
-            if (
-                label && 
-                label.type === KeypointLabel.NAME
-            ) {
+        if (
+            label && 
+            label.type === KeypointLabel.NAME
+        ) {
 
-                const keypoint = this.labeller.keypoint
+            const keypoint = this.labeller.keypoint
 
-                console.log(keypoint)
+            console.log(keypoint)
 
-                if (keypoint) {
+            if (keypoint) {
 
-                    this.labeller.update(label.id, {
-                        props: {
-                            boundbox: label.props.boundbox,
-                            keypoints: [...label.props.keypoints, {
-                                point: {
-                                    x: event.point.x,
-                                    y: event.point.y
-                                },
-                                name: keypoint.name,
-                                visibility: this.visibility
-                            }]
-                        }
-                    })
-
-                }
-
+                this.labeller.update(label.id, {
+                    props: {
+                        boundbox: label.props.boundbox,
+                        keypoints: [...label.props.keypoints, {
+                            point: {
+                                x: event.point.x,
+                                y: event.point.y
+                            },
+                            name: keypoint.name,
+                            visibility: this.visibility
+                        }]
+                    }
+                })
 
             }
+
+
         }
+    }
+
+    /* 
+     |---------------------------------
+     | Edit mode drawing
+     |---------------------------------
+    */
+    private onmousedown_edit(event: ToolEvent) {
+
+        const label = this.labeller.selected
+
+        const item = event.item
+
+        if (
+            label && 
+            label.type === KeypointLabel.NAME && 
+            item.data.index === this.workspace.RESERVED_ITEMS.CONTROL
+        ) {
+
+            const path = <Item>this.workspace.getPath(this.labeller.selected)
+
+            const points = path.children[2]
+
+            const kp = points.hitTest(item.position).item
+
+            console.log(kp)
+
+            kp.data.visibility = kp.data.visibility === 1 ? 2 : 1;
+
+            this.labeller.apply(label.id, path)
+
+        }
+   }
+
 
     /* 
      |---------------------------------

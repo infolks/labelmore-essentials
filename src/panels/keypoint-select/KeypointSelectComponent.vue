@@ -28,6 +28,10 @@
             <button @click="visible = !visible" uk-tooltip="title: Toggle Visibility" class="uk-button uk-button-small" :class="{'uk-button-default' : !visible, 'uk-button-primary': visible}">
                 <i class="fas fa-eye"></i> <span class="uk-margin-left">{{visible? 'visible' : 'hidden'}}</span>
             </button>
+
+            <button @click="editMode = !editMode" uk-tooltip="title: Toggle Edit Mode" class="uk-button uk-button-small uk-margin-left" :class="{'uk-button-default' : !editMode, 'uk-button-primary': editMode}">
+                <i class="fas fa-cog"></i> <span class="uk-margin-left">{{editMode? 'Edit' : 'Normal'}}</span>
+            </button>
         </div>
         <div class="uk-list uk-list-clickable">
             <li :class="{'uk-active': keypoint && (keypoint.name === kp.name)}" v-for="kp in keypoints" :key="kp.name">
@@ -48,6 +52,7 @@
     import { KeypointLabel } from '../../labels/keypoint.label';
 
     const VISIBILITY = `tools.default.keypoint.visibility`
+    const MODE = `tools.default.keypoint.mode`
 
     export default {
         name: 'app-panel-keypoints',
@@ -72,6 +77,21 @@
                     this.$store.dispatch('setGlobal', {
                         key: VISIBILITY,
                         value: visibility
+                    })
+                }
+            },
+            editMode: {
+                get() {
+                    return this.$store.state.globals[MODE] == 1
+                },
+
+                set(val: boolean) {
+
+                    const mode = val? 1:0
+
+                    this.$store.dispatch('setGlobal', {
+                        key: MODE,
+                        value: mode
                     })
                 }
             }
