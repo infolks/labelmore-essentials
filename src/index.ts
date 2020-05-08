@@ -1,10 +1,10 @@
 // tools
-import SelectTool from "./tools/select.tool"
-import BoundboxTool from "./tools/boundbox.tool"
-import ContourTool from "./tools/contour.tool"
-import LineTool from "./tools/line.tool"
-import KeypointTool from "./tools/keypoint.tool";
-import PanTool from "./tools/pan.tool"
+// import SelectTool from "./tools/select.tool"
+// import BoundboxTool from "./tools/boundbox.tool"
+// import ContourTool from "./tools/contour.tool"
+// import LineTool from "./tools/line.tool"
+// import KeypointTool from "./tools/keypoint.tool";
+// import PanTool from "./tools/pan.tool"
 
 // labels
 import BoundboxLabel from "./labels/boundbox.label"
